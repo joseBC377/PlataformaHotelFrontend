@@ -1,0 +1,50 @@
+@use 'variables' as var;
+
+.sección {
+    .cabecera {
+        .posicion1 {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+            .conjunto-iconos {
+
+                .footer-icon i {
+                    font-size: 1.6rem;
+                    transition: color 0.3s ease;
+                    margin: 0.2rem;
+                }
+
+                .footer-icon:hover i {
+                    color: var.$color-secundario !important;
+                }
+            }
+        }
+        .posicion2{
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+        }
+        .posicion3{
+            a{
+                color: var.$color-terciario;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+            a:hover{
+                color: var.$color-secundario;
+            }
+        }
+        .posicion4{
+            a{
+                color: var.$color-terciario;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+            a:hover{
+                color: var.$color-secundario;
+            }
+        }
+    }
+}
