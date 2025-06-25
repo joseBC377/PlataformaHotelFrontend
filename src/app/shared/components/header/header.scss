@@ -1,0 +1,38 @@
+@use 'variables' as var;
+
+.navbar {
+    background-color: var.$backgraound-primario !important;
+}
+
+.navbar-toggler {
+    color: var.$backgraound-navbar;
+    background-color: var.$backgraound-navbar;
+}
+
+a {
+    color: var.$color-terciario !important;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+a:hover {
+    color: var.$color-secundario !important;
+
+}
+
+.perfil {
+    .fas {
+        font-size: 30px;
+        color: #ffff;
+        transition: color 0.3s ease;
+    }
+
+    .fas:hover {
+        color: var.$color-secundario !important;
+    }
+}
+
+.nav-link.active {
+    color: var.$color-secundario !important;
+    font-weight: bold;
+}
