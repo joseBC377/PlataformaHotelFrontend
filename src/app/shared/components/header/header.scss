@@ -36,3 +36,8 @@ a:hover {
     color: var.$color-secundario !important;
     font-weight: bold;
 }
+//para que sobrepase el container
+.navbar {
+  z-index: 9999;
+  position: relative; 
+}

@@ -5,7 +5,5 @@ export const routes: Routes = [
     {
         path: 'login', component: Login, title: "Iniciar Sesión"
     },
-    {
-        path: '', redirectTo: '/home', pathMatch: 'full'
-    },
+    
 ];
