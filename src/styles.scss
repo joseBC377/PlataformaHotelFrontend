@@ -1,5 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
 @use 'variables' as var;
+// Custom Theming for Angular Material
+// For more information: https://material.angular.dev/guide/theming
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+/* You can add global styles to this file, and also import other style files */
 
 * {
     padding: 0;
@@ -17,11 +32,11 @@
         "main"
         "footer";
     header {
-        height: 4rem;
+        // height: 4rem;
     }
     main {
         grid-area: main;
-        padding: 1rem;
+        // padding: 1rem;
     }
 
     footer {
@@ -31,3 +46,5 @@
         color: var.$color-terciario;
     }
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

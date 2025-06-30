@@ -1,0 +1,232 @@
+@use 'variables' as var;
+
+::ng-deep .mat-datepicker-toggle-default-icon {
+  color: var.$color-secundario;
+  font-size: 1.5rem;
+}
+
+.banner {
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
+  margin-bottom: 25px;
+}
+
+.booking-bar {
+  background-color: #C1C2FF;
+  border-radius: 2rem;
+  max-width: 88%;
+
+  .booking-item {
+    width: 300px;
+    // margin: 0 5px;
+
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    .calendar-icon {
+      color: var.$color-secundario;
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+  }
+
+  .btn-reservar {
+    background-color: var.$color-secundario;
+    color: var.$color-terciario;
+    font-weight: bold;
+    border-radius: 2rem;
+    height: 56px;
+    width: 140px;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken(var.$color-primario, 20%);
+    }
+  }
+}
+
+
+.titulo-banner {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var.$color-terciario;
+}
+
+.habitacion-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  min-width: 250px;
+
+  fieldset {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: none;
+    margin: 0;
+    padding: 0;
+
+    legend {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var.$color-primario;
+    }
+
+    .control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      button {
+        background-color: transparent;
+        border: 1px solid var.$color-secundario;
+        color: var.$color-secundario;
+        border-radius: 0.25rem;
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+          background-color: var.$color-secundario;
+          color: white;
+        }
+      }
+
+      input[type='number'] {
+        width: 50px;
+        text-align: center;
+        font-size: 1rem;
+        border: none;
+        background: transparent;
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+// -----------------------------
+.welcome-text {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  .titulo-bienvenida {
+    color: var.$color-primario;
+    font-size: 38px;
+    font-weight: 700;
+  }
+
+  .subtitulo-bienvenida {
+    color: var.$color-secundario;
+    font-size: 28px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 6px;
+    margin-bottom: 0;
+  }
+
+  .ubicacion {
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+}
+
+.content-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4rem;
+  margin-top: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 3rem;
+
+  .content-text {
+    flex: 1 1 45%;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: justify;
+    max-width: 400px;
+  }
+
+  .carousel-inner {
+    width: 500px;
+    height: 300px;
+    overflow: hidden;
+    margin: 0 auto;
+    // border-radius: 10px;
+
+    .carousel-item {
+      width: 100%;
+      height: 100%;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 1s ease;
+      }
+    }
+  }
+}
+
+// ----------------------------------------------
+.beneficios {
+  max-width: 990px;
+  margin: 0 auto;
+  padding: 4rem;
+  background-color: #C1C2FF;
+  border-radius: 54px;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  .description {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .btn-amarrilo {
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    // font-weight: bold;
+    font-size: 0.95rem;
+    background-color: var.$color-secundario;
+    color: black;
+  }
+
+  .btn-azul {
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    // font-weight: bold;
+    font-size: 0.95rem;
+    background-color: var.$color-primario;
+    color: #ffff;
+  }
+
+  .feature-col {
+    i {
+      color: var(--color-primario);
+    }
+
+    .feature-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+  }
+}
