@@ -10,55 +10,58 @@
     </div>
     <section class="container booking-bar my-4">
         <div class="row m-4 justify-content-center align-items-center">
-            <div class="col-12 col-md-6 col-lg-3 mt-3 booking-item">
-                <!-- Fecha Entrada -->
-                <mat-form-field appearance="fill">
-                    <mat-label>Entrada</mat-label>
-                    <input matInput [matDatepicker]="entradaPicker" [formControl]="entradaControl">
-                    <mat-datepicker-toggle matSuffix [for]="entradaPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #entradaPicker></mat-datepicker>
-                </mat-form-field>
+            <div class="col-12 col-lg-9 row justify-content-center">
+                <div class="col-12 col-md-6 col-lg-4 mt-3 booking-item">
+                    <!-- Fecha Entrada -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Entrada</mat-label>
+                        <input matInput [matDatepicker]="entradaPicker" [formControl]="entradaControl">
+                        <mat-datepicker-toggle matSuffix [for]="entradaPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #entradaPicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4 mt-3 booking-item">
+                    <!-- Fecha Salida -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Salida</mat-label>
+                        <input matInput [matDatepicker]="salidaPicker" [formControl]="salidaControl">
+                        <mat-datepicker-toggle matSuffix [for]="salidaPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #salidaPicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4 mt-3 booking-item">
+                    <!-- Habitaciones -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Habitaciones</mat-label>
+                        <mat-select [value]="'custom'" disableOptionCentering [panelClass]="'habitacion-panel'">
+                            <mat-select-trigger>
+                                {{ ninos }}-{{ adultos }}-{{ habitaciones }}
+                            </mat-select-trigger>
+
+                            <mat-option>
+                                <section class="habitacion-panel-content" (click)="$event.stopPropagation()">
+                                    <fieldset *ngFor="let item of ['Adultos', 'Niños', 'Habitaciones']; let i = index">
+                                        <legend>{{ item }}</legend>
+                                        <div class="control">
+                                            <button type="button" (click)="decrementar(i)">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input type="number" [value]="getValor(i)" readonly />
+                                            <button type="button" (click)="incrementar(i)">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                </section>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
 
-            <div class="col-12 col-md-6 col-lg-3 mt-3 booking-item">
-                <!-- Fecha Salida -->
-                <mat-form-field appearance="fill">
-                    <mat-label>Salida</mat-label>
-                    <input matInput [matDatepicker]="salidaPicker" [formControl]="salidaControl">
-                    <mat-datepicker-toggle matSuffix [for]="salidaPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #salidaPicker></mat-datepicker>
-                </mat-form-field>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-3 mt-3 booking-item">
-                <!-- Habitaciones -->
-                <mat-form-field appearance="fill">
-                    <mat-label>Habitaciones</mat-label>
-                    <mat-select [value]="'custom'" disableOptionCentering [panelClass]="'habitacion-panel'">
-                        <mat-select-trigger>
-                            {{ ninos }}-{{ adultos }}-{{ habitaciones }}
-                        </mat-select-trigger>
-
-                        <mat-option>
-                            <section class="habitacion-panel-content" (click)="$event.stopPropagation()">
-                                <fieldset *ngFor="let item of ['Adultos', 'Niños', 'Habitaciones']; let i = index">
-                                    <legend>{{ item }}</legend>
-                                    <div class="control">
-                                        <button type="button" (click)="decrementar(i)">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <input type="number" [value]="getValor(i)" readonly />
-                                        <button type="button" (click)="incrementar(i)">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </fieldset>
-                            </section>
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3 d-flex justify-content-center align-items-center">
+            <div class="col-12 col-lg-3 d-flex justify-content-center align-items-center">
                 <!-- Botón Reservar -->
                 <button mat-raised-button class="btn-reservar">
                     RESERVA
