@@ -1,0 +1,107 @@
+@use 'variables' as var;
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.cuerpo {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // justify-content: center;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    position: relative;
+    z-index: 0;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: -1;
+    }
+
+    .mensaje {
+        margin-top: 5rem;
+        text-align: center;
+        color: var.$color-terciario;
+        z-index: 1;
+        max-width: 90%;
+        // padding: 20px; 
+        // background-color: rgba(0, 0, 0, 0.2); 
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin-bottom: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        p {
+            font-size: clamp(1rem, 2.5vw, 1.7rem);
+            margin-bottom: 2rem;
+        }
+    }
+
+    .acciones {
+        z-index: 1;
+        color: var.$color-terciario;
+        font-size: 1.2rem;
+        display: flex; 
+        flex-direction: column;
+        align-items: center; 
+
+        .boton {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 14.4rem;
+            height: 2.7rem;
+            background-color: var.$backgraound-secundario; 
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+
+            a {
+                width: 100%;
+                height: 100%;
+                color: var.$color-terciario;
+                text-decoration: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: background-color 0.3s ease-in-out;
+            }
+
+            a:hover {
+                background-color: var.$backgraound-primario;
+                border: 2.3px solid var.$backgraound-terciario;
+            }
+        }
+
+        p {
+            color: var.$color-terciario; 
+            text-align: center;
+
+            a {
+                color: var.$backgraound-secundario; 
+                text-decoration: underline; 
+                font-weight: bold; 
+                transition: color 0.3s ease; 
+
+                &:hover {
+                    color: var.$backgraound-terciario; 
+                    text-decoration: none; 
+                }
+            }
+        }
+    }
+}
