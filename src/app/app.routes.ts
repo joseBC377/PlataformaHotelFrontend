@@ -8,6 +8,9 @@ import { Nosotros } from './features/publico/nosotros/nosotros';
 import { Error } from './features/publico/error/error';
 import { Habitaciones } from './features/publico/habitacion/habitaciones';
 import { Inicio } from './features/publico/inicio/inicio';
+import { Servicios } from './features/publico/servicios/servicios';
+import { Reservas } from './features/publico/reservas/reservas';
+import { Contactos } from './features/publico/contactos/contactos';
 
 export const routes: Routes = [
     {
@@ -27,6 +30,15 @@ export const routes: Routes = [
             },
             {
                 path: 'habitaciones', component: Habitaciones, title:"Habitaciones"
+            },
+            {
+                path: 'servicios', component: Servicios, title:"Servicios"
+            },
+            {
+                path: 'reservas', component: Reservas, title:"Reservas"
+            },
+            {
+                path: 'contactos', component: Contactos, title:"Contactos"
             },
             {
                 path:'',component:Inicio, title:"Inicio"

@@ -1,0 +1,94 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+}
+
+.mis-reservas {
+  padding: 40px 20px;
+  text-align: center;
+
+  h2 {
+    color: #2c3e75;
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    color: #4a4a4a;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+  }
+
+  .form-reserva {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+
+    label {
+      text-align: left;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+      font-size: 15px;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #f8aa2d;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #e09a1f;
+      }
+    }
+  }
+
+  // Media queries anidadas
+  @media (max-width: 480px) {
+    h2 {
+      font-size: 22px;
+    }
+
+    h3 {
+      font-size: 18px;
+    }
+
+    .form-reserva {
+      padding: 10px;
+
+      input {
+        font-size: 13px;
+      }
+
+      button {
+        font-size: 15px;
+      }
+    }
+  }
+}
