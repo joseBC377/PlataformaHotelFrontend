@@ -72,10 +72,11 @@
     max-width: 320px !important;
     min-width: 280px !important;
     padding: 0 !important;
-    box-shadow: 0 4px 8pxrgba(0, 0, 0, 0.1); 
+    box-shadow: 0 4px 8pxrgba(0, 0, 0, 0.1);
     border-radius: 0.5rem;
   }
 }
+
 .habitacion-panel-content {
   display: flex;
   flex-direction: column;
@@ -226,20 +227,50 @@
     line-height: 1.6;
   }
 
-  .btn-amarrilo {
-    padding: 0.5rem 1.5rem;
-    border-radius: 2rem;
-    font-size: 0.95rem;
-    background-color: var.$color-secundario;
-    color: black;
-  }
-
+  .btn-amarrilo,
   .btn-azul {
     padding: 0.5rem 1.5rem;
     border-radius: 2rem;
     font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      opacity: 0.9;
+    }
+
+    &:active {
+      transform: scale(0.98);
+      box-shadow: none;
+    }
+
+    &:focus {
+      outline: 2px dashed lighten(var.$color-primario, 20%);
+      outline-offset: 4px;
+    }
+  }
+
+  .btn-amarrilo {
+    background-color: var.$color-secundario;
+    color: black;
+
+    &:hover {
+      background-color: darken(var.$color-secundario, 5%);
+    }
+  }
+
+  .btn-azul {
     background-color: var.$color-primario;
-    color: #ffff;
+    color: #fff;
+
+    &:hover {
+      background-color: lighten(var.$color-primario, 5%);
+    }
   }
 
   .feature-col {
