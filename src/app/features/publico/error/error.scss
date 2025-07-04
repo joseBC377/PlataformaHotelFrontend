@@ -78,7 +78,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                transition: background-color 0.3s ease-in-out;
+                transition: all 0.3s ease-in-out;
             }
 
             a:hover {
@@ -98,7 +98,6 @@
                 transition: color 0.3s ease; 
 
                 &:hover {
-                    color: var.$backgraound-terciario; 
                     text-decoration: none; 
                 }
             }
