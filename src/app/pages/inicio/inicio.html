@@ -37,7 +37,13 @@
                         <mat-label>Habitaciones</mat-label>
                         <mat-select [value]="'custom'" disableOptionCentering [panelClass]="'habitacion-panel'">
                             <mat-select-trigger>
-                                {{ ninos }}-{{ adultos }}-{{ habitaciones }}
+                                <ng-container *ngIf="adultos > 0 || ninos > 0 || habitaciones > 0; else noSelection">
+                                    {{ adultos }} - {{ ninos }} - {{ habitaciones }}
+                                </ng-container>
+
+                                <ng-template #noSelection>
+                                    0 Adultos, 0 Niños, 0 Habitaciones
+                                </ng-template>
                             </mat-select-trigger>
 
                             <mat-option>

@@ -26,7 +26,6 @@
   }
 
   .booking-item {
-    // width: 300px;
 
     mat-form-field {
       width: 100%;
@@ -62,19 +61,26 @@
   }
 }
 
-
 .titulo-banner {
   font-size: 4rem;
   font-weight: 700;
   color: var.$color-terciario;
 }
 
+.habitacion-panel {
+  .mat-mdc-select-panel {
+    max-width: 320px !important;
+    min-width: 280px !important;
+    padding: 0 !important;
+    box-shadow: 0 4px 8pxrgba(0, 0, 0, 0.1); 
+    border-radius: 0.5rem;
+  }
+}
 .habitacion-panel-content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   padding: 1rem;
-  min-width: 250px;
 
   fieldset {
     display: flex;
@@ -82,16 +88,22 @@
     justify-content: space-between;
     border: none;
     margin: 0;
-    padding: 0;
+    padding: 0.5rem 0;
+    gap: 1rem;
 
     legend {
+      flex: 1;
       font-size: 1rem;
       font-weight: 600;
       color: var.$color-primario;
+      margin: 0;
+      white-space: nowrap;
     }
 
     .control {
+      flex: 1;
       display: flex;
+      justify-content: flex-end;
       align-items: center;
       gap: 0.5rem;
 
@@ -113,9 +125,11 @@
       }
 
       input[type='number'] {
-        width: 50px;
+        width: 40px;
         text-align: center;
         font-size: 1rem;
+        font-weight: 600;
+        color: var.$color-primario;
         border: none;
         background: transparent;
         pointer-events: none;
@@ -177,7 +191,6 @@
     height: 300px;
     overflow: hidden;
     margin: 0 auto;
-    // border-radius: 10px;
 
     .carousel-item {
       width: 100%;
@@ -216,7 +229,6 @@
   .btn-amarrilo {
     padding: 0.5rem 1.5rem;
     border-radius: 2rem;
-    // font-weight: bold;
     font-size: 0.95rem;
     background-color: var.$color-secundario;
     color: black;
@@ -225,7 +237,6 @@
   .btn-azul {
     padding: 0.5rem 1.5rem;
     border-radius: 2rem;
-    // font-weight: bold;
     font-size: 0.95rem;
     background-color: var.$color-primario;
     color: #ffff;

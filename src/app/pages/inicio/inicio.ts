@@ -51,9 +51,9 @@ export class Inicio {
       }
     });
   }
-  adultos = 1;
+  adultos = 0;
   ninos = 0;
-  habitaciones = 1;
+  habitaciones = 0;
 
   getValor(index: number): number {
     switch (index) {
