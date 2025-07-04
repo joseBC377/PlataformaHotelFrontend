@@ -250,7 +250,7 @@
     }
 
     &:focus {
-      outline: 2px dashed lighten(var.$color-primario, 20%);
+      outline: 2px dashed var.$color-primario;
       outline-offset: 4px;
     }
   }
@@ -260,7 +260,7 @@
     color: black;
 
     &:hover {
-      background-color: darken(var.$color-secundario, 5%);
+      background-color: var.$color-secundario;
     }
   }
 
@@ -269,7 +269,7 @@
     color: #fff;
 
     &:hover {
-      background-color: lighten(var.$color-primario, 5%);
+      background-color: var.$color-primario;
     }
   }
 
