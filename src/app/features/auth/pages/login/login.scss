@@ -6,14 +6,14 @@
     box-sizing: border-box;
 }
 
-body {
+.cuerpo {
     width: 100%;
     height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
     background-image: url('/img/walpaperLogin.jpg');
-    background-size: contain;
+    background-size: cover;
 
     a {
         color: var.$backgraound-primario;
@@ -203,8 +203,24 @@ body {
     background-color: var.$backgraound-primario;
 }
 
+.alerta {
+    .contenido {
+        position: absolute;
+        top: 80px;
+        left: 260px;
+        right: 260px;
+        padding: 0.9rem;
+        text-align: center;
+        background-color: #f58888;
+        border: 2px solid #ff4b4b;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        z-index: 9999;
+    }
+}
+
 @media screen and (max-width: 990px) {
-    body {
+    .cuerpo {
         align-items: flex-start;
         padding: 1rem;
         background-size: cover;
@@ -312,6 +328,17 @@ body {
         transform: translateY(0) !important;
     }
 
+    .alerta {
+        .contenido {
+            position: absolute;
+            top: 62px;
+            left: 49px;
+            right: 49px;
+            padding: 0.5rem;
+        }
+    }
+
+
     //hacer para menores de 380
     @media screen and (max-width: 380px) {
         .container-form h2 {
@@ -376,5 +403,14 @@ body {
         }
     }
 
-
+    .alerta {
+        .contenido {
+            position: absolute;
+            top: 52px;
+            left: 70px;
+            right: 70px;
+            padding: 1px;
+            font-size: 16px;
+        }
+    }
 }

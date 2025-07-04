@@ -1,7 +1,7 @@
-<body>
+<div class="cuerpo">
     <div [class.toggled]="toggled" class="container">
         <div class="container-form">
-            <form class="sign-in">
+            <form [formGroup]="loginForm" (ngSubmit)="loginFn()" novalidate class="sign-in">
                 <h2>Iniciar sesión</h2>
                 <div class="social-networks">
                     <i class="icono fa-brands fa-google"></i>
@@ -10,16 +10,18 @@
                 <span>Ingrese su correo y contraseña</span>
                 <div class="container-input">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="email" placeholder="Correo">
+                    <input formControlName="email" type="email" placeholder="Correo">
                 </div>
                 <div class="container-input">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Contraseña">
+                    <input formControlName="password" type="password" placeholder="Contraseña">
                 </div>
                 <a href="#">¿Olvidaste tu contraseña?</a>
-                <button class="button">Iniciar Sesión</button>
+                <button [disabled]="loginForm.invalid" class="button">Iniciar Sesión</button>
             </form>
+
         </div>
+
         <div class="container-form">
             <form class="sign-up">
                 <h2>Registrarse</h2>
@@ -52,17 +54,25 @@
             </form>
         </div>
         <div class="container-welcome">
-        <div class="welcome-sign-up welcome">
-            <h3>¡Bienvenido!</h3>
-            <p>Ingrese sus datos personales para ingresar al sitio</p>
-            <button class="button" (click)="showSignUp()">Registrarse</button>
-        </div>
-        <div class="welcome-sign-in welcome">
-            <h3>¡Hola!</h3>
-            <p>Registre sus datos personales para ingresar al sitio</p>
-            <button class="button"(click)="showSignIn()">Iniciar Sesión</button>
+            <div class="welcome-sign-up welcome">
+                <h3>¡Bienvenido!</h3>
+                <p>Ingrese sus datos personales para ingresar al sitio</p>
+                <button class="button" (click)="showSignUp()">Registrarse</button>
+            </div>
+            <div class="welcome-sign-in welcome">
+                <h3>¡Hola!</h3>
+                <p>Registre sus datos personales para ingresar al sitio</p>
+                <button class="button" (click)="showSignIn()">Iniciar Sesión</button>
 
+            </div>
         </div>
     </div>
+    <div class="alerta">
+        @if (errorMsg()) {
+        <div class="contenido">
+            <span>{{errorMsg()}}</span>
+        </div>
+        }
     </div>
-</body>
+
+</div>
