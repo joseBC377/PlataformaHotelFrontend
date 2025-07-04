@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { Habitaciones } from './pages/habitaciones/habitaciones';
 import { Login } from './features/auth/pages/login/login';
 import { AdminLayout } from './features/auth/layouts/admin-layout/admin-layout';
 import { ClientLayout } from './features/auth/layouts/client-layout/client-layout';
@@ -22,6 +23,9 @@ export const routes: Routes = [
             },
             { 
                 path: 'nosotros', component: Nosotros, title: "Nosotros" 
+            },
+            {
+                path: 'habitaciones', component: Habitaciones
             },
             {
                 path: '**', component: Error, title: "Pagina de error"

@@ -1,0 +1,286 @@
+@use "sass:map";
+
+$colors: (
+  primary: #245ab2,
+  accent: #f4a300,
+  light-gray: #f9f9f9,
+  purple-light: #e6e0f6,
+  text: #333,
+  dark-text: #222,
+  subtext: #555,
+  tab-bg: #e0e0e0,
+  scrollbar-thumb: #ccc
+);
+
+$font-stack: 'Segoe UI', sans-serif;
+$max-width: 1200px;
+
+//Mixins
+@mixin center-text {
+  text-align: center;
+}
+
+@mixin responsive-img($width: 100%, $radius: 8px) {
+  width: $width;
+  height: auto;
+  object-fit: cover;
+  border-radius: $radius;
+}
+
+@mixin card($bg-color: map.get($colors, light-gray)) {
+  background-color: $bg-color;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+@mixin scroll-style {
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: map.get($colors, scrollbar-thumb);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
+
+.habitaciones-container {
+  padding: 2rem;
+  font-family: $font-stack;
+  max-width: $max-width;
+  margin: auto;
+  color: map.get($colors, text);
+
+  .titulo-seccion,
+  .subtitulo-seccion {
+    @include center-text;
+  }
+
+  .titulo-seccion {
+    color: map.get($colors, primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitulo-seccion {
+    color: #CC9F53;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .descripcion {
+    @include center-text;
+    max-width: 750px;
+    margin: 0 auto 2rem;
+    font-size: 1rem;
+    color: #444;
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+
+    .tab {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      background-color: map.get($colors, tab-bg);
+      color: #000;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &.active {
+        background-color: map.get($colors, accent);
+        color: white;
+      }
+    }
+  }
+}
+
+.habitacion-card {
+  @include card;
+  margin-bottom: 7rem;
+
+  .habitacion-card.par {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  z-index: 1;
+}
+
+.habitacion-card.par::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  max-width: 100%;
+  height: 100%;
+  background-color: map.get($colors, purple-light);
+  z-index: -1;
+}
+
+
+  
+
+  .habitacion-contenido {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6rem;
+    padding-left: 8rem;
+
+    .habitacion-img {
+      @include responsive-img(250px, 10px);
+    }
+
+    .habitacion-carrusel {
+      width: 350px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      @include scroll-style;
+
+      .imagenes {
+        display: flex;
+        gap: 10px;
+
+        img {
+          flex: 0 0 100%;
+          @include responsive-img(350px, 40px);
+          scroll-snap-align: start;
+        }
+      }
+    }
+
+    .habitacion-info {
+      flex: 1;
+
+      h4 {
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        color: map.get($colors, dark-text);
+      }
+
+      p {
+        font-size: 0.95rem;
+        color: map.get($colors, subtext);
+        margin-bottom: 0.8rem;
+      }
+
+      .iconos {
+        margin-top: 0.5rem;
+
+        i {
+          font-size: 1.2rem;
+          margin-right: 10px;
+          color: #CC9F53;
+        }
+      }
+    }
+  }
+}
+
+
+.habitacion-card.par .habitacion-contenido {
+  flex-direction: row-reverse;
+  gap: 4rem;
+  padding-left: 9rem;
+
+  .habitacion-carrusel {
+    margin-right: 8rem;
+  }
+}
+
+
+@media (max-width: 1024px) {
+
+  .habitacion-card .habitacion-contenido,
+  .habitacion-card.par .habitacion-contenido {
+    padding: 2rem;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    justify-content: flex-start;
+    padding: 0 1rem;
+
+    .tab {
+      flex: 0 0 auto;
+      margin-right: 0.5rem;
+      border-radius: 0;
+      border-right: 1px solid #ccc;
+
+      &:first-child {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+      }
+
+      &:last-child {
+        border-right: none;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
+    }
+  }
+
+  .habitacion-card,
+  .habitacion-card.par {
+    margin-bottom: 3rem;
+
+    .habitacion-contenido {
+      flex-direction: column !important;
+      padding: 1rem;
+      gap: 1.5rem;
+      text-align: center;
+
+      .habitacion-img {
+        @include responsive-img(100%, 10px);
+        max-width: 300px;
+        margin: 0 auto;
+      }
+
+      .habitacion-carrusel {
+        width: 100%;
+        margin: 1rem 0;
+
+        .imagenes {
+          img {
+            width: 100%;
+            border-radius: 12px;
+          }
+        }
+      }
+
+      .habitacion-info {
+        h4 {
+          font-size: 1.1rem;
+        }
+
+        p {
+          font-size: 0.95rem;
+        }
+      }
+    }
+
+    &.par::before {
+      width: 100vw;
+      left: 0;
+      transform: none;
+    }
+  }
+}
