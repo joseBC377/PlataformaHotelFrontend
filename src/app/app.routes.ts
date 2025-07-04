@@ -29,7 +29,7 @@ export const routes: Routes = [
                 path: 'habitaciones', component: Habitaciones, title:"Habitaciones"
             },
             {
-                path:'inicio',component:Inicio, title:"Inicio"
+                path:'',component:Inicio, title:"Inicio"
             },
             {
                 path: '**', component: Error, title: "Pagina de error"
