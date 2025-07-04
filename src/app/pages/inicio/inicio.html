@@ -1,0 +1,178 @@
+<div class="banner">
+    <div class="banner d-flex justify-content-center align-items-center text-center"
+        style="background-image: url('assets/images/inicio/banner.jpg')">
+        <div class="text-white">
+            <h1 class="titulo-banner fw-bold">Más que un hotel</h1>
+            <span class="minititulo" style="font-size: 1.5rem;">una experiencia</span>
+        </div>
+    </div>
+</div>
+<section class="container booking-bar my-4">
+    <div class="row m-4 justify-content-center align-items-center">
+        <div class="col-12 col-lg-9 row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-4 mt-3 booking-item">
+                <!-- Fecha Entrada -->
+                <mat-form-field appearance="fill">
+                    <mat-label>Entrada</mat-label>
+                    <input matInput [matDatepicker]="entradaPicker" [formControl]="entradaControl">
+                    <mat-datepicker-toggle matSuffix [for]="entradaPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #entradaPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 mt-3 booking-item">
+                <!-- Fecha Salida -->
+                <mat-form-field appearance="fill">
+                    <mat-label>Salida</mat-label>
+                    <input matInput [matDatepicker]="salidaPicker" [formControl]="salidaControl">
+                    <mat-datepicker-toggle matSuffix [for]="salidaPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #salidaPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 mt-3 booking-item">
+                <!-- Habitaciones -->
+                <mat-form-field appearance="fill">
+                    <mat-label>Habitaciones</mat-label>
+                    <mat-select [value]="'custom'" disableOptionCentering [panelClass]="'habitacion-panel'">
+                        <mat-select-trigger>
+                            <ng-container *ngIf="adultos > 0 || ninos > 0 || habitaciones > 0; else noSelection">
+                                {{ adultos }} - {{ ninos }} - {{ habitaciones }}
+                            </ng-container>
+
+                            <ng-template #noSelection>
+                                0 Adultos, 0 Niños, 0 Habitaciones
+                            </ng-template>
+                        </mat-select-trigger>
+
+                        <mat-option>
+                            <section class="habitacion-panel-content" (click)="$event.stopPropagation()">
+                                <fieldset *ngFor="let item of ['Adultos', 'Niños', 'Habitaciones']; let i = index">
+                                    <legend>{{ item }}</legend>
+                                    <div class="control">
+                                        <button type="button" (click)="decrementar(i)">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="number" [value]="getValor(i)" readonly />
+                                        <button type="button" (click)="incrementar(i)">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </section>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-3 d-flex justify-content-center align-items-center">
+            <!-- Botón Reservar -->
+            <button mat-raised-button class="btn-reservar">
+                RESERVA
+            </button>
+        </div>
+    </div>
+</section>
+<main class="container mt-5">
+    <section class="welcome-text text-center mb-5">
+        <h2 class="titulo-bienvenida">
+            TE DAMOS LA BIENVENIDA
+        </h2>
+        <h3 class="subtitulo-bienvenida">
+            ROYAL SUITES HOTEL
+        </h3>
+        <p class="ubicacion">
+            Lima - Perú
+        </p>
+    </section>
+    <section
+        class="content-section d-flex align-items-center justify-content-center gap-4 flex-nowrap flex-lg-row flex-column">
+        <p class="content-text me-4 mb-3 mb-lg-0">
+            Más que un hotel, somos tu refugio ideal para desconectar, disfrutar y vivir momentos especiales en un
+            ambiente acogedor, moderno y lleno de buenas experiencias. Nuestro compromiso es brindarte atención
+            personalizada,
+            instalaciones de primer nivel y una variedad de servicios pensados para tu comodidad y bienestar. Ya sea
+            que viajes
+            por placer o negocios, en Royal Suites Hotel encontrarás el equilibrio perfecto entre confort, elegancia
+            y hospitalidad.
+            Descubre nuestras habitaciones equipadas, disfruta de la gastronomía local en nuestro restaurante y
+            relájate en nuestras
+            áreas comunes diseñadas para que cada momento sea inolvidable.
+        </p>
+        <div id="carouselExampleRide" class="carousel slide" data-bs-ride="true">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="assets/images/inicio/carrusel1.jpg" class="d-block w-100" alt="carrusel1">
+                </div>
+                <div class="carousel-item">
+                    <img src="assets/images/inicio/carrusel2.jpg" class="d-block w-100" alt="carrusel2">
+                </div>
+                <div class="carousel-item">
+                    <img src="assets/images/inicio/carrusel3.png" class="d-block w-100" alt="carrusel3">
+                </div>
+                <div class="carousel-item">
+                    <img src="assets/images/inicio/carrusel4.jpeg" class="d-block w-100" alt="carrusel4">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleRide"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleRide"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
+    <div class="beneficios container py-5">
+        <div class="row align-items-center">
+            <!-- Columna izquierda -->
+            <section class="left col-12 col-md-6 col-lg-5 mb-4 mb-md-0">
+                <h2 class="mb-3">
+                    Regístrate en <br />
+                    Royal Suites Hotel
+                </h2>
+                <p class="description mb-4">
+                    Consigue tarifas exclusivas, acumula puntos para noches gratis y mucho más. ¡Únete gratis y
+                    mejora tu estancia!
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <button mat-raised-button class="btn-amarrilo">Regístrate gratis</button>
+                    <button mat-raised-button class="btn-azul">Inicia sesión</button>
+                </div>
+            </section>
+            <!-- Columna derecha -->
+            <section class="right col-12 col-md-6 col-lg-7 d-flex flex-wrap justify-content-center gap-4">
+                <div class="feature-col text-center" style="width: 110px;">
+                    <i class="fas fa-wifi fa-2x mb-2"></i>
+                    <p class="feature-text">Wifi Gratis</p>
+                </div>
+                <div class="feature-col text-center" style="width: 110px;">
+                    <i class="fas fa-tags fa-2x mb-2"></i>
+                    <p class="feature-text">Descuentos</p>
+                </div>
+                <div class="feature-col text-center" style="width: 110px;">
+                    <i class="fas fa-star fa-2x mb-2"></i>
+                    <p class="feature-text">Noches gratis</p>
+                </div>
+                <div class="feature-col text-center" style="width: 110px;">
+                    <i class="fas fa-mug-hot fa-2x mb-2"></i>
+                    <p class="feature-text">Desayuno gratis</p>
+                </div>
+
+                <div class="feature-col text-center" style="width: 110px;">
+                    <i class="fas fa-dumbbell fa-2x mb-2"></i>
+                    <p class="feature-text">Gimnasio</p>
+                </div>
+
+                <div class="feature-col text-center" style="width: 110px;">
+                    <i class="fas fa-paw fa-2x mb-2"></i>
+                    <p class="feature-text">Pet Friendly</p>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
