@@ -7,6 +7,7 @@ import { authGuard } from './core/guards/auth-guard';
 import { Nosotros } from './features/publico/nosotros/nosotros';
 import { Error } from './features/publico/error/error';
 import { Habitaciones } from './features/publico/habitacion/habitaciones';
+import { Inicio } from './features/publico/inicio/inicio';
 
 export const routes: Routes = [
     {
@@ -26,6 +27,9 @@ export const routes: Routes = [
             },
             {
                 path: 'habitaciones', component: Habitaciones, title:"Habitaciones"
+            },
+            {
+                path:'inicio',component:Inicio, title:"Inicio"
             },
             {
                 path: '**', component: Error, title: "Pagina de error"
