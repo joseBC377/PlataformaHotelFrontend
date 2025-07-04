@@ -7,34 +7,34 @@
         <span class="navbar-toggler-icon"></span>
       </button>
     </div>
-
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li>
-          <a class="d-block d-lg-none" href="#">Iniciar sesión</a>
+      <hr style="color: #f4f7fa;">
+      <ul class="navbar-nav ms-auto" >
+        <li class="nav-item">
+          <a class="nav-link d-block d-lg-none" routerLinkActive="active" routerLink="/login">Iniciar sesión</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+          <a class="nav-link" routerLinkActive="active" href="#">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Nosotros</a>
+          <a class="nav-link" routerLinkActive="active" routerLink="/nosotros">Nosotros</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Habitaciones</a>
+          <a class="nav-link" routerLinkActive="active" routerLink="/habitaciones">Habitaciones</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Servicios</a>
+          <a class="nav-link" routerLinkActive="active" href="#">Servicios</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Mis Reservas</a>
+          <a class="nav-link" routerLinkActive="active" href="#">Mis Reservas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Contáctanos</a>
+          <a class="nav-link" routerLinkActive="active" href="#">Contáctanos</a>
         </li>
       </ul>
     </div>
-    <div class="d-none d-lg-block perfil" style="margin-left: 1rem; margin-right: 1rem;">
-      <a href="#" class="text-decoration-none">
+    <div class="nav-link  d-none d-lg-block perfil" style="margin-left: 1rem; margin-right: 1rem;">
+      <a class="text-decoration-none" routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
         <i class="fas fa-user-circle"></i>
       </a>
     </div>

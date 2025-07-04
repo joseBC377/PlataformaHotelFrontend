@@ -1,0 +1,7 @@
+<p>intranet works!</p>
+<button type="button" (click)="getUsuario()">
+    Obtener clientes
+</button>
+@if (usuario$ |async; as usuario) {
+    <pre>{{usuario|json}}</pre>
+}
