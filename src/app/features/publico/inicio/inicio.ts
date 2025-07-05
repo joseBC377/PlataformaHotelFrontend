@@ -7,6 +7,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 export const CUSTOM_DATE_FORMATS = {
   parse: {
@@ -28,7 +29,7 @@ export const CUSTOM_DATE_FORMATS = {
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatButtonModule,],
+    MatButtonModule,RouterLink],
   templateUrl: './inicio.html',
   styleUrl: './inicio.scss',
   providers: [
