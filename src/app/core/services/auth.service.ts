@@ -23,7 +23,7 @@ export class AuthService {
     return this.http.post<Token>(`${this.URL}/autenticarse`, credenciales).pipe(tap(resp => {
       this.almacenarTokens(resp);
       this.isAuth.next(true);
-      this.router.navigate(['admin/intranet'])
+      this.router.navigate(['/admin/intranet'])
     }));
   }
   cerrarSesion() {

@@ -7,11 +7,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AdminServices {
-  private API_URL="http://localhost:8081"
-  private URL= "/api/subarid";
+  private API_URL="http://localhost:8081/api/usuario"
+  //private URL= "/api/usuario";
+
   private http= inject(HttpClient);
+
   getAllUsers():Observable<Usuario[]>{
-    return this.http.get<Usuario[]>(`${this.API_URL}${this.URL}/todosCliente`);
+    return this.http.get<Usuario[]>(`${this.API_URL}/todosCliente`);
   }
 
 }
