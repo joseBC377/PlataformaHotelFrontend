@@ -1,22 +1,58 @@
-  <section class="mis-reservas">
-    <h2>MIS RESERVAS</h2>
-    <h3>Revisa aquí tus reservas</h3>
-    <p>
-      Desde esta página podrás cancelar tu reserva si así lo deseas.<br />
-      Si tienes alguna duda, puedes ponerte en contacto con nuestro departamento de reservas.
-    </p>
-    <p>
-      Teléfono: +51 615 6511542<br />
-      Correo: reservaswebroyalsuites.com
-    </p>
+   <div class="cuerpo"> 
+   <div [class.toggled]="toggled" class="container">
+        <div class="container-form">
+            <form [formGroup]="loginForm" (ngSubmit)="loginFn()" novalidate class="sign-in">
+                <h2>MIS RESERVAS</h2>
+                <h2>Revisa aquí tus reservas</h2>
+              <span>Desde esta página podrás cancelar tu reserva si así lo deseas.<br />
+                  Si tienes alguna duda, puedes ponerte en contacto con nuestro<br />departamento de reservas.</span>
 
-    <form class="form-reserva">
-      <label for="codigo">Código de la reserva</label>
-      <input type="text" id="codigo" placeholder="Ej: ABC1234" />
+                <span>
+                    Teléfono: +51 615 6511542<br />
+                    <br />
+                    Correo: reservaswebroyalsuites.com
+                </span>
 
-      <label for="nombre">Nombre</label>
-      <input type="text" id="nombre" placeholder="Tu nombre completo" />
+                <span>
+                  Ingrese su correo y contraseña
+                </span>
+                <div class="container-input">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input formControlName="email" type="email" placeholder="Codigo">
+                </div>
+                @if (email?.invalid && (email?.dirty || email?.touched)) {
+                @if (email?.errors?.['required']) {
+                <p class="error-message"> El codigo es obligatorio.</p>
+                }
+                @if (email?.errors?.['email']) {
+                <p class="error-message"> Por favor, ingresa un formato de codigo valido.</p>
+                }
+                @if (email?.errors?.['customEmail']) {
+                <p class="error-message"> Verifica el formato de tu codigo.</p>
+                }
+                }
+                <div class="container-input">
+                    <i class="fa-solid fa-lock"></i>
+                    <input formControlName="password" type="password" placeholder="Nombre">
+                </div>
+                @if (password?.invalid &&(password?.dirty||password?.touched)) {
+                @if (password?.errors?.['required']) {
+                <p class="error-message"> El nombre es obligatoria</p>
+                }
+                }
+                <button [disabled]="loginForm.invalid" class="button">Iniciar Sesión</button>
+            </form>
 
-      <button type="submit">Buscar reserva</button>
-    </form>
-  </section>
+        </div>
+
+    </div>
+
+    <div class="alerta">
+        @if (errorMsg()) {
+        <div class="contenido">
+            <span>{{errorMsg()}}</span>
+        </div>
+        }
+    </div>
+
+    </div>
