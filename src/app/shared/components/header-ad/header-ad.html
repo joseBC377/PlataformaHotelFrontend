@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg bg-fondo shadow-sm py-1">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+            <span class="fs-3 fw-bold font-greatvibes brand-text text-dark">Royal Suites Hotel</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <hr>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li>
+                    <a class="d-block d-lg-none" routerLink="/inicio">Iniciar sesión</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link active" routerLink="contacto" aria-current="page">Contacto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " routerLink="pago">Pago</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="reserva">Reserva</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="habitacion">Habitación</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="usuario">Usuario</a>
+                </li>
+            </ul>
+        </div>
+        <div class="d-none d-lg-block perfil" style="margin-left: 1rem; margin-right: 1rem;">
+            <a routerLink="/login" class="text-decoration-none">
+                <i class="fas fa-user-circle"></i>
+            </a>
+        </div>
+    </div>
+</nav>

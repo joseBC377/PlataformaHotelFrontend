@@ -16,6 +16,11 @@ import { ServiciosAdminComponent } from './features/admin/servicio/servicio';
 import { CategoriaHabitacionAdminComponent } from './features/admin/categoria-habitacion/categoria-habitacion';
 import { ReservaServicioAdminComponent } from './features/admin/reserva-servicio/reserva-servicio';
 import { ResenaAdminComponent } from './features/admin/resenas/resenas';
+import { Usuario } from './features/admin/usuario/usuario';
+import { ReservaHabitacion } from './features/admin/reserva-habitacion/reserva-habitacion';
+import { Reserva } from './features/admin/reserva/reserva';
+import { Contacto } from './features/admin/contacto/contacto';
+import { Pago } from './features/admin/pago/pago';
 
 
 export const routes: Routes = [
@@ -24,12 +29,20 @@ export const routes: Routes = [
             {
                 path: 'intranet', component: Intranet, title: 'Intranet'
             },
-        ]
-    },
-    {
-        path: '', component: ClientLayout, children: [
             {
-                path: 'login', component: Login, title: "Iniciar Sesión"
+                path: 'usuario', component: Usuario, title: 'Usuario'
+            },
+            {
+                path: 'habitacion-reserva', component: ReservaHabitacion, title: 'Habitacion-reserva'
+            },
+            {
+                path: 'pago', component: Pago, title: 'Pago de Reserva'
+            },
+            {
+                path: 'reserva', component: Reserva, title: 'Reserva'
+            },
+            {
+                path: 'contacto', component: Contacto, title: 'Contacto'
             },
             {
                 path: 'habitacion', component: HabitacionesAdminComponent, title: 'Habitacion'
@@ -45,6 +58,14 @@ export const routes: Routes = [
             },
                {
                 path: 'resena', component: ResenaAdminComponent, title: "Resena"
+            },
+          
+        ]
+    },
+    {
+        path: '', component: ClientLayout, children: [
+            {
+                path: 'login', component: Login, title: "Iniciar Sesión"
             },
             {
                 path: 'nosotros', component: Nosotros, title: "Nosotros"
@@ -64,6 +85,7 @@ export const routes: Routes = [
             {
                 path: '', component: Inicio, title: "Inicio"
             },
+            
             {
                 path: '**', component: Error, title: "Pagina de error"
             }

@@ -1,0 +1,107 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Gestión de Usuarios 👥</h2>
+
+    <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()" class="row g-3 mb-4 p-3 border rounded shadow-sm">
+        <div class="col-md-4">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombre"
+                placeholder="Nombre del usuario">
+            <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)" class="text-danger mt-1">
+                <small *ngIf="nombre?.errors?.['required']">El nombre es obligatorio.</small>
+                <small *ngIf="nombre?.errors?.['minlength']">Mínimo 3 caracteres.</small>
+                <small *ngIf="nombre?.errors?.['pattern']">El nombre solo puede contener letras y espacios.</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="apellido" formControlName="apellido"
+                placeholder="Apellido del usuario">
+            <div *ngIf="apellido?.invalid && (apellido?.dirty || apellido?.touched)" class="text-danger mt-1">
+                <small *ngIf="apellido?.errors?.['required']">El apellido es obligatorio.</small>
+                <small *ngIf="apellido?.errors?.['pattern']">El apellido solo puede contener letras y espacios.</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="correo" class="form-label">Correo</label>
+            <input type="email" class="form-control" id="correo" formControlName="correo"
+                placeholder="correo@ejemplo.com">
+            <div *ngIf="correo?.invalid && (correo?.dirty || correo?.touched)" class="text-danger mt-1">
+                <small *ngIf="correo?.errors?.['required']">El correo es obligatorio.</small>
+                <small *ngIf="correo?.errors?.['email']">Formato de correo inválido.</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="contrasena" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="contrasena" formControlName="contrasena"
+                placeholder="••••••••">
+            <div *ngIf="contrasena?.invalid && (contrasena?.dirty || contrasena?.touched)" class="text-danger mt-1">
+                <small *ngIf="contrasena?.errors?.['required']">La contraseña es obligatoria.</small>
+                <small *ngIf="contrasena?.errors?.['minlength']">Mínimo 6 caracteres.</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="tel" class="form-control" id="telefono" formControlName="telefono" placeholder="987654321">
+            <div *ngIf="telefono?.invalid && (telefono?.dirty || telefono?.touched)" class="text-danger mt-1">
+                <small *ngIf="telefono?.errors?.['required']">El teléfono es obligatorio.</small>
+                <small *ngIf="telefono?.errors?.['pattern']">Debe contener 9 dígitos.</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="rol" class="form-label">Rol</label>
+            <select class="form-select" id="rol" formControlName="rol">
+                <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+            </select>
+        </div>
+
+        <div class="col-12 mt-4">
+            <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
+                [disabled]="usuarioForm.invalid">
+                {{ modoEdicion ? 'Actualizar Usuario' : 'Agregar Usuario' }}
+            </button>
+            <button type="button" class="btn btn-secondary ms-2" *ngIf="modoEdicion" (click)="resetFormulario()">
+                Cancelar Edición
+            </button>
+        </div>
+    </form>
+
+    <div class="table-responsive mt-4" *ngIf="usuarios.length > 0; else sinUsuarios">
+        <table class="table table-bordered table-hover">
+            <thead class="table-hotel">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of usuarios">
+                    <td>{{ u.id_usuario }}</td>
+                    <td>{{ u.nombre }}</td>
+                    <td>{{ u.apellido }}</td>
+                    <td>{{ u.correo }}</td>
+                    <td>{{ u.telefono }}</td>
+                    <td>{{ u.rol }}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm me-1" (click)="editarUsuario(u)">Editar</button>
+                        <button class="btn btn-danger btn-sm" (click)="eliminarUsuario(u.id_usuario)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ng-template #sinUsuarios>
+        <div class="alert alert-info mt-4">No hay usuarios registrados.</div>
+    </ng-template>
+
+</div>
