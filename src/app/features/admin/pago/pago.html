@@ -1,0 +1,56 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Gestión de Pagos 💳</h2>
+
+  <form (ngSubmit)="modoEdicion ? actualizarPago() : agregarPago()" class="row g-3">
+    <div class="col-md-3">
+      <input type="number" class="form-control" placeholder="Total" [(ngModel)]="nuevoPago.total" name="total" required />
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Método de Pago" [(ngModel)]="nuevoPago.metodo_pago" name="metodo_pago" required />
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Estado de Pago" [(ngModel)]="nuevoPago.estado_pago" name="estado_pago" required />
+    </div>
+    <div class="col-md-3">
+      <input type="date" class="form-control" [(ngModel)]="nuevoPago.fecha_pago" name="fecha_pago" required />
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="ID Reserva" [(ngModel)]="nuevoPago.id_reserva" name="id_reserva" required />
+    </div>
+    <div class="col-md-3">
+      <button type="submit" [ngClass]="modoEdicion ? 'btn btn-warning' : 'btn btn-success'">
+        {{ modoEdicion ? 'Actualizar' : 'Agregar' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="table-responsive mt-4">
+    <table class="table table-bordered table-hover">
+      <thead class="table-hotel">
+        <tr>
+          <th>ID</th>
+          <th>Total</th>
+          <th>Método de pago</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>ID Reserva</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pago of pagos">
+          <td>{{ pago.id }}</td>
+          <td>{{ pago.total }}</td>
+          <td>{{ pago.metodo_pago }}</td>
+          <td>{{ pago.estado_pago }}</td>
+          <td>{{ pago.fecha_pago | date:'shortDate' }}</td>
+          <td>{{ pago.id_reserva }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm me-1" (click)="editarPago(pago)">Editar</button>
+            <button class="btn btn-danger btn-sm" (click)="eliminarPago(pago.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
