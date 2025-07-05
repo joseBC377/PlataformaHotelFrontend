@@ -1,0 +1,45 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Gestión de Servicios Reservados 📋</h2>
+
+  <form (ngSubmit)="modoEdicion ? actualizarReservaServicio() : agregarReservaServicio()" class="row g-3">
+    <div class="col-md-6">
+      <select class="form-select" [(ngModel)]="nuevaReservaServicio.id_reserva" name="id_reserva" required>
+        <option [ngValue]="null" disabled>Seleccionar ID Reserva</option>
+        <option *ngFor="let reserva of reservas" [value]="reserva.id">{{ reserva.id }}</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <select class="form-select" [(ngModel)]="nuevaReservaServicio.id_servicio" name="id_servicio" required>
+        <option [ngValue]="null" disabled>Seleccionar ID Servicio</option>
+        <option *ngFor="let servicio of servicios" [value]="servicio.id">{{ servicio.id }}</option>
+      </select>
+    </div>
+    <div class="col-12 text-start">
+      <button type="submit" [ngClass]="modoEdicion ? 'btn btn-warning' : 'btn btn-success'">
+        {{ modoEdicion ? 'Actualizar' : 'Agregar' }} Servicio Reservado
+      </button>
+    </div>
+  </form>
+
+  <table class="table table-bordered table-hover mt-4">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>ID Reserva</th>
+        <th>ID Servicio</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rs of reservaServicios">
+        <td>{{ rs.id }}</td>
+        <td>{{ rs.id_reserva }}</td>
+        <td>{{ rs.id_servicio }}</td>
+        <td class="d-flex" style="padding-top: 30px; align-items: center;">
+          <button class="btn btn-primary btn-sm" (click)="editarReservaServicio(rs)">Editar</button>
+          <button class="btn btn-danger btn-sm" (click)="eliminarReservaServicio(rs.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

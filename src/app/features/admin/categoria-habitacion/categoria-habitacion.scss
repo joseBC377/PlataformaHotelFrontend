@@ -1,0 +1,96 @@
+$body-bg: #fef8f4;
+$container-bg: #fff8f0;
+$primary-color: #6b3e26;
+$border-highlight: #d3a166;
+$table-bg: #fffdf9;
+$thead-bg: #f7d9b8;
+$thead-text: #4a2c1d;
+$danger-bg: #b24c32;
+$danger-hover: #902f1c;
+$success-bg: #a3713d;
+$success-hover: #8b5a2b;
+
+body {
+  background-color: $body-bg;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+  background-color: $container-bg;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(140, 90, 50, 0.1);
+  margin-bottom: 40px;
+}
+
+h2 {
+  color: $primary-color;
+  font-weight: bold;
+  border-bottom: 3px solid $border-highlight;
+  padding-bottom: 10px;
+}
+
+input.form-control,
+select.form-select {
+  border: 1px solid $border-highlight;
+  border-radius: 8px;
+  background-color: #fffaf4;
+  color: $thead-text;
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 0.2rem rgba(190, 120, 50, 0.25);
+  }
+}
+
+button.btn-success {
+  background-color: $success-bg;
+  border-color: $success-bg;
+  font-weight: bold;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: $success-hover;
+    border-color: $success-hover;
+  }
+}
+
+.table {
+  background-color: $table-bg;
+
+  th {
+    background-color: $thead-bg;
+    color: $thead-text;
+    text-align: center;
+  }
+
+  td {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  img {
+    border-radius: 8px;
+    border: 2px solid #e6c3a0;
+  }
+}
+
+.btn-danger {
+  background-color: $danger-bg;
+  border: none;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: $danger-hover;
+  }
+}
+
+.d-flex {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 8px;
+  height: 100%;
+  padding: 32px 0;
+  vertical-align: middle;
+}

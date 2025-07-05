@@ -1,0 +1,49 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Gestión de Servicios 🛎️</h2>
+
+  <form (ngSubmit)="modoEdicion ? actualizarServicio() : agregarServicio()" class="row g-3">
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Nombre del Servicio" [(ngModel)]="nuevoServicio.nombre" name="nombre" required />
+    </div>
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Descripción" [(ngModel)]="nuevoServicio.descripcion" name="descripcion" required />
+    </div>
+    <div class="col-md-2">
+      <input type="number" class="form-control" placeholder="Precio" [(ngModel)]="nuevoServicio.precio" name="precio" step="0.01" required />
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Ruta de Imagen" [(ngModel)]="nuevoServicio.imagen" name="imagen" required />
+    </div>
+    <div class="col-12 text-start">
+      <button type="submit" [ngClass]="modoEdicion ? 'btn btn-warning' : 'btn btn-success'">
+        {{ modoEdicion ? 'Actualizar' : 'Agregar' }} Servicio
+      </button>
+    </div>
+  </form>
+
+  <table class="table table-bordered table-hover mt-4">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio (S/)</th>
+        <th>Imagen</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let servicio of servicios">
+        <td>{{ servicio.id }}</td>
+        <td>{{ servicio.nombre }}</td>
+        <td>{{ servicio.descripcion }}</td>
+        <td>{{ servicio.precio | number: '1.2-2' }}</td>
+        <td><img [src]="servicio.imagen" alt="{{servicio.nombre}}" width="60" /></td>
+        <td class="d-flex" style="padding-top: 30px; align-items: center;">
+          <button class="btn btn-primary btn-sm" (click)="editarServicio(servicio)">Editar</button>
+          <button class="btn btn-danger btn-sm" (click)="eliminarServicio(servicio.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

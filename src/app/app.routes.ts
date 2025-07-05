@@ -11,11 +11,17 @@ import { Inicio } from './features/publico/inicio/inicio';
 import { Servicios } from './features/publico/servicios/servicios';
 import { Reservas } from './features/publico/reservas/reservas';
 import { Contactos } from './features/publico/contactos/contactos';
+import { HabitacionesAdminComponent } from './features/admin/habitacion/habitacion';
+import { ServiciosAdminComponent } from './features/admin/servicio/servicio';
+import { CategoriaHabitacionAdminComponent } from './features/admin/categoria-habitacion/categoria-habitacion';
+import { ReservaServicioAdminComponent } from './features/admin/reserva-servicio/reserva-servicio';
+import { ResenaAdminComponent } from './features/admin/resenas/resenas';
 import { Usuario } from './features/admin/usuario/usuario';
 import { ReservaHabitacion } from './features/admin/reserva-habitacion/reserva-habitacion';
 import { Reserva } from './features/admin/reserva/reserva';
 import { Contacto } from './features/admin/contacto/contacto';
 import { Pago } from './features/admin/pago/pago';
+
 
 export const routes: Routes = [
     {
@@ -27,7 +33,7 @@ export const routes: Routes = [
                 path: 'usuario', component: Usuario, title: 'Usuario'
             },
             {
-                path: 'habitacion', component: ReservaHabitacion, title: 'Habitacion'
+                path: 'habitacion-reserva', component: ReservaHabitacion, title: 'Habitacion-reserva'
             },
             {
                 path: 'pago', component: Pago, title: 'Pago de Reserva'
@@ -38,6 +44,22 @@ export const routes: Routes = [
             {
                 path: 'contacto', component: Contacto, title: 'Contacto'
             },
+            {
+                path: 'habitacion', component: HabitacionesAdminComponent, title: 'Habitacion'
+            },
+            {
+                path: 'servicio', component: ServiciosAdminComponent, title: "Servicio"
+            },
+            {
+                path: 'categoria-habitacion', component: CategoriaHabitacionAdminComponent, title: "Categoria-Habitacion"
+            },
+             {
+                path: 'reserva-servicio', component: ReservaServicioAdminComponent, title: "Reserva-Servicio"
+            },
+               {
+                path: 'resena', component: ResenaAdminComponent, title: "Resena"
+            },
+          
         ]
     },
     {
@@ -45,23 +67,23 @@ export const routes: Routes = [
             {
                 path: 'login', component: Login, title: "Iniciar Sesión"
             },
-            { 
-                path: 'nosotros', component: Nosotros, title: "Nosotros" 
+            {
+                path: 'nosotros', component: Nosotros, title: "Nosotros"
             },
             {
-                path: 'habitaciones', component: Habitaciones, title:"Habitaciones"
+                path: 'habitaciones', component: Habitaciones, title: "Habitaciones"
             },
             {
-                path: 'servicios', component: Servicios, title:"Servicios"
+                path: 'servicios', component: Servicios, title: "Servicios"
             },
             {
-                path: 'reservas', component: Reservas, title:"Reservas"
+                path: 'reservas', component: Reservas, title: "Reservas"
             },
             {
-                path: 'contactos', component: Contactos, title:"Contactos"
+                path: 'contactos', component: Contactos, title: "Contactos"
             },
             {
-                path:'',component:Inicio, title:"Inicio"
+                path: '', component: Inicio, title: "Inicio"
             },
             
             {
