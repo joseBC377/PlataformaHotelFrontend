@@ -1,0 +1,49 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Gestión de Reservas de Habitaciones 🛏️</h2>
+
+    <form (ngSubmit)="modoEdicion ? actualizarReserva() : agregarReserva()" class="row g-3">
+        <div class="col-md-3">
+            <input type="number" class="form-control" placeholder="Precio" [(ngModel)]="nuevaReserva.precio"
+                name="precio" required />
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="ID Reserva" [(ngModel)]="nuevaReserva.id_reserva"
+                name="id_reserva" required />
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="ID Habitación" [(ngModel)]="nuevaReserva.id_habitacion"
+                name="id_habitacion" required />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" [ngClass]="modoEdicion ? 'btn btn-warning' : 'btn btn-success'">
+                {{ modoEdicion ? 'Actualizar' : 'Agregar' }}
+            </button>
+        </div>
+    </form>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered table-hover">
+            <thead class="table-hotel">
+                <tr>
+                    <th>ID</th>
+                    <th>Precio</th>
+                    <th>ID Reserva</th>
+                    <th>ID Habitación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let reserva of reservasHabitacion">
+                    <td>{{ reserva.id }}</td>
+                    <td>{{ reserva.precio}}</td>
+                    <td>{{ reserva.id_reserva }}</td>
+                    <td>{{ reserva.id_habitacion }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm me-1" (click)="editarReserva(reserva)">Editar</button>
+                        <button class="btn btn-danger btn-sm" (click)="eliminarReserva(reserva.id)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
