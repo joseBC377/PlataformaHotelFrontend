@@ -26,7 +26,6 @@ export class ServiciosAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // ✅ Cargar servicios por defecto al iniciar
     this.servicios = [
       {
         id: 1,

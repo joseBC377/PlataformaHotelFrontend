@@ -1,8 +1,8 @@
 <div class="container mt-4">
   <h2 class="mb-4">Gestión de Habitaciones 🛏️</h2>
 
-  <!-- ✅ Aquí aplicamos el formGroup directamente en el <form> -->
   <form [formGroup]="habitacionForm" (ngSubmit)="agregarHabitacion()" class="row g-3">
+
     <div class="col-md-3">
       <label class="form-label">Nombre</label>
       <input type="text" class="form-control" formControlName="nombre"
@@ -39,7 +39,9 @@
         {{ modoEdicion ? 'Actualizar' : 'Agregar' }} Habitación
       </button>
     </div>
+
   </form>
+
 
   <table class="table table-bordered table-hover mt-4">
     <thead class="table-light">

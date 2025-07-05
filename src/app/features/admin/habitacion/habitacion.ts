@@ -16,7 +16,8 @@ export class HabitacionesAdminComponent implements OnInit {
   modoEdicion = false;
   idHabitacionEditar: number | null = null;
 
-  constructor(private fb: FormBuilder) {}
+
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.habitacionForm = this.fb.group({
@@ -65,10 +66,9 @@ export class HabitacionesAdminComponent implements OnInit {
       }
     ];
   }
-
   agregarHabitacion() {
     if (this.habitacionForm.invalid) {
-      this.habitacionForm.markAllAsTouched();
+      this.habitacionForm.markAllAsTouched(); // Solo marca si está inválido al presionar "Agregar"
       return;
     }
 

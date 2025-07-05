@@ -37,11 +37,10 @@ export class ResenaAdminComponent implements OnInit {
       id_habitacion: [null, Validators.required]
     });
 
-    // Carga inicial de reseñas
     this.resenas = [
-      { id: 1, calificacion: 4.5, fecha: '2025-07-01', id_usuario: 101,  id_habitacion: 'H101' },
-      { id: 2, calificacion: 5.0, fecha: '2025-07-02', id_usuario: 102,  id_habitacion: 'H102' },
-      { id: 3, calificacion: 5.0, fecha: '2025-07-02', id_usuario: 103,  id_habitacion: 'H103' }
+      { id: 1, calificacion: 4.5, fecha: '2025-07-01', id_usuario: 101, id_habitacion: 'H101' },
+      { id: 2, calificacion: 5.0, fecha: '2025-07-02', id_usuario: 102, id_habitacion: 'H102' },
+      { id: 3, calificacion: 5.0, fecha: '2025-07-02', id_usuario: 103, id_habitacion: 'H103' }
     ];
 
   }
