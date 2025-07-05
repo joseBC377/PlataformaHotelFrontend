@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand mb-1 h1" href="#">Royal Suites Hotel</a>
+    <a class="navbar-brand mb-1 h1" routerLink="">Royal Suites Hotel</a>
     <div class="d-flex align-items-center ms-auto">
       <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,12 +9,13 @@
     </div>
     <div class="collapse navbar-collapse" id="navbarNav">
       <hr style="color: #f4f7fa;">
-      <ul class="navbar-nav ms-auto" >
+      <ul class="navbar-nav ms-auto">
         <li class="nav-item">
           <a class="nav-link d-block d-lg-none" routerLinkActive="active" routerLink="/login">Iniciar sesión</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" routerLink="" [routerLinkActiveOptions]="{exact: true}" >Inicio</a>
+          <a class="nav-link" routerLinkActive="active" routerLink=""
+            [routerLinkActiveOptions]="{exact: true}">Inicio</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" routerLink="/nosotros">Nosotros</a>
@@ -26,7 +27,7 @@
           <a class="nav-link" routerLinkActive="active" routerLink="/servicios">Servicios</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" routerLink="/reservas">Reservas</a>
+          <a class="nav-link" routerLinkActive="active" routerLink="/reservas">Mis Reservas</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" routerLink="/contactos">Contactos</a>
@@ -34,7 +35,8 @@
       </ul>
     </div>
     <div class="nav-link  d-none d-lg-block perfil" style="margin-left: 1rem; margin-right: 1rem;">
-      <a class="text-decoration-none" routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+      <a class="text-decoration-none" routerLink="/login" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact:true}">
         <i class="fas fa-user-circle"></i>
       </a>
     </div>
