@@ -1,74 +1,93 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-pago',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './pago.html',
   styleUrl: './pago.scss'
 })
 export class Pago {
-  
-  modoEdicion = false;
-  idPagoEditar: number | null = null;
-
+  pagoForm!: FormGroup; 
   pagos: any[] = [];
+  modoEdicion = false;
 
-  nuevoPago = {
-    total: 0,
-    metodo_pago: '',
-    estado_pago: '',
-    fecha_pago: '',
-    id_reserva: ''
-  };
+  metodosDePago = ['Tarjeta de Crédito', 'PayPal', 'Yape', 'Plin','Efectivo'];
+  estadosDePago = ['Pendiente', 'Pagado', 'Cancelado', 'Reembolsado'];
 
-  agregarPago() {
-    const nuevo = {
-      ...this.nuevoPago,
-      id: this.pagos.length + 1
-    };
-    this.pagos.push(nuevo);
+  constructor(private fb: FormBuilder) { }
+
+  ngOnInit(): void {
+    const today = new Date().toISOString().split('T')[0]; 
+    this.pagoForm = this.fb.group({
+      id: [null], 
+      total: [null, [Validators.required, Validators.min(0.01)]], 
+      metodo_pago: ['', Validators.required],
+      estado_pago: ['', Validators.required],
+      fecha_pago: [today, Validators.required],
+      id_reserva: [null, [Validators.required, Validators.pattern('^[0-9]+$')]] 
+    });
+  }
+
+  guardarPago(): void {
+    if (this.pagoForm.invalid) {
+      this.pagoForm.markAllAsTouched();
+      return;
+    }
+
+    if (this.modoEdicion) {
+      this.actualizarPago();
+    } else {
+      this.agregarPago();
+    }
+  }
+
+  agregarPago(): void {
+    const nuevoId = this.pagos.length > 0 ? Math.max(...this.pagos.map(p => p.id)) + 1 : 1;
+    this.pagos.push({ ...this.pagoForm.value, id: nuevoId });
     this.resetFormulario();
   }
 
-  editarPago(pago: any) {
-    this.nuevoPago = { ...pago };
+  actualizarPago(): void {
+    const id = this.pagoForm.value.id;
+    const index = this.pagos.findIndex(p => p.id === id);
+    if (index !== -1) {
+      this.pagos[index] = this.pagoForm.value;
+    }
+    this.resetFormulario();
+  }
+
+  editarPago(pago: any): void {
     this.modoEdicion = true;
-    this.idPagoEditar = pago.id;
+    const fechaFormateada = new Date(pago.fecha_pago).toISOString().split('T')[0];
+    this.pagoForm.patchValue({
+      ...pago,
+      fecha_pago: fechaFormateada
+    });
   }
 
-  actualizarPago() {
-    if (this.idPagoEditar !== null) {
-      const index = this.pagos.findIndex(p => p.id === this.idPagoEditar);
-      if (index !== -1) {
-        this.pagos[index] = { ...this.nuevoPago, id: this.idPagoEditar };
-      }
-      this.modoEdicion = false;
-      this.idPagoEditar = null;
-      this.resetFormulario();
-    }
-  }
-
-  eliminarPago(id: number) {
-    const confirmar = confirm('¿Deseas eliminar este pago?');
-    if (confirmar) {
+  eliminarPago(id: number): void {
+    if (confirm('¿Estás seguro de que deseas eliminar este pago?')) {
       this.pagos = this.pagos.filter(p => p.id !== id);
-      if (this.idPagoEditar === id) {
-        this.modoEdicion = false;
-        this.idPagoEditar = null;
+      if (this.pagoForm.value.id === id) {
+        this.resetFormulario();
       }
     }
   }
 
-  resetFormulario() {
-    this.nuevoPago = {
-      total: 0,
+  resetFormulario(): void {
+    this.modoEdicion = false;
+    const today = new Date().toISOString().split('T')[0];
+    this.pagoForm.reset({
+      fecha_pago: today,
       metodo_pago: '',
-      estado_pago: '',
-      fecha_pago: '',
-      id_reserva: ''
-    };
+      estado_pago: ''
+    });
   }
-
+  get total() { return this.pagoForm.get('total'); }
+  get metodo_pago() { return this.pagoForm.get('metodo_pago'); }
+  get estado_pago() { return this.pagoForm.get('estado_pago'); }
+  get fecha_pago() { return this.pagoForm.get('fecha_pago'); }
+  get id_reserva() { return this.pagoForm.get('id_reserva'); }
 }

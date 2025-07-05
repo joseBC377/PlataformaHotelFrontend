@@ -1,6 +1,6 @@
 <div class="container mt-4">
     <h2 class="mb-4">Gestión de Reservas de Habitaciones 🛏️</h2>
-
+<!-- 
     <form (ngSubmit)="modoEdicion ? actualizarReserva() : agregarReserva()" class="row g-3">
         <div class="col-md-3">
             <input type="number" class="form-control" placeholder="Precio" [(ngModel)]="nuevaReserva.precio"
@@ -19,8 +19,7 @@
                 {{ modoEdicion ? 'Actualizar' : 'Agregar' }}
             </button>
         </div>
-    </form>
-
+    </form> -->
     <div class="table-responsive mt-4">
         <table class="table table-bordered table-hover">
             <thead class="table-hotel">
@@ -39,7 +38,6 @@
                     <td>{{ reserva.id_reserva }}</td>
                     <td>{{ reserva.id_habitacion }}</td>
                     <td>
-                        <button class="btn btn-primary btn-sm me-1" (click)="editarReserva(reserva)">Editar</button>
                         <button class="btn btn-danger btn-sm" (click)="eliminarReserva(reserva.id)">Eliminar</button>
                     </td>
                 </tr>

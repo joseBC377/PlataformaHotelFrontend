@@ -11,9 +11,12 @@ import { FormsModule } from '@angular/forms';
 export class ReservaHabitacion {
   modoEdicion = false;
   idReservaEditar: number | null = null;
-
-  reservasHabitacion: any[] = [];
-
+  
+  reservasHabitacion: any[] = [
+    { id: 1, precio: 150.0, id_reserva: 'R001', id_habitacion: 'H101' },
+    { id: 2, precio: 200.0, id_reserva: 'R002', id_habitacion: 'H102' },
+    { id: 3, precio: 180.0, id_reserva: 'R003', id_habitacion: 'H103' }
+  ];
   nuevaReserva = {
     precio: 0,
     id_reserva: '',

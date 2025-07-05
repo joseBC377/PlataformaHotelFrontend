@@ -48,13 +48,13 @@ select.form-select {
 }
 
 .btn-warning {
-  background-color: var.$color-primario;
+  background-color: var.$color-secundario;
   border: none;
   color: white;
 }
 
 .btn-warning:hover {
-  background-color: #2d34b3;
+  background-color: var.$backgraound-secundario;
 }
 
 .btn-danger {
