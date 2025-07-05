@@ -11,13 +11,33 @@ import { Inicio } from './features/publico/inicio/inicio';
 import { Servicios } from './features/publico/servicios/servicios';
 import { Reservas } from './features/publico/reservas/reservas';
 import { Contactos } from './features/publico/contactos/contactos';
+import { Usuario } from './features/admin/usuario/usuario';
+import { ReservaHabitacion } from './features/admin/reserva-habitacion/reserva-habitacion';
+import { Reserva } from './features/admin/reserva/reserva';
+import { Contacto } from './features/admin/contacto/contacto';
+import { Pago } from './features/admin/pago/pago';
 
 export const routes: Routes = [
     {
         path: 'admin', component: AdminLayout, canActivate: [authGuard], children: [
             {
                 path: 'intranet', component: Intranet, title: 'Intranet'
-            }
+            },
+            {
+                path: 'usuario', component: Usuario, title: 'Usuario'
+            },
+            {
+                path: 'habitacion', component: ReservaHabitacion, title: 'Habitacion'
+            },
+            {
+                path: 'pago', component: Pago, title: 'Pago de Reserva'
+            },
+            {
+                path: 'reserva', component: Reserva, title: 'Reserva'
+            },
+            {
+                path: 'contacto', component: Contacto, title: 'Contacto'
+            },
         ]
     },
     {
@@ -43,6 +63,7 @@ export const routes: Routes = [
             {
                 path:'',component:Inicio, title:"Inicio"
             },
+            
             {
                 path: '**', component: Error, title: "Pagina de error"
             }
