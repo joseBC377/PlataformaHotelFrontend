@@ -1,0 +1,80 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Gestión de Categorías de Habitación 🛏️</h2>
+
+  <form [formGroup]="categoriaForm" (ngSubmit)="modoEdicion ? agregarCategoria() : agregarCategoria()" class="row g-3">
+    <div class="col-md-2">
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-control" formControlName="nombre"
+        [ngClass]="{ 'is-invalid': nombre?.invalid && (nombre?.touched || nombre?.dirty) }" />
+      <div class="invalid-feedback">El nombre es obligatorio.</div>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Descripción</label>
+      <input type="text" class="form-control" formControlName="descripcion"
+        [ngClass]="{ 'is-invalid': descripcion?.invalid && (descripcion?.touched || descripcion?.dirty) }" />
+      <div class="invalid-feedback">La descripción es obligatoria.</div>
+    </div>
+
+    <div class="col-md-2">
+      <label class="form-label">Capacidad</label>
+      <input type="number" class="form-control" formControlName="capacidad"
+        [ngClass]="{ 'is-invalid': capacidad?.invalid && (capacidad?.touched || capacidad?.dirty) }" />
+      <div class="invalid-feedback">
+        <small *ngIf="capacidad?.errors?.['required']">Campo requerido.</small>
+        <small *ngIf="capacidad?.errors?.['min']">Mínimo 1 persona.</small>
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      <label class="form-label">Precio</label>
+      <input type="number" class="form-control" step="0.01" formControlName="precio"
+        [ngClass]="{ 'is-invalid': precio?.invalid && (precio?.touched || precio?.dirty) }" />
+      <div class="invalid-feedback">
+        <small *ngIf="precio?.errors?.['required']">Campo requerido.</small>
+        <small *ngIf="precio?.errors?.['min']">Debe ser mayor a 0.</small>
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      <label class="form-label">Ruta Imagen</label>
+      <input type="text" class="form-control" formControlName="imagen"
+        [ngClass]="{ 'is-invalid': imagen?.invalid && (imagen?.touched || imagen?.dirty) }" />
+      <div class="invalid-feedback">La imagen es obligatoria.</div>
+    </div>
+
+    <div class="col-12 text-start">
+      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'">
+        {{ modoEdicion ? 'Actualizar' : 'Agregar' }} Categoría
+      </button>
+    </div>
+  </form>
+
+  <table class="table table-bordered table-hover mt-4">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Capacidad</th>
+        <th>Precio</th>
+        <th>Imagen</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let categoria of categorias">
+        <td>{{ categoria.id }}</td>
+        <td>{{ categoria.nombre }}</td>
+        <td>{{ categoria.descripcion }}</td>
+        <td>{{ categoria.capacidad }}</td>
+        <td>S/ {{ categoria.precio | number: '1.2-2' }}</td>
+        <td><img [src]="categoria.imagen" alt="{{ categoria.nombre }}" width="60" /></td>
+        <td class="d-flex" style="padding-top: 30px; align-items: center;">
+          <button class="btn btn-primary btn-sm" (click)="editarCategoria(categoria)">Editar</button>
+          <button class="btn btn-danger btn-sm" (click)="eliminarCategoria(categoria.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,33 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Reservas Registradas 📅</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-hotel">
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha inicio</th>
+                    <th>Fecha fin</th>
+                    <th>ID Usuario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let reserva of reservas">
+                    <td>{{ reserva.id_reserva }}</td>
+                    <td>{{ reserva.fecha_inicio }}</td>
+                    <td>{{ reserva.fecha_fin }}</td>
+                    <td>{{ reserva.id_usuario }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" (click)="eliminarReserva(reserva.id_reserva)">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="reservas.length === 0">
+                    <td colspan="5">No hay reservas registradas.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Mensajes Recibidos - Contáctanos 📬</h2>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-hotel">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Correo</th>
+          <th>Mensaje</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let contacto of contactos">
+          <td>{{ contacto.id_contacto }}</td>
+          <td>{{ contacto.nombre }}</td>
+          <td>{{ contacto.apellido }}</td>
+          <td>{{ contacto.correo }}</td>
+          <td>{{ contacto.mensaje }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="eliminarContacto(contacto.id_contacto)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
