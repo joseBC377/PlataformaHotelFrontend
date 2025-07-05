@@ -1,0 +1,54 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Gestión de Categorías de Habitación 🛏️</h2>
+
+  <form (ngSubmit)="modoEdicion ? actualizarCategoria() : agregarCategoria()" class="row g-3">
+    <div class="col-md-2">
+      <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="nuevaCategoria.nombre" name="nombre" required />
+    </div>
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Descripción" [(ngModel)]="nuevaCategoria.descripcion" name="descripcion" required />
+    </div>
+    <div class="col-md-2">
+      <input type="number" class="form-control" placeholder="Capacidad" [(ngModel)]="nuevaCategoria.capacidad" name="capacidad" required />
+    </div>
+    <div class="col-md-2">
+      <input type="number" step="0.01" class="form-control" placeholder="Precio" [(ngModel)]="nuevaCategoria.precio" name="precio" required />
+    </div>
+    <div class="col-md-2">
+      <input type="text" class="form-control" placeholder="Ruta Imagen" [(ngModel)]="nuevaCategoria.imagen" name="imagen" required />
+    </div>
+    <div class="col-12 text-start">
+      <button type="submit" [ngClass]="modoEdicion ? 'btn btn-warning' : 'btn btn-success'">
+        {{ modoEdicion ? 'Actualizar' : 'Agregar' }} Categoría
+      </button>
+    </div>
+  </form>
+
+  <table class="table table-bordered table-hover mt-4">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Capacidad</th>
+        <th>Precio</th>
+        <th>Imagen</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let categoria of categorias">
+        <td>{{ categoria.id }}</td>
+        <td>{{ categoria.nombre }}</td>
+        <td>{{ categoria.descripcion }}</td>
+        <td>{{ categoria.capacidad }}</td>
+        <td>{{ categoria.precio | number: '1.2-2' }}</td>
+        <td><img [src]="categoria.imagen" alt="{{categoria.nombre}}" width="60" /></td>
+        <td class="d-flex" style="padding-top: 30px; align-items: center;">
+          <button class="btn btn-primary btn-sm" (click)="editarCategoria(categoria)">Editar</button>
+          <button class="btn btn-danger btn-sm" (click)="eliminarCategoria(categoria.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

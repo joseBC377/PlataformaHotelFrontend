@@ -11,13 +11,19 @@ import { Inicio } from './features/publico/inicio/inicio';
 import { Servicios } from './features/publico/servicios/servicios';
 import { Reservas } from './features/publico/reservas/reservas';
 import { Contactos } from './features/publico/contactos/contactos';
+import { HabitacionesAdminComponent } from './features/admin/habitacion/habitacion';
+import { ServiciosAdminComponent } from './features/admin/servicio/servicio';
+import { CategoriaHabitacionAdminComponent } from './features/admin/categoria-habitacion/categoria-habitacion';
+import { ReservaServicioAdminComponent } from './features/admin/reserva-servicio/reserva-servicio';
+import { ResenaAdminComponent } from './features/admin/resenas/resenas';
+
 
 export const routes: Routes = [
     {
         path: 'admin', component: AdminLayout, canActivate: [authGuard], children: [
             {
                 path: 'intranet', component: Intranet, title: 'Intranet'
-            }
+            },
         ]
     },
     {
@@ -25,23 +31,38 @@ export const routes: Routes = [
             {
                 path: 'login', component: Login, title: "Iniciar Sesión"
             },
-            { 
-                path: 'nosotros', component: Nosotros, title: "Nosotros" 
+            {
+                path: 'habitacion', component: HabitacionesAdminComponent, title: 'Habitacion'
             },
             {
-                path: 'habitaciones', component: Habitaciones, title:"Habitaciones"
+                path: 'servicio', component: ServiciosAdminComponent, title: "Servicio"
             },
             {
-                path: 'servicios', component: Servicios, title:"Servicios"
+                path: 'categoria-habitacion', component: CategoriaHabitacionAdminComponent, title: "Categoria-Habitacion"
+            },
+             {
+                path: 'reserva-servicio', component: ReservaServicioAdminComponent, title: "Reserva-Servicio"
+            },
+               {
+                path: 'resena', component: ResenaAdminComponent, title: "Resena"
             },
             {
-                path: 'reservas', component: Reservas, title:"Reservas"
+                path: 'nosotros', component: Nosotros, title: "Nosotros"
             },
             {
-                path: 'contactos', component: Contactos, title:"Contactos"
+                path: 'habitaciones', component: Habitaciones, title: "Habitaciones"
             },
             {
-                path:'',component:Inicio, title:"Inicio"
+                path: 'servicios', component: Servicios, title: "Servicios"
+            },
+            {
+                path: 'reservas', component: Reservas, title: "Reservas"
+            },
+            {
+                path: 'contactos', component: Contactos, title: "Contactos"
+            },
+            {
+                path: '', component: Inicio, title: "Inicio"
             },
             {
                 path: '**', component: Error, title: "Pagina de error"
