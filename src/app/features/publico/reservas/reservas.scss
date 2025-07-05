@@ -1,94 +1,343 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #fff;
+@use 'variables' as var;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.error-message{
+    color: red;
 }
 
-.mis-reservas {
-  padding: 40px 20px;
-  text-align: center;
-
-  h2 {
-    color: #2c3e75;
-    font-size: 28px;
-    margin-bottom: 10px;
-  }
-
-  h3 {
-    color: #4a4a4a;
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-
-  p {
-    color: #333;
-    font-size: 16px;
-    margin-bottom: 15px;
-    line-height: 1.6;
-  }
-
-  .form-reserva {
-    max-width: 500px;
+.cuerpo {
     width: 100%;
-    margin: 0 auto;
+    height: 100dvh;
     display: flex;
-    flex-direction: column;
-    padding: 20px;
-    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
 
-    label {
-      text-align: left;
-      margin-top: 15px;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #333;
-      font-size: 15px;
+    a {
+        color: var.$backgraound-primario;
+        text-decoration: none;
+        transition: color 0.3s ease;
     }
 
-    input {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
+    a:hover {
+        color: var.$color-secundario;
     }
 
-    button {
-      margin-top: 20px;
-      padding: 12px;
-      background-color: #f8aa2d;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
+    .container {
+        width: 170rem;
+        height: 45rem;
+        display: flex;
+        position: relative;
+        background-color: var.$backgraound-terciario;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgb(0, 0, 0, 0.3);
 
-      &:hover {
-        background-color: #e09a1f;
-      }
+        .container-form {
+            width: 100%;
+            overflow: hidden;
+
+            
+
+            .button {
+                width: 8rem;
+                height: 2.7rem;
+                font-size: 1rem;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 1rem;
+                background-color: var.$backgraound-secundario;
+                color: var.$color-terciario;
+                transition: background-color 0.5s ease;
+            }
+
+            .button:hover {
+
+                background-color: var.$backgraound-primario;
+            }
+
+            .button:disabled {
+                background-color: var.$backgraound-input;
+                color: var.$color-cuaternario;
+                cursor: not-allowed;
+                opacity: 0.7;
+
+                &:hover {
+                    background-color: var.$backgraound-input;
+                    cursor: not-allowed;
+                }
+            }
+        }
+
+        .container-form form {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.5s ease-in;
+        }
+
+        .container-form h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var.$color-primario; 
+        }
+
+
+        .container-form span {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: block;
+        }
+
+        .container-form a {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            margin-top: 10px;
+        }
+
+        .container-input {
+            width: 17rem;
+            height: 2.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 0 1rem;
+            background-color: var.$backgraound-input;
+        }
+
+        .container-input input {
+            border: none;
+            outline: none;
+            width: 100%;
+            height: 100%;
+            background-color: inherit;
+        }
+
     }
-  }
+}
 
-  // Media queries anidadas
-  @media (max-width: 480px) {
-    h2 {
-      font-size: 22px;
+
+
+.alerta {
+    .contenido {
+        position: absolute;
+        top: 80px;
+        left: 260px;
+        right: 260px;
+        padding: 0.9rem;
+        text-align: center;
+        background-color: #f58888;
+        border: 2px solid #ff4b4b;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        z-index: 9999;
+    }
+}
+
+
+@media screen and (max-width: 990px) {
+    .cuerpo {
+        align-items: flex-start;
+        padding: 1rem;
+        background-size: cover;
+
     }
 
-    h3 {
-      font-size: 18px;
+    .container {
+        flex-direction: column;
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 0;
+        box-shadow: none;
+        position: relative;
     }
 
-    .form-reserva {
-      padding: 10px;
+    .container-form {
+        width: 100%;
+        height: 100%;
+        position: relative !important;
 
-      input {
-        font-size: 13px;
-      }
+        .sign-up {
+            padding: 1rem;
 
-      button {
-        font-size: 15px;
-      }
+            .container-input {
+                height: 2rem;
+                margin-bottom: 0.3rem;
+            }
+        }
     }
-  }
+
+    .container-form form {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .sign-in {
+        transform: translateY(0%);
+        z-index: 0;
+    }
+
+    .sign-up {
+        transform: translateY(100%);
+        z-index: 1;
+    }
+
+    .container.toggled .sign-in {
+        transform: translateY(-100%);
+        z-index: 1;
+    }
+
+    .container.toggled .sign-up {
+        transform: translateY(0%);
+        z-index: 2;
+    }
+
+    .container-welcome {
+        position: absolute;
+        width: 100%;
+        height: 50%;
+        transform: translateY(100%);
+        flex-direction: column;
+        background-color: var.$backgraound-primario;
+        padding: 1.5rem;
+        overflow: hidden;
+        gap: 2rem;
+
+        .welcome-sign-in {
+            transform: translateY(150%);
+        }
+
+        .welcome-sign-up {
+            transform: translateY(50%);
+        }
+
+    }
+
+    .container-welcome .welcome {
+        position: relative;
+        transform: transform 0.5s ease-in-out;
+        padding: 1rem;
+        text-align: center;
+        color: var.$color-terciario;
+    }
+
+
+
+    .container.toggled .welcome-sign-in {
+        transform: translateY(-50%) !important;
+    }
+
+    .container.toggled .welcome-sign-up {
+        transform: translateY(-150%) !important;
+    }
+
+    //esto es del formulario de inicio de sesion
+    .container.toggled .sign-in {
+        transform: translateY(-100%);
+    }
+
+    .container.toggled .container-welcome {
+        //permite para mover el cuadro
+        transform: translateY(0) !important;
+    }
+
+    .alerta {
+        .contenido {
+            position: absolute;
+            top: 62px;
+            left: 49px;
+            right: 49px;
+            padding: 0.5rem;
+        }
+    }
+
+
+    //hacer para menores de 380
+    @media screen and (max-width: 380px) {
+        .container-form h2 {
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .container-welcome h3 {
+            font-size: 2rem;
+        }
+
+        .container-input {
+            width: 100%;
+        }
+
+        .container-input input {
+            font-size: 0.9rem;
+        }
+
+        .container-welcome {
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .container-welcome .welcome {
+            padding: 0.5rem;
+        }
+
+        .container-form .button,
+        .container-welcome .button {
+            width: 100%;
+            font-size: 0.9rem;
+        }
+    }
+
+    .container {
+        .container-form {
+            h2 {
+                font-size: 2rem !important;
+                margin-top: 0.5rem;
+            }
+
+            .social-networks {
+                margin-bottom: 0.3rem !important;
+            }
+
+            span {
+                margin-bottom: 0.4rem !important;
+            }
+
+            .container-input {
+                margin-bottom: 0.4rem;
+            }
+
+            a {
+                margin-bottom: 0.5rem !important;
+            }
+
+            .button {
+                margin-top: 0.3rem !important;
+                margin-bottom: 1rem !important;
+            }
+        }
+    }
+
+    .alerta {
+        .contenido {
+            position: absolute;
+            top: 52px;
+            left: 70px;
+            right: 70px;
+            padding: 1px;
+            font-size: 16px;
+        }
+    }
 }
