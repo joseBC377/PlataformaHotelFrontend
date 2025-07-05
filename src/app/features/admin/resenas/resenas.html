@@ -1,55 +1,76 @@
 <div class="container mt-4">
-  <h2 class="mb-4">Gestión de Reseñas 📝</h2>
+    <h2 class="mb-4">Gestión de Reseñas 📝</h2>
 
-  <form (ngSubmit)="modoEdicion ? actualizarResena() : agregarResena()" class="row g-3">
-    <div class="col-md-3">
-      <input type="number" step="0.1" class="form-control" placeholder="Calificación (1-5)" [(ngModel)]="nuevaResena.calificacion" name="calificacion" required min="1" max="5" />
-    </div>
-    <div class="col-md-3">
-      <input type="date" class="form-control" [(ngModel)]="nuevaResena.fecha" name="fecha" required />
-    </div>
-    <div class="col-md-3">
-      <select class="form-select" [(ngModel)]="nuevaResena.id_usuario" name="id_usuario" required>
-        <option [ngValue]="null" disabled>Seleccionar ID Usuario</option>
-        <option *ngFor="let usuario of usuarios" [value]="usuario.id">{{ usuario.id }}</option>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <select class="form-select" [(ngModel)]="nuevaResena.id_habitacion" name="id_habitacion" required>
-        <option [ngValue]="null" disabled>Seleccionar ID Habitación</option>
-        <option *ngFor="let habitacion of habitaciones" [value]="habitacion.id">{{ habitacion.id }}</option>
-      </select>
-    </div>
-    <div class="col-12 text-start">
-      <button type="submit" [ngClass]="modoEdicion ? 'btn btn-warning' : 'btn btn-success'">
-        {{ modoEdicion ? 'Actualizar' : 'Agregar' }} Reseña
-      </button>
-    </div>
-  </form>
+    <form [formGroup]="resenaForm" (ngSubmit)="modoEdicion ? actualizarResena() : agregarResena()" class="row g-3">
 
-  <table class="table table-bordered table-hover mt-4">
-    <thead class="table-light">
-      <tr>
-        <th>#</th>
-        <th>Calificación</th>
-        <th>Fecha</th>
-        <th>ID Usuario</th>
-        <th>ID Habitación</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let r of resenas">
-        <td>{{ r.id }}</td>
-        <td>{{ r.calificacion }}</td>
-        <td>{{ r.fecha }}</td>
-        <td>{{ r.id_usuario }}</td>
-        <td>{{ r.id_habitacion }}</td>
-        <td class="d-flex justify-content-center gap-2 align-middle" style="padding-top: 28px;">
-          <button class="btn btn-primary btn-sm" (click)="editarResena(r)">Editar</button>
-          <button class="btn btn-danger btn-sm" (click)="eliminarResena(r.id)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        <div class="col-md-3">
+            <label class="form-label">Calificación</label>
+            <input type="number" step="0.1" class="form-control" formControlName="calificacion" placeholder="1-5"
+                [ngClass]="{ 'is-invalid': calificacion?.invalid && (calificacion?.touched || calificacion?.dirty) }" />
+            <div class="invalid-feedback">
+                <small *ngIf="calificacion?.errors?.['required']">La calificación es obligatoria.</small>
+                <small *ngIf="calificacion?.errors?.['min'] || calificacion?.errors?.['max']">Debe estar entre 1 y
+                    5.</small>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Fecha</label>
+            <input type="date" class="form-control" formControlName="fecha"
+                [ngClass]="{ 'is-invalid': fecha?.invalid && (fecha?.touched || fecha?.dirty) }" />
+            <div class="invalid-feedback">La fecha es obligatoria.</div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">ID Usuario</label>
+            <select class="form-select" formControlName="id_usuario"
+                [ngClass]="{ 'is-invalid': id_usuario?.invalid && (id_usuario?.touched || id_usuario?.dirty) }">
+                <option [ngValue]="null" disabled>Seleccionar</option>
+                <option *ngFor="let u of usuarios" [value]="u.id">{{ u.id }}</option>
+            </select>
+            <div class="invalid-feedback">Debe seleccionar un usuario.</div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">ID Habitación</label>
+            <select class="form-select" formControlName="id_habitacion"
+                [ngClass]="{ 'is-invalid': id_habitacion?.invalid && (id_habitacion?.touched || id_habitacion?.dirty) }">
+                <option [ngValue]="null" disabled>Seleccionar</option>
+                <option *ngFor="let h of habitaciones" [value]="h.id">{{ h.id }}</option>
+            </select>
+            <div class="invalid-feedback">Debe seleccionar una habitación.</div>
+        </div>
+
+        <div class="col-12 text-start">
+            <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'">
+                {{ modoEdicion ? 'Actualizar' : 'Agregar' }} Reseña
+            </button>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-hover mt-4">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Calificación</th>
+                <th>Fecha</th>
+                <th>ID Usuario</th>
+                <th>ID Habitación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let r of resenas">
+                <td>{{ r.id }}</td>
+                <td>{{ r.calificacion }}</td>
+                <td>{{ r.fecha }}</td>
+                <td>{{ r.id_usuario }}</td>
+                <td>{{ r.id_habitacion }}</td>
+                <td class="d-flex justify-content-center gap-2 align-middle">
+                    <button class="btn btn-primary btn-sm" (click)="editarResena(r)">Editar</button>
+                    <button class="btn btn-danger btn-sm" (click)="eliminarResena(r.id)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

@@ -55,6 +55,16 @@ button.btn-success {
   }
 }
 
+.btn-danger {
+  background-color: $danger-bg;
+  border: none;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: $danger-hover;
+  }
+}
+
 .table {
   background-color: $table-bg;
 
@@ -67,16 +77,6 @@ button.btn-success {
   td {
     vertical-align: middle;
     text-align: center;
-  }
-}
-
-.btn-danger {
-  background-color: $danger-bg;
-  border: none;
-  border-radius: 6px;
-
-  &:hover {
-    background-color: $danger-hover;
   }
 }
 

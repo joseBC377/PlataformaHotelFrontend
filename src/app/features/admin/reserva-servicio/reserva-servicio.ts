@@ -1,96 +1,69 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 interface ReservaServicio {
   id: number;
-  id_reserva: number;
+  id_reserva: string;   // 🔧 corregido: string en lugar de number
   id_servicio: number;
-}
-
-interface NuevaReservaServicio {
-  id_reserva: number | null;
-  id_servicio: number | null;
 }
 
 @Component({
   selector: 'app-reserva-servicio-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './reserva-servicio.html',
   styleUrls: ['./reserva-servicio.scss']
 })
-export class ReservaServicioAdminComponent {
-  reservaServicios: ReservaServicio[] = [
-    { id: 1, id_reserva: 101, id_servicio: 201 },
-    { id: 2, id_reserva: 102, id_servicio: 203 },
-  ];
+export class ReservaServicioAdminComponent implements OnInit {
+  reservaServicioForm!: FormGroup;
+  reservaServicios: ReservaServicio[] = [];
+  reservas = [{ id: 'R001' }, { id: 'R002' }, { id: 'R003' }];
+  servicios = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
-  reservas = [
-    { id: 101 },
-    { id: 102 },
-    { id: 103 }
-  ];
+  constructor(private fb: FormBuilder) {}
 
-  servicios = [
-    { id: 201 },
-    { id: 202 },
-    { id: 203 }
-  ];
+  ngOnInit(): void {
+    this.reservaServicioForm = this.fb.group({
+      id_reserva: ['', Validators.required],
+      id_servicio: [null, Validators.required]
+    });
 
-  nuevaReservaServicio: NuevaReservaServicio = {
-    id_reserva: null,
-    id_servicio: null
-  };
-
-  modoEdicion = false;
-  idEditar: number | null = null;
-
-  agregarReservaServicio() {
-    if (this.nuevaReservaServicio.id_reserva === null || this.nuevaReservaServicio.id_servicio === null) return;
-
-    if (this.modoEdicion && this.idEditar !== null) {
-      const index = this.reservaServicios.findIndex(rs => rs.id === this.idEditar);
-      if (index !== -1) {
-        this.reservaServicios[index] = {
-          ...this.nuevaReservaServicio as { id_reserva: number, id_servicio: number },
-          id: this.idEditar
-        };
-      }
-    } else {
-      const nuevo: ReservaServicio = {
-        ...this.nuevaReservaServicio as { id_reserva: number, id_servicio: number },
-        id: this.generarNuevoId()
-      };
-      this.reservaServicios.push(nuevo);
-    }
-    this.resetFormulario();
+    this.reservaServicios = [
+      { id: 1, id_reserva: 'R001', id_servicio: 1 },
+      { id: 2, id_reserva: 'R002', id_servicio: 2 },
+      { id: 3, id_reserva: 'R003', id_servicio: 3 }
+    ];
   }
 
-  editarReservaServicio(rs: ReservaServicio) {
-    this.nuevaReservaServicio = { id_reserva: rs.id_reserva, id_servicio: rs.id_servicio };
-    this.idEditar = rs.id;
-    this.modoEdicion = true;
+  agregarReservaServicio() {
+    if (this.reservaServicioForm.invalid) {
+      this.reservaServicioForm.markAllAsTouched();
+      return;
+    }
+
+    const nuevo = {
+      ...this.reservaServicioForm.value,
+      id: this.reservaServicios.length > 0 ? Math.max(...this.reservaServicios.map(rs => rs.id)) + 1 : 1
+    };
+
+    this.reservaServicios.push(nuevo);
+    this.reservaServicioForm.reset();
   }
 
   eliminarReservaServicio(id: number) {
-    this.reservaServicios = this.reservaServicios.filter(rs => rs.id !== id);
-    if (this.idEditar === id) {
-      this.resetFormulario();
+    const confirmar = confirm('¿Deseas eliminar este servicio reservado?');
+    if (confirmar) {
+      this.reservaServicios = this.reservaServicios.filter(rs => rs.id !== id);
     }
   }
 
-  actualizarReservaServicio() {
-    this.agregarReservaServicio();
+  // Getters para validación
+  get id_reserva() {
+    return this.reservaServicioForm.get('id_reserva');
   }
 
-  private resetFormulario() {
-    this.nuevaReservaServicio = { id_reserva: null, id_servicio: null };
-    this.idEditar = null;
-    this.modoEdicion = false;
-  }
-
-  private generarNuevoId(): number {
-    return this.reservaServicios.length > 0 ? Math.max(...this.reservaServicios.map(rs => rs.id)) + 1 : 1;
+  get id_servicio() {
+    return this.reservaServicioForm.get('id_servicio');
   }
 }

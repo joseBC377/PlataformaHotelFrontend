@@ -55,6 +55,16 @@ button.btn-success {
   }
 }
 
+.btn-danger {
+  background-color: $danger-bg;
+  border: none;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: $danger-hover;
+  }
+}
+
 .table {
   background-color: $table-bg;
 
@@ -70,22 +80,9 @@ button.btn-success {
   }
 }
 
-.btn-danger {
-  background-color: $danger-bg;
-  border: none;
-  border-radius: 6px;
-
-  &:hover {
-    background-color: $danger-hover;
-  }
-}
-
 .d-flex {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   gap: 8px;
-  height: 100%;
-  padding: 32px 0;
-  vertical-align: middle;
 }

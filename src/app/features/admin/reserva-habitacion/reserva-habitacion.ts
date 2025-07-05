@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reserva-habitacion',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule , ReactiveFormsModule],
   templateUrl: './reserva-habitacion.html',
   styleUrl: './reserva-habitacion.scss'
 })

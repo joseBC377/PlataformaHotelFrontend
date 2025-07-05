@@ -1,24 +1,42 @@
 <div class="container mt-4">
   <h2 class="mb-4">Gestión de Habitaciones 🛏️</h2>
 
-  <form (ngSubmit)="modoEdicion ? actualizarHabitacion() : agregarHabitacion()" class="row g-3">
+  <!-- ✅ Aquí aplicamos el formGroup directamente en el <form> -->
+  <form [formGroup]="habitacionForm" (ngSubmit)="agregarHabitacion()" class="row g-3">
     <div class="col-md-3">
-      <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="nuevaHabitacion.nombre" name="nombre" required />
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-control" formControlName="nombre"
+        [ngClass]="{ 'is-invalid': nombre?.invalid && (nombre?.touched || nombre?.dirty) }" />
+      <div class="invalid-feedback">El nombre es obligatorio.</div>
     </div>
+
     <div class="col-md-3">
-      <input type="text" class="form-control" placeholder="Descripción" [(ngModel)]="nuevaHabitacion.descripcion" name="descripcion" />
+      <label class="form-label">Descripción</label>
+      <input type="text" class="form-control" formControlName="descripcion"
+        [ngClass]="{ 'is-invalid': descripcion?.invalid && (descripcion?.touched || descripcion?.dirty) }" />
+      <div class="invalid-feedback">La descripción es obligatoria.</div>
     </div>
+
     <div class="col-md-2">
-      <input type="text" class="form-control" placeholder="Estado" [(ngModel)]="nuevaHabitacion.estado" name="estado" />
+      <label class="form-label">Estado</label>
+      <input type="text" class="form-control" formControlName="estado"
+        [ngClass]="{ 'is-invalid': estado?.invalid && (estado?.touched || estado?.dirty) }" />
+      <div class="invalid-feedback">El estado es obligatorio.</div>
     </div>
+
     <div class="col-md-2">
-      <select class="form-select" [(ngModel)]="nuevaHabitacion.categoria" name="categoria">
+      <label class="form-label">Categoría</label>
+      <select class="form-select" formControlName="categoria"
+        [ngClass]="{ 'is-invalid': categoria?.invalid && (categoria?.touched || categoria?.dirty) }">
+        <option [ngValue]="null" disabled>Seleccionar</option>
         <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
       </select>
+      <div class="invalid-feedback">Debes seleccionar una categoría.</div>
     </div>
+
     <div class="col-12">
-      <button type="submit" [ngClass]="modoEdicion ? 'btn btn-warning' : 'btn btn-success'">
-        {{ modoEdicion ? 'Actualizar Habitación' : 'Agregar Habitación' }}
+      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'">
+        {{ modoEdicion ? 'Actualizar' : 'Agregar' }} Habitación
       </button>
     </div>
   </form>
@@ -41,11 +59,10 @@
         <td>{{ habitacion.descripcion }}</td>
         <td>{{ habitacion.estado }}</td>
         <td>{{ habitacion.categoria }}</td>
-       <td class="d-flex justify-content-center gap-2">
-  <button class="btn btn-primary btn-sm" (click)="editarHabitacion(habitacion)">Editar</button>
-  <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(habitacion.id)">Eliminar</button>
-</td>
-
+        <td class="d-flex justify-content-center gap-2 align-middle">
+          <button class="btn btn-primary btn-sm" (click)="editarHabitacion(habitacion)">Editar</button>
+          <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(habitacion.id)">Eliminar</button>
+        </td>
       </tr>
     </tbody>
   </table>
