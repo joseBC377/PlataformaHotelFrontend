@@ -1,61 +1,54 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
-import { Credenciales } from '../../auth/models/credenciales';
 
 @Component({
   selector: 'app-reservas',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './reservas.html',
   styleUrl: './reservas.scss'
 })
 export class Reservas {
   toggled = false;
+
   showSignIn() {
     this.toggled = false;
   }
+
   showSignUp() {
     this.toggled = true;
   }
-  private fb= inject(FormBuilder)
-  private service= inject(AuthService);
-  private credenciales: Credenciales ={
-    email: '', password:''
-  }
-  public errorMsg= signal<string|null>(null);
-  public loginForm: FormGroup = this.fb.group({
-    email: ['',[Validators.required,Validators.email]],
-    password: ['',[Validators.required,Validators.minLength(6)]]
+
+  private fb = inject(FormBuilder);
+  public errorMsg = signal<string | null>(null);
+
+  public reservaForm: FormGroup = this.fb.group({
+    codigo: ['', Validators.required],
+    nombre: ['', Validators.required],
   });
 
-  get email(){
-    return this.loginForm.get('email');
+  get codigo() {
+    return this.reservaForm.get('codigo');
   }
-  get password(){
-    return this.loginForm.get('password')
+
+  get nombre() {
+    return this.reservaForm.get('nombre');
   }
-  /*formulario fin */
-  loginFn(){
-    //sino cumple validacion se sale
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+
+  buscarReserva() {
+    if (this.reservaForm.invalid) {
+      this.reservaForm.markAllAsTouched();
       return;
     }
-    //refrescar mensajes de error
+
     this.errorMsg.set(null);
-    //captura datos
-    this.credenciales.email= this.loginForm.value.email;
-    this.credenciales.password=this.loginForm.value.password;
-    //proceso de login
-    this.service.iniciarSesion(this.credenciales).subscribe({
-      next:(res)=>{
-        console.log("Tokens: ",res.access_token,res.refresh_token)
-      },
-      error:(e)=>{
-        this.errorMsg.set('Credenciales erroneas');
-        console.warn(e.message);
-      }
-    })
+    const { codigo, nombre } = this.reservaForm.value;
+
+    console.log('Buscando reserva con código:', codigo, 'y nombre:', nombre);
+
+    if (codigo !== 'ABC123') {
+      this.errorMsg.set('No se encontró ninguna reserva con ese código.');
+    }
   }
 }

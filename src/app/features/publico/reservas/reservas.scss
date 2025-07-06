@@ -1,343 +1,236 @@
+@use "sass:map";
 @use 'variables' as var;
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+$colors: (
+  primary: #245ab2,
+  accent: #f4a300,
+  light-gray: #f9f9f9,
+  purple-light: #e6e0f6,
+  text: #333,
+  dark-text: #222,
+  subtext: #555,
+  tab-bg: #e0e0e0,
+  scrollbar-thumb: #ccc
+);
+
+@mixin center-text {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.error-message{
-    color: red;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .cuerpo {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+
+  .container {
     width: 100%;
-    height: 100dvh;
+    max-width: 600px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background-size: cover;
-
-    a {
-        color: var.$backgraound-primario;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-
-    a:hover {
-        color: var.$color-secundario;
-    }
-
-    .container {
-        width: 170rem;
-        height: 45rem;
-        display: flex;
-        position: relative;
-        background-color: var.$backgraound-terciario;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 0 10px rgb(0, 0, 0, 0.3);
-
-        .container-form {
-            width: 100%;
-            overflow: hidden;
-
-            
-
-            .button {
-                width: 8rem;
-                height: 2.7rem;
-                font-size: 1rem;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                margin-top: 1rem;
-                background-color: var.$backgraound-secundario;
-                color: var.$color-terciario;
-                transition: background-color 0.5s ease;
-            }
-
-            .button:hover {
-
-                background-color: var.$backgraound-primario;
-            }
-
-            .button:disabled {
-                background-color: var.$backgraound-input;
-                color: var.$color-cuaternario;
-                cursor: not-allowed;
-                opacity: 0.7;
-
-                &:hover {
-                    background-color: var.$backgraound-input;
-                    cursor: not-allowed;
-                }
-            }
-        }
-
-        .container-form form {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.5s ease-in;
-        }
-
-        .container-form h2 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var.$color-primario; 
-        }
-
-
-        .container-form span {
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            text-align: center;
-            display: block;
-        }
-
-        .container-form a {
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            margin-top: 10px;
-        }
-
-        .container-input {
-            width: 17rem;
-            height: 2.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            padding: 0 1rem;
-            background-color: var.$backgraound-input;
-        }
-
-        .container-input input {
-            border: none;
-            outline: none;
-            width: 100%;
-            height: 100%;
-            background-color: inherit;
-        }
-
-    }
-}
-
-
-
-.alerta {
-    .contenido {
-        position: absolute;
-        top: 80px;
-        left: 260px;
-        right: 260px;
-        padding: 0.9rem;
-        text-align: center;
-        background-color: #f58888;
-        border: 2px solid #ff4b4b;
-        font-size: 1.2rem;
-        border-radius: 10px;
-        z-index: 9999;
-    }
-}
-
-
-@media screen and (max-width: 990px) {
-    .cuerpo {
-        align-items: flex-start;
-        padding: 1rem;
-        background-size: cover;
-
-    }
-
-    .container {
-        flex-direction: column;
-        width: 100% !important;
-        height: 100% !important;
-        border-radius: 0;
-        box-shadow: none;
-        position: relative;
-    }
+    background: transparent;
 
     .container-form {
-        width: 100%;
-        height: 100%;
-        position: relative !important;
+      width: 100%;
 
-        .sign-up {
-            padding: 1rem;
+      .titulo-seccion {
+        color: map.get($colors, primary);
+        font-size: 2.5rem;
+        font-weight: bold;
+        @include center-text;
+        margin-bottom: 0.2rem;
+      }
 
-            .container-input {
-                height: 2rem;
-                margin-bottom: 0.3rem;
-            }
-        }
-    }
+      .subtitulo-seccion {
+        color: map.get($colors, accent);
+        font-size: 2rem;
+        font-weight: bold;
+        @include center-text;
+        margin-bottom: 2rem;
+      }
 
-    .container-form form {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        transition: transform 0.5s ease-in-out;
-    }
-
-    .sign-in {
-        transform: translateY(0%);
-        z-index: 0;
-    }
-
-    .sign-up {
-        transform: translateY(100%);
-        z-index: 1;
-    }
-
-    .container.toggled .sign-in {
-        transform: translateY(-100%);
-        z-index: 1;
-    }
-
-    .container.toggled .sign-up {
-        transform: translateY(0%);
-        z-index: 2;
-    }
-
-    .container-welcome {
-        position: absolute;
-        width: 100%;
-        height: 50%;
-        transform: translateY(100%);
-        flex-direction: column;
-        background-color: var.$backgraound-primario;
-        padding: 1.5rem;
-        overflow: hidden;
-        gap: 2rem;
-
-        .welcome-sign-in {
-            transform: translateY(150%);
-        }
-
-        .welcome-sign-up {
-            transform: translateY(50%);
-        }
-
-    }
-
-    .container-welcome .welcome {
-        position: relative;
-        transform: transform 0.5s ease-in-out;
-        padding: 1rem;
+      span,
+      .info-contacto,
+      .correo {
         text-align: center;
-        color: var.$color-terciario;
+        font-size: 1rem;
+        color: map.get($colors, subtext);
+        display: block;
+
+      }
+
+      .correo {
+        margin-bottom: 2rem;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .container-input {
+        width: 100%;
+        max-width: 400px;
+        height: 2.7rem;
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border: 1px solid #2d3e50;
+        border-radius: 6px;
+        padding: 0 0.8rem;
+
+        input {
+          width: 100%;
+          height: 100%;
+          border: none;
+          outline: none;
+          background-color: inherit;
+          font-size: 1rem;
+        }
+      }
+
+      .button {
+        width: 100%;
+        max-width: 300px;
+        height: 2.7rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        background-color: map.get($colors, accent);
+        color: white;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+
+        &:hover {
+          background-color: #cc8400; 
+        }
+
+        &:disabled {
+          background-color: map.get($colors, tab-bg);
+          color: map.get($colors, subtext);
+          cursor: not-allowed;
+          opacity: 0.6;
+        }
+      }
     }
+  }
+}
 
+.form-group {
+  width: 100%;
+  max-width: 300px; 
+  margin-top: 10px;
+}
 
+label {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  color: #130275;
+}
 
-    .container.toggled .welcome-sign-in {
-        transform: translateY(-50%) !important;
+input {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #4a648c;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+  background-color: #fff;
+}
+
+input:focus {
+  border-color: #2f5ca4;
+}
+
+input::placeholder {
+  color: #bcbcbc;
+  font-style: italic;
+}
+
+.button {
+  width: 100%;
+  max-width: 300px;
+  height: 2.7rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: map.get($colors, accent);
+  color: white;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #cc8400;
+  }
+
+  &:disabled {
+    background-color: #a5b4c8;
+    cursor: not-allowed;
+  }
+}
+
+.alerta {
+  .contenido {
+    position: absolute;
+    top: 80px;
+    left: 20%;
+    right: 20%;
+    padding: 0.9rem;
+    text-align: center;
+    background-color: #f58888;
+    border: 2px solid #ff4b4b;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    z-index: 9999;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .cuerpo {
+    padding: 1rem;
+  }
+
+  .container {
+    .container-form {
+      .titulo-seccion {
+        font-size: 1.8rem;
+      }
+
+      .subtitulo-seccion {
+        font-size: 1.4rem;
+      }
+
+      .button {
+        width: 100%;
+      }
     }
+  }
 
-    .container.toggled .welcome-sign-up {
-        transform: translateY(-150%) !important;
-    }
-
-    //esto es del formulario de inicio de sesion
-    .container.toggled .sign-in {
-        transform: translateY(-100%);
-    }
-
-    .container.toggled .container-welcome {
-        //permite para mover el cuadro
-        transform: translateY(0) !important;
-    }
-
-    .alerta {
-        .contenido {
-            position: absolute;
-            top: 62px;
-            left: 49px;
-            right: 49px;
-            padding: 0.5rem;
-        }
-    }
-
-
-    //hacer para menores de 380
-    @media screen and (max-width: 380px) {
-        .container-form h2 {
-            font-size: 1rem;
-            text-align: center;
-        }
-
-        .container-welcome h3 {
-            font-size: 2rem;
-        }
-
-        .container-input {
-            width: 100%;
-        }
-
-        .container-input input {
-            font-size: 0.9rem;
-        }
-
-        .container-welcome {
-            gap: 1rem;
-            padding: 1rem;
-        }
-
-        .container-welcome .welcome {
-            padding: 0.5rem;
-        }
-
-        .container-form .button,
-        .container-welcome .button {
-            width: 100%;
-            font-size: 0.9rem;
-        }
-    }
-
-    .container {
-        .container-form {
-            h2 {
-                font-size: 2rem !important;
-                margin-top: 0.5rem;
-            }
-
-            .social-networks {
-                margin-bottom: 0.3rem !important;
-            }
-
-            span {
-                margin-bottom: 0.4rem !important;
-            }
-
-            .container-input {
-                margin-bottom: 0.4rem;
-            }
-
-            a {
-                margin-bottom: 0.5rem !important;
-            }
-
-            .button {
-                margin-top: 0.3rem !important;
-                margin-bottom: 1rem !important;
-            }
-        }
-    }
-
-    .alerta {
-        .contenido {
-            position: absolute;
-            top: 52px;
-            left: 70px;
-            right: 70px;
-            padding: 1px;
-            font-size: 16px;
-        }
-    }
+  .alerta .contenido {
+    left: 10%;
+    right: 10%;
+  }
 }
