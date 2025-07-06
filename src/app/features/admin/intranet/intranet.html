@@ -1,7 +1,11 @@
-<p>intranet works!</p>
-<button type="button" (click)="getUsuario()">
+<div class="intranet-container">
+  <p class="title">Intranet</p>
+  
+  <button type="button" class="btn-clientes" (click)="getUsuario()">
     Obtener clientes
-</button>
-@if (usuario$ |async; as usuario) {
-    <pre>{{usuario|json}}</pre>
-}
+  </button>
+
+  @if (usuario$ | async; as usuario) {
+    <pre class="json-box">{{ usuario | json }}</pre>
+  }
+</div>
