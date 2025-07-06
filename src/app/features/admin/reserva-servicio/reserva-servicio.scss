@@ -10,6 +10,7 @@ body {
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(35, 30, 130, 0.15);
+  margin-bottom: 40px;
 }
 
 h2 {
@@ -25,9 +26,14 @@ select.form-select {
   border: 1px solid var.$color-primario;
   border-radius: 8px;
   color: #15173b;
+
+  &:focus {
+    border-color: var.$color-primario;
+    box-shadow: 0 0 0 0.2rem rgba(62, 64, 149, 0.25);
+  }
 }
 
-.table-hotel th {
+.table th {
   background-color: #b0caf5;
   color: #1d1e4a;
   text-align: center;
@@ -38,27 +44,61 @@ select.form-select {
   vertical-align: middle;
 }
 
-.btn-success {
-  background-color:var.$color-secundario;
-  border: none;
+.table img {
+  border-radius: 8px;
+  border: 2px solid #a5b8f0;
 }
 
-.btn-success:hover {
-  background-color: var.$backgraound-secundario;
+.btn-success {
+  background-color: var.$color-secundario;
+  border: none;
+  color: white;
+
+  &:hover {
+    background-color: var.$backgraound-secundario;
+  }
+}
+
+.btn-warning {
+  background-color: var.$color-secundario;
+  border: none;
+  color: white;
+
+  &:hover {
+    background-color: var.$backgraound-secundario;
+  }
 }
 
 .btn-danger {
   background-color: #3238b2;
   border: none;
-}
+  color: white;
 
-.btn-danger:hover {
-  background-color: #1c2890;
+  &:hover {
+    background-color: #1c2890;
+  }
 }
 
 .btn-primary {
   background-color: var.$color-secundario;
   border: none;
+  color: white;
+
+  &:hover {
+    background-color: var.$backgraound-secundario;
+  }
+}
+
+.d-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding-top: 28px;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
 }
 
 .btn-primary:hover {

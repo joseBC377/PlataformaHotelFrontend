@@ -1,11 +1,139 @@
-<div class="intranet-container">
-  <p class="title">Intranet</p>
-  
-  <button type="button" class="btn-clientes" (click)="getUsuario()">
-    Obtener clientes
-  </button>
-
-  @if (usuario$ | async; as usuario) {
-    <pre class="json-box">{{ usuario | json }}</pre>
-  }
+<div class="cuerpo">
+    <div class="container mt-4">
+        <h2>Intranet de Administrador</h2>
+        <div class="container my-4">
+            <div class="row align-items-center g-2">
+                <div class="col-12 col-md-6 d-flex align-items-center p-3">
+                    <p>¡Hola, administrador&#64;! Nos alegra verte por aquí. Esta es tu área dedicada para tener una vista
+                        completa de todos los clientes que usan la plataforma web de nuestro hotel. Desde aquí, podrás
+                        consultar rápidamente los datos de cada usuario, explorar sus reservas activas e históricas, y
+                        revisar los conteos por rol para mantener un control total sobre nuestra comunidad de usuarios.
+                    </p>
+                </div>
+                <div class="col-12 col-md-6 d-flex justify-content-center"> <img
+                        src="https://www.baoss.es/wp-content/uploads/2024/12/asistente-virtual-3.jpg" alt="imagen"
+                        style="width: auto; height: 15rem;"> </div>
+            </div>
+        </div>
+        <!-- <button type="button" (click)="getUsuario()">
+        Obtener clientes
+    </button>
+    @if (usuario$ |async; as usuario) {
+    <pre>{{usuario|json}}</pre>
+    } -->
+    </div>
+    <div class="container mt-4 mb-4">
+        <h2 class="mb-4">Tabla de Clientes 👩‍👧‍👦</h2>
+        <div class="table-responsive mt-4">
+            <table class="table">
+                <thead class="table-hotel">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Rol</th>
+                        <!-- <th>Acciones</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (usuario$|async; as client) {
+                    @for (c of client; track c.id) {
+                    <tr>
+                        <td>{{c.id}}</td>
+                        <td>{{c.nombre}}</td>
+                        <td>{{c.apellido}}</td>
+                        <td>{{c.correo}}</td>
+                        <td>{{c.telefono}}</td>
+                        <td>{{c.rol}}</td>
+                    </tr>
+                    }@empty {
+                    <tr>
+                        <td colspan="6"> No hay clientes registrados</td>
+                    </tr>
+                    }}@else {
+                    <tr>
+                        <td colspan="6">Cargando clientes</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <ng-template #sinUsuarios>
+            <div class="alert alert-info mt-4">No hay Clientes registrados</div>
+        </ng-template>
+        <h2 class="mb-4">Reservas de Clientes 👪</h2>
+        <div class="table-responsive mt-4">
+            <table class="table">
+                <thead class="table-hotel">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Rol</th>
+                        <th>Reserva</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (usuarioReserva$|async; as userRes) {
+                    @for (c of userRes; track c.id) {
+                    <tr>
+                        <td>{{c.id}}</td>
+                        <td>{{c.nombre}}</td>
+                        <td>{{c.apellido}}</td>
+                        <td>{{c.correo}}</td>
+                        <td>{{c.telefono}}</td>
+                        <td>{{c.rol}}</td>
+                        <td>{{c.reserva}}</td>
+                    </tr>
+                    }@empty {
+                    <tr>
+                        <td colspan="7"> No hay clientes registrados</td>
+                    </tr>
+                    }}@else {
+                    <tr>
+                        <td colspan="7">Cargando clientes</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <ng-template #sinUsuarios>
+            <div class="alert alert-info mt-4">No hay Reservas de Clientes</div>
+        </ng-template>
+        <h2 class="mb-4">Conteo de Roles 📊</h2>
+        <div class=" table-responsive mt-4">
+            <table class="table">
+                <thead class="table-hotel">
+                    <tr>
+                        <th>Rol</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (contero$|async; as conteo) {
+                    @for (c of conteo; track contero$) {
+                    <tr>
+                        <td>{{c.rol}}</td>
+                        <td>{{c.cantidad}}</td>
+                    </tr>
+                    }@empty {
+                    <tr>
+                        <td colspan="2"> No hay clientes registrados</td>
+                    </tr>
+                    }}@else {
+                    <tr>
+                        <td colspan="2">Cargando clientes</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <ng-template #sinUsuarios>
+            <div class="alert alert-info mt-4">No hay Roles asignados</div>
+        </ng-template>
+    </div>
 </div>
