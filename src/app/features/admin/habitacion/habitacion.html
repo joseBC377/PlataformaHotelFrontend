@@ -7,21 +7,27 @@
       <label class="form-label">Nombre</label>
       <input type="text" class="form-control" formControlName="nombre"
         [ngClass]="{ 'is-invalid': nombre?.invalid && (nombre?.touched || nombre?.dirty) }" />
-      <div class="invalid-feedback">El nombre es obligatorio.</div>
+      <div class="invalid-feedback" *ngIf="nombre?.invalid && (nombre?.touched || nombre?.dirty)">
+        El nombre es obligatorio.
+      </div>
     </div>
 
     <div class="col-md-3">
       <label class="form-label">Descripción</label>
       <input type="text" class="form-control" formControlName="descripcion"
         [ngClass]="{ 'is-invalid': descripcion?.invalid && (descripcion?.touched || descripcion?.dirty) }" />
-      <div class="invalid-feedback">La descripción es obligatoria.</div>
+      <div class="invalid-feedback" *ngIf="descripcion?.invalid && (descripcion?.touched || descripcion?.dirty)">
+        La descripción es obligatoria.
+      </div>
     </div>
 
     <div class="col-md-2">
       <label class="form-label">Estado</label>
       <input type="text" class="form-control" formControlName="estado"
         [ngClass]="{ 'is-invalid': estado?.invalid && (estado?.touched || estado?.dirty) }" />
-      <div class="invalid-feedback">El estado es obligatorio.</div>
+      <div class="invalid-feedback" *ngIf="estado?.invalid && (estado?.touched || estado?.dirty)">
+        El estado es obligatorio.
+      </div>
     </div>
 
     <div class="col-md-2">
@@ -31,7 +37,9 @@
         <option [ngValue]="null" disabled>Seleccionar</option>
         <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
       </select>
-      <div class="invalid-feedback">Debes seleccionar una categoría.</div>
+      <div class="invalid-feedback" *ngIf="categoria?.invalid && (categoria?.touched || categoria?.dirty)">
+        Debes seleccionar una categoría.
+      </div>
     </div>
 
     <div class="col-12">
@@ -41,7 +49,6 @@
     </div>
 
   </form>
-
 
   <table class="table table-bordered table-hover mt-4">
     <thead class="table-light">
