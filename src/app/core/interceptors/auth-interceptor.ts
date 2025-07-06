@@ -10,7 +10,7 @@ const refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null)
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
-  console.log("INTERCEPTOR EJECUTADO");//De prueba solo para ver si el interceptor logra ejecutarse
+  // console.log("INTERCEPTOR EJECUTADO");
 
   const authServ = inject(AuthService);
   const router = inject(Router);
