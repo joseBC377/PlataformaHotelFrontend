@@ -10,15 +10,15 @@ import { routes } from './app/app.routes';
 
 registerLocaleData(localeEs);
 
+
+
 bootstrapApplication(App, appConfig)
   .catch((err) => console.error(err));
-
-  
-// bootstrapApplication(App, {
-//   providers: [
-//     importProvidersFrom(),
-//     provideHttpClient(),
-//     provideRouter(routes),
-//     { provide: LOCALE_ID, useValue: 'es-PE' }
-//   ]
-// });
+/*bootstrapApplication(App, {
+  providers: [
+    importProvidersFrom(),
+    provideHttpClient(),
+    provideRouter(routes),
+    { provide: LOCALE_ID, useValue: 'es-PE' }
+  ]
+}); */

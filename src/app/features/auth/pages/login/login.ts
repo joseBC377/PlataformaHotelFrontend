@@ -47,6 +47,7 @@ export class Login {
     //captura datos
     this.credenciales.email= this.loginForm.value.email;
     this.credenciales.password=this.loginForm.value.password;
+    console.log(this.credenciales)
     //proceso de login
     this.service.iniciarSesion(this.credenciales).subscribe({
       next:(res)=>{

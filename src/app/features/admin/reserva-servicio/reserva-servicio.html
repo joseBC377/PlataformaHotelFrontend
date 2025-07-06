@@ -1,0 +1,24 @@
+<div class="container mt-4" [formGroup]="reservaServicioForm">
+  <h2 class="mb-4">Gestión de Servicios Reservados 📋</h2>
+
+  <table class="table table-bordered table-hover mt-4">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>ID Reserva</th>
+        <th>ID Servicio</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rs of reservaServicios">
+        <td>{{ rs.id }}</td>
+        <td>{{ rs.id_reserva }}</td>
+        <td>{{ rs.id_servicio }}</td>
+        <td class="d-flex justify-content-center gap-2 align-middle">
+          <button class="btn btn-danger btn-sm" (click)="eliminarReservaServicio(rs.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -9,6 +9,9 @@ let isRefreshing = false;
 const refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+
+  console.log("INTERCEPTOR EJECUTADO");//De prueba solo para ver si el interceptor logra ejecutarse
+
   const authServ = inject(AuthService);
   const router = inject(Router);
   let authReq = req;

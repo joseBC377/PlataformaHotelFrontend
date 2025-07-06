@@ -1,0 +1,99 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Gestión de Pagos 💳</h2>
+
+  <form [formGroup]="pagoForm" (ngSubmit)="guardarPago()" class="row g-3 mb-4 p-3 border rounded shadow-sm">
+
+    <div class="col-md-4">
+      <label for="total" class="form-label">Total (S/.)</label>
+      <input type="number" class="form-control" id="total" formControlName="total" placeholder="150.50">
+      <div *ngIf="total?.invalid && (total?.dirty || total?.touched)" class="text-danger mt-1">
+        <small *ngIf="total?.errors?.['required']">El total es obligatorio.</small>
+        <small *ngIf="total?.errors?.['min']">El total debe ser mayor a 0.</small>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="metodo_pago" class="form-label">Método de Pago</label>
+      <select id="metodo_pago" class="form-select" formControlName="metodo_pago">
+        <option value="" disabled>Seleccione un método...</option>
+        <option *ngFor="let metodo of metodosDePago" [value]="metodo">{{ metodo }}</option>
+      </select>
+      <div *ngIf="metodo_pago?.invalid && (metodo_pago?.dirty || metodo_pago?.touched)" class="text-danger mt-1">
+        <small *ngIf="metodo_pago?.errors?.['required']">Seleccione un método de pago.</small>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="estado_pago" class="form-label">Estado del Pago</label>
+      <select id="estado_pago" class="form-select" formControlName="estado_pago">
+        <option value="" disabled>Seleccione un estado...</option>
+        <option *ngFor="let estado of estadosDePago" [value]="estado">{{ estado }}</option>
+      </select>
+      <div *ngIf="estado_pago?.invalid && (estado_pago?.dirty || estado_pago?.touched)" class="text-danger mt-1">
+        <small *ngIf="estado_pago?.errors?.['required']">Seleccione un estado de pago.</small>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="fecha_pago" class="form-label">Fecha de Pago</label>
+      <input type="date" class="form-control" id="fecha_pago" formControlName="fecha_pago">
+      <div *ngIf="fecha_pago?.invalid && (fecha_pago?.dirty || fecha_pago?.touched)" class="text-danger mt-1">
+        <small *ngIf="fecha_pago?.errors?.['required']">La fecha es obligatoria.</small>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="id_reserva" class="form-label">ID Reserva</label>
+      <input type="text" class="form-control" id="id_reserva" formControlName="id_reserva" placeholder="Ej: 101">
+      <div *ngIf="id_reserva?.invalid && (id_reserva?.dirty || id_reserva?.touched)" class="text-danger mt-1">
+        <small *ngIf="id_reserva?.errors?.['required']">El ID de reserva es obligatorio.</small>
+        <small *ngIf="id_reserva?.errors?.['pattern']">El ID solo debe contener números.</small>
+      </div>
+    </div>
+
+    <div class="col-12 mt-4">
+      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
+        [disabled]="pagoForm.invalid">
+        {{ modoEdicion ? 'Actualizar Pago' : 'Agregar Pago' }}
+      </button>
+      <button type="button" class="btn btn-secondary ms-2" *ngIf="modoEdicion" (click)="resetFormulario()">
+        Cancelar Edición
+      </button>
+    </div>
+  </form>
+
+  <div class="table-responsive mt-4" *ngIf="pagos.length > 0; else sinPagos">
+    <table class="table table-bordered table-hover">
+      <thead class="table-hotel">
+        <tr>
+          <th>ID</th>
+          <th>Total (S/.)</th>
+          <th>Método</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>ID Reserva</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pago of pagos">
+          <td>{{ pago.id }}</td>
+          <td>{{ pago.total }}</td>
+          <td>{{ pago.metodo_pago }}</td>
+          <td>{{ pago.estado_pago }}</td>
+          <td>{{ pago.fecha_pago }}</td>
+          <td>{{ pago.id_reserva }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm me-1" (click)="editarPago(pago)">Editar</button>
+            <button class="btn btn-danger btn-sm" (click)="eliminarPago(pago.id_pago)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #sinPagos>
+    <div class="alert alert-info">No hay pagos registrados.</div>
+  </ng-template>
+
+</div>
