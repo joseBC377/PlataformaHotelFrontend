@@ -100,3 +100,8 @@ select.form-select {
     flex-direction: column;
   }
 }
+
+.btn-primary:hover {
+  background-color: var.$backgraound-secundario;
+}
+

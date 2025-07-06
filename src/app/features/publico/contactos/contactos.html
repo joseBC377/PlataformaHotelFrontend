@@ -30,24 +30,44 @@
 
         <div class="formulario">
             <h3 class="subtitulo-seccion">DÉJANOS TUS DATOS</h3>
-            <p class="dialogo">Para mayor información o solicitar nuestros servicios, por favor llene el formulario o envíenos un mensaje a nuestro correo.</p>
+            <p class="dialogo">Para mayor información o solicitar nuestros servicios, por favor llene el formulario o
+                envíenos un mensaje a nuestro correo.</p>
 
             <div class="contenedor-formulario">
-                <form class="form-contacto">
+                <form [formGroup]="contactoForm" (ngSubmit)="onSubmit()" class="form-contacto">
                     <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" placeholder="Ingrese su Nombre" required>
+                    <input type="text" id="nombre" formControlName="nombre" placeholder="Ingrese su Nombre" />
+                    <div *ngIf="contactoForm.get('nombre')?.touched && contactoForm.get('nombre')?.invalid"
+                        class="error">
+                        El nombre es obligatorio.
+                    </div>
 
                     <label for="apellido">Apellido</label>
-                    <input type="text" id="apellido" placeholder="Ingrese su Apellido" required>
+                    <input type="text" id="apellido" formControlName="apellido" placeholder="Ingrese su Apellido" />
+                    <div *ngIf="contactoForm.get('apellido')?.touched && contactoForm.get('apellido')?.invalid"
+                        class="error">
+                        El apellido es obligatorio.
+                    </div>
 
                     <label for="correo">Correo electrónico</label>
-                    <input type="email" id="correo" placeholder="Ingrese su Correo" required>
+                    <input type="email" id="correo" formControlName="correo" placeholder="Ingrese su Correo" />
+                    <div *ngIf="contactoForm.get('correo')?.touched && contactoForm.get('correo')?.invalid"
+                        class="error">
+                        <div *ngIf="contactoForm.get('correo')?.errors?.['required']">El correo es obligatorio.</div>
+                        <div *ngIf="contactoForm.get('correo')?.errors?.['email']">Formato de correo inválido.</div>
+                    </div>
 
                     <label for="mensaje">Mensaje</label>
-                    <textarea id="mensaje" placeholder="Escriba aqui" required></textarea>
+                    <textarea id="mensaje" formControlName="mensaje" placeholder="Escriba aquí"></textarea>
+                    <div *ngIf="contactoForm.get('mensaje')?.touched && contactoForm.get('mensaje')?.invalid"
+                        class="error">
+                        <div *ngIf="contactoForm.get('mensaje')?.errors?.['required']">El mensaje es obligatorio.</div>
+                        <div *ngIf="contactoForm.get('mensaje')?.errors?.['minlength']">Mínimo 10 caracteres.</div>
+                    </div>
 
                     <button type="submit">Enviar</button>
                 </form>
+
             </div>
         </div>
     </div>

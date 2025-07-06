@@ -4,14 +4,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reserva-habitacion',
-  imports: [CommonModule, FormsModule , ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './reserva-habitacion.html',
   styleUrl: './reserva-habitacion.scss'
 })
 export class ReservaHabitacion {
   modoEdicion = false;
   idReservaEditar: number | null = null;
-  
+
   reservasHabitacion: any[] = [
     { id: 1, precio: 150.0, id_reserva: 'R001', id_habitacion: 'H101' },
     { id: 2, precio: 200.0, id_reserva: 'R002', id_habitacion: 'H102' },
