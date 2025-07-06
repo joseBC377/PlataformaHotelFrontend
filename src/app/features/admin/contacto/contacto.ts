@@ -13,7 +13,7 @@ export class Contacto {
     {
       id_contacto: 1,
       nombre: 'Ana',
-      apellido:'Torres',
+      apellido: 'Torres',
       correo: 'ana@mail.com',
       telefono: '912345678',
       mensaje: '¿Puedo reservar una mesa para mañana a las 5pm?'
@@ -21,7 +21,7 @@ export class Contacto {
     {
       id_contacto: 2,
       nombre: 'Pedro',
-      apellido:'Salazar',
+      apellido: 'Salazar',
       correo: 'pedro@mail.com',
       telefono: '987654321',
       mensaje: '¿Qué métodos de pago aceptan en la cafetería?'

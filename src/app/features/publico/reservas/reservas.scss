@@ -1,94 +1,236 @@
-body {
+@use "sass:map";
+@use 'variables' as var;
+
+$colors: (
+  primary: #245ab2,
+  accent: #f4a300,
+  light-gray: #f9f9f9,
+  purple-light: #e6e0f6,
+  text: #333,
+  dark-text: #222,
+  subtext: #555,
+  tab-bg: #e0e0e0,
+  scrollbar-thumb: #ccc
+);
+
+@mixin center-text {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.cuerpo {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+
+  .container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+
+    .container-form {
+      width: 100%;
+
+      .titulo-seccion {
+        color: map.get($colors, primary);
+        font-size: 2.5rem;
+        font-weight: bold;
+        @include center-text;
+        margin-bottom: 0.2rem;
+      }
+
+      .subtitulo-seccion {
+        color: map.get($colors, accent);
+        font-size: 2rem;
+        font-weight: bold;
+        @include center-text;
+        margin-bottom: 2rem;
+      }
+
+      span,
+      .info-contacto,
+      .correo {
+        text-align: center;
+        font-size: 1rem;
+        color: map.get($colors, subtext);
+        display: block;
+
+      }
+
+      .correo {
+        margin-bottom: 2rem;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .container-input {
+        width: 100%;
+        max-width: 400px;
+        height: 2.7rem;
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border: 1px solid #2d3e50;
+        border-radius: 6px;
+        padding: 0 0.8rem;
+
+        input {
+          width: 100%;
+          height: 100%;
+          border: none;
+          outline: none;
+          background-color: inherit;
+          font-size: 1rem;
+        }
+      }
+
+      .button {
+        width: 100%;
+        max-width: 300px;
+        height: 2.7rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        background-color: map.get($colors, accent);
+        color: white;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+
+        &:hover {
+          background-color: #cc8400; 
+        }
+
+        &:disabled {
+          background-color: map.get($colors, tab-bg);
+          color: map.get($colors, subtext);
+          cursor: not-allowed;
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+}
+
+.form-group {
+  width: 100%;
+  max-width: 300px; 
+  margin-top: 10px;
+}
+
+label {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  color: #130275;
+}
+
+input {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #4a648c;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
   background-color: #fff;
 }
 
-.mis-reservas {
-  padding: 40px 20px;
-  text-align: center;
+input:focus {
+  border-color: #2f5ca4;
+}
 
-  h2 {
-    color: #2c3e75;
-    font-size: 28px;
-    margin-bottom: 10px;
+input::placeholder {
+  color: #bcbcbc;
+  font-style: italic;
+}
+
+.button {
+  width: 100%;
+  max-width: 300px;
+  height: 2.7rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: map.get($colors, accent);
+  color: white;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #cc8400;
   }
 
-  h3 {
-    color: #4a4a4a;
-    font-size: 20px;
-    margin-bottom: 20px;
+  &:disabled {
+    background-color: #a5b4c8;
+    cursor: not-allowed;
+  }
+}
+
+.alerta {
+  .contenido {
+    position: absolute;
+    top: 80px;
+    left: 20%;
+    right: 20%;
+    padding: 0.9rem;
+    text-align: center;
+    background-color: #f58888;
+    border: 2px solid #ff4b4b;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    z-index: 9999;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .cuerpo {
+    padding: 1rem;
   }
 
-  p {
-    color: #333;
-    font-size: 16px;
-    margin-bottom: 15px;
-    line-height: 1.6;
-  }
+  .container {
+    .container-form {
+      .titulo-seccion {
+        font-size: 1.8rem;
+      }
 
-  .form-reserva {
-    max-width: 500px;
-    width: 100%;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    box-sizing: border-box;
+      .subtitulo-seccion {
+        font-size: 1.4rem;
+      }
 
-    label {
-      text-align: left;
-      margin-top: 15px;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #333;
-      font-size: 15px;
-    }
-
-    input {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 12px;
-      background-color: #f8aa2d;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: #e09a1f;
+      .button {
+        width: 100%;
       }
     }
   }
 
-  // Media queries anidadas
-  @media (max-width: 480px) {
-    h2 {
-      font-size: 22px;
-    }
-
-    h3 {
-      font-size: 18px;
-    }
-
-    .form-reserva {
-      padding: 10px;
-
-      input {
-        font-size: 13px;
-      }
-
-      button {
-        font-size: 15px;
-      }
-    }
+  .alerta .contenido {
+    left: 10%;
+    right: 10%;
   }
 }

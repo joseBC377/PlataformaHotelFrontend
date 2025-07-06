@@ -21,7 +21,7 @@ export class ReservaServicioAdminComponent implements OnInit {
   reservas = [{ id: 'R001' }, { id: 'R002' }, { id: 'R003' }];
   servicios = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.reservaServicioForm = this.fb.group({

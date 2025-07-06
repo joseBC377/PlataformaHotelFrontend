@@ -23,18 +23,43 @@ export class AuthService {
     return this.http.post<Token>(`${this.URL}/autenticarse`, credenciales).pipe(tap(resp => {
       this.almacenarTokens(resp);
       this.isAuth.next(true);
-      this.router.navigate(['admin/intranet'])
+      this.router.navigate(['/admin/intranet'])
     }));
   }
-  cerrarSesion() {
+  //refrescar token
+  refreshToken(refresh_token: string):Observable<Token>{
+    return this.http.post<Token>(`${this.URL}/refresh-token`,{refreshToken:refresh_token}).pipe(
+      tap(resp=>{
+        this.almacenarTokens(resp);
+        this.isAuth.next(true);
+      })
+    )
+  }
+  clearTokens():void{
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
     }
+  }
+  cerrarSesion():void{
+    this.clearTokens();
     this.isAuth.next(false);
     this.router.navigate(['/login']);
   }
-  private almacenarTokens(token: Token) {
+
+
+
+  // cerrarSesion() {
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     localStorage.removeItem('access_token');
+  //     localStorage.removeItem('refresh_token');
+  //   }
+  //   this.isAuth.next(false);
+  //   this.router.navigate(['/login']);
+  // }
+
+
+  public almacenarTokens(token: Token) {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('access_token', token.access_token);
       localStorage.setItem('refresh_token', token.refresh_token);
@@ -43,6 +68,12 @@ export class AuthService {
   getTokenAcces(): string | null {
     if (isPlatformBrowser(this.platformId)) {
           return localStorage.getItem('access_token');
+    }
+    return null;
+  }
+  getRefreshToken(): string|null{
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('refresh_token');
     }
     return null;
   }

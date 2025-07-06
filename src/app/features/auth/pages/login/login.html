@@ -12,37 +12,44 @@
                     <i class="fa-solid fa-envelope"></i>
                     <input formControlName="email" type="email" placeholder="Correo">
                 </div>
+
                 @if (email?.invalid && (email?.dirty || email?.touched)) {
+                <div class="text-danger mt-1">
                     @if (email?.errors?.['required']) {
-                        <p class="error-message"> El correo es obligatorio.</p>
+                    <small> El correo es obligatorio.</small>
                     }
                     @if (email?.errors?.['email']) {
-                        <p class="error-message"> Por favor, ingresa un formato de correo valido.</p>
+                    <small> Por favor, ingresa un formato de correo valido.</small>
                     }
                     @if (email?.errors?.['customEmail']) {
-                        <p class="error-message"> Verifica el formato de tu correo electrónico.</p>
+                    <small> Verifica el formato de tu correo electrónico.</small>
                     }
+                </div>
                 }
                 <div class="container-input">
                     <i class="fa-solid fa-lock"></i>
                     <input formControlName="password" type="password" placeholder="Contraseña">
                 </div>
                 @if (password?.invalid &&(password?.dirty||password?.touched)) {
+                <div class="text-danger mt-1">
+
                     @if (password?.errors?.['required']) {
-                        <p class="error-message"> La contraseña es obligatoria</p>
+                    <small> La contraseña es obligatoria</small>
                     }
                     @if (password?.errors?.['minLenghy']) {
-                        <p class="error-message">La contraseña debe tener al menos {{password?.errors?.['minlenght']?.requiredLength}} caracteres.</p>
+                    <small>La contraseña debe tener al menos
+                        {{password?.errors?.['minlenght']?.requiredLength}} caracteres.</small>
                     }
-                }
-                <a href="#">¿Olvidaste tu contraseña?</a>
-                <button [disabled]="loginForm.invalid" class="button">Iniciar Sesión</button>
+                    </div>
+                    }
+                    <a href="#">¿Olvidaste tu contraseña?</a>
+                    <button [disabled]="loginForm.invalid" class="button">Iniciar Sesión</button>
             </form>
 
         </div>
 
         <div class="container-form">
-            <form class="sign-up">
+            <form [formGroup]="registrForm" (ngSubmit)="registroFn()" class="sign-up">
                 <h2>Registrarse</h2>
                 <div class="social-networks">
                     <i class="icono fa-brands fa-google"></i>
@@ -51,24 +58,80 @@
                 <span>Use su correo electronico para registrarse</span>
                 <div class="container-input">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Nombre">
+                    <input formControlName="nombre" type="text" placeholder="Nombre">
                 </div>
+                @if (nombre?.invalid &&(nombre?.dirty||nombre?.touched)) {
+                    <div class="text-danger">
+                        @if (nombre?.errors?.['required']) {
+                            <small>El nombre es obligatorio.</small>
+                        }
+                        @if (nombre?.errors?.['minlength']) {
+                            <small>Mínimo {{ nombre?.errors?.['minlength']?.requiredLength }} caracteres.</small>
+                        }
+                        @if (nombre?.errors?.['pattern']) {
+                            <small>El nombre solo puede contener letras y espacios.</small>
+                        }
+                    </div>
+                }
                 <div class="container-input">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Apellido">
+                    <input formControlName="apellido" type="text" placeholder="Apellido">
                 </div>
+                @if (apellido?.invalid &&(apellido?.dirty||apellido?.touched)) {
+                    <div class="text-danger">
+                        @if (apellido?.errors?.['required']) {
+                            <small>El apellido es obligatorio.</small>
+                        }
+                        @if (apellido?.errors?.['minlength']) {
+                            <small>Minimo{{apellido?.errors?.['minlength']}} caracteres.</small>
+                        }
+                        @if (apellido?.errors?.['pattern']) {
+                            <small>El apellido solo puede contener letras y espacios.</small>
+                        }
+                    </div>
+                }
                 <div class="container-input">
                     <i class="fa-solid fa-phone"></i>
-                    <input type="tel" placeholder="Telefono">
+                    <input formControlName="telefono" type="tel" placeholder="Telefono">
                 </div>
+                @if (telefono?.invalid &&(telefono?.dirty||telefono?.touched)) {
+                    <div class="text-danger">
+                        @if (telefono?.errors?.['required']) {
+                            <small>El correo es obligatorio.</small>
+                        }
+                        @if (telefono?.errors?.['pattern']) {
+                            <small>El formato del teléfono no es válido (ej. 9 dígitos).</small>
+                        }
+                    </div>
+                }
                 <div class="container-input">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="email" placeholder="Correo">
+                    <input formControlName="correoRe" type="email" placeholder="Correo">
                 </div>
+                @if (correoRegistro?.invalid && (correoRegistro?.dirty|| correoRegistro?.touched)) {
+                    <div class="text-danger">
+                        @if (correoRegistro?.errors?.['required']) {
+                            <small>El correo es obligatorio.</small>
+                        }
+                        @if (correoRegistro?.errors?.['email']) {
+                            <small>Por favor, ingresa un formato de correo válido.</small>
+                        }
+                    </div>
+                }
                 <div class="container-input">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Contraseña">
+                    <input formControlName="passwordRe" type="password" placeholder="Contraseña">
                 </div>
+                @if (passwordRegistro?.invalid && (passwordRegistro?.dirty||passwordRegistro?.touched)) {
+                    <div class="text-danger">
+                        @if (passwordRegistro?.errors?.['required']) {
+                            <small>La contraseña es obligatoria.</small>
+                        }
+                        @if (passwordRegistro?.errors?.['minlength']) {
+                            <small>La contraseña debe tener al menos {{passwordRegistro?.errors?.['minlength']?.requiredLength}} caracteres.</small>
+                        }
+                    </div>
+                }
                 <button class="button">Registrate</button>
             </form>
         </div>
