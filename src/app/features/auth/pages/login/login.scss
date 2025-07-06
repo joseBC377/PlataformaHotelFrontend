@@ -247,7 +247,7 @@
         align-items: flex-start;
         padding: 1rem;
         background-size: cover;
-        height: 170dvh;
+        height: 140dvh;
 
     }
 
@@ -365,6 +365,9 @@
 
     //hacer para menores de 380
     @media screen and (max-width: 380px) {
+        .cuerpo{
+            height: 170dvh;
+        }
         .container-form h2 {
             font-size: 1rem;
         }
