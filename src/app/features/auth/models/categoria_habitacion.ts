@@ -1,5 +1,5 @@
 export interface CategoriaHabitacion {
-  id_categoria_habitacion?: number;
+  id?: number;
   nombre: string;
   descripcion: string;
   capacidad: number;

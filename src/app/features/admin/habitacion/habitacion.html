@@ -35,7 +35,7 @@
       <select class="form-select" id="categoria" formControlName="categoria_habitacion">
         <option [ngValue]="null" disabled selected>Seleccionar</option>
         @if (categorias$ | async; as categorias) {
-        @for (cat of categorias; track cat.id_categoria_habitacion) {
+        @for (cat of categorias; track cat.id) {
         <option [ngValue]="cat">{{ cat.nombre }}</option>
         }
         }
@@ -70,17 +70,18 @@
       </thead>
       <tbody>
         @if (habitacion$ | async; as user) {
-        @for (use of user; track use.id_habitacion) {
+        @for (use of user; track use.id) {
         <tr>
-          <td>{{ use.id_habitacion }}</td>
+          <td>{{ use.id }}</td>
           <td>{{ use.nombre }}</td>
           <td>{{ use.descripcion }}</td>
           <td>{{ use.estado }}</td>
-          <td>{{ use.categoria_habitacion.nombre }}</td>
+          <td>{{ use.categoriaHabitacion.nombre }}</td>
 
           <td>
             <button class="btn btn-warning btn-sm me-1" (click)="editarHabitacion(use)">Editar</button>
-            <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(use.id_habitacion!)">Eliminar</button>
+            <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(use.id!)">Eliminar</button>
+
 
           </td>
         </tr>

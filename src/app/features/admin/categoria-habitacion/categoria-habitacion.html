@@ -78,9 +78,9 @@
       </thead>
       <tbody>
         @if (categorias$ | async; as catList) {
-        @for (cat of catList; track cat.id_categoria_habitacion) {
+        @for (cat of catList; track cat.id) {
         <tr>
-          <td>{{ cat.id_categoria_habitacion }}</td>
+          <td>{{ cat.id }}</td>
           <td>{{ cat.nombre }}</td>
           <td>{{ cat.descripcion }}</td>
           <td>{{ cat.capacidad }}</td>
@@ -88,8 +88,8 @@
           <td><img [src]="cat.imagen" alt="Imagen" width="80" /></td>
           <td>
             <button class="btn btn-warning btn-sm me-1" (click)="editarCategoria(cat)">Editar</button>
-            <button class="btn btn-danger btn-sm" *ngIf="cat.id_categoria_habitacion !== undefined"
-              (click)="eliminarCategoria(cat.id_categoria_habitacion)">
+            <button class="btn btn-danger btn-sm" *ngIf="cat.id"
+              (click)="eliminarCategoria(cat.id)">
               Eliminar
             </button>
 

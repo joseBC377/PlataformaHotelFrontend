@@ -14,7 +14,7 @@ import { CategoriaHabitacion } from '../../auth/models/categoria_habitacion';
   templateUrl: './habitacion.html',
   styleUrl: './habitacion.scss'
 })
-export class HabitacionesAdminComponent {
+export class HabitacionesAdminComponent{
   protected habitacion$!: Observable<Habitacion[]>;
   protected categorias$!: Observable<CategoriaHabitacion[]>;
 
@@ -23,11 +23,11 @@ export class HabitacionesAdminComponent {
   private catServ = inject(CategoriaHabitacionServices);
 
   public habitacionForm: FormGroup = this.fb.group({
-    id_habitacion: [null],
+    id: [null],
     nombre: ['', [Validators.required, Validators.minLength(3)]],
     descripcion: ['', Validators.required],
     estado: ['', Validators.required],
-    categoria_habitacion: [null, Validators.required]
+    categoriaHabitacion: [null, Validators.required]
   });
 
   get nombre() { return this.habitacionForm.get('nombre'); }
@@ -62,7 +62,7 @@ export class HabitacionesAdminComponent {
 
   editarHabitacion(h: Habitacion): void {
     this.habitacionForm.patchValue(h);
-    this.idHabitacionEditar = h.id_habitacion ?? null;
+    this.idHabitacionEditar = h.id ?? null;
     this.modoEdicion = true;
   }
 
