@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { ResenaService } from '../services/resena.service';
+import { Observable } from 'rxjs';
+import { Resena } from '../../auth/models/resena';
+/*
 interface Resena {
   id: number;
   calificacion: number;
@@ -9,42 +12,45 @@ interface Resena {
   id_usuario: number;
   id_habitacion: string;
 }
-
+*/
 @Component({
   selector: 'app-resena-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, AsyncPipe],
   templateUrl: './resenas.html',
   styleUrls: ['./resenas.scss']
 })
 export class ResenaAdminComponent implements OnInit {
+
+  private serv = inject(ResenaService);
+  protected rese$!: Observable<Resena[]>;
+
   resenaForm!: FormGroup;
   resenas: Resena[] = [];
-  usuarios = [{ id: 101 }, { id: 102 }, { id: 103 }];
-  habitaciones = [{ id: 'H101' }, { id: 'H102' }, { id: 'H103' }];
-
-
-  modoEdicion = false;
-  idEditar: number | null = null;
+ 
 
   constructor(private fb: FormBuilder) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.resenaForm = this.fb.group({
       calificacion: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
       fecha: ['', Validators.required],
       id_usuario: [null, Validators.required],
       id_habitacion: [null, Validators.required]
+
     });
 
-    this.resenas = [
-      { id: 1, calificacion: 4.5, fecha: '2025-07-01', id_usuario: 101, id_habitacion: 'H101' },
-      { id: 2, calificacion: 5.0, fecha: '2025-07-02', id_usuario: 102, id_habitacion: 'H102' },
-      { id: 3, calificacion: 5.0, fecha: '2025-07-02', id_usuario: 103, id_habitacion: 'H103' }
-    ];
+
+    this.cargarResena();
 
   }
 
+
+  cargarResena() {
+    this.rese$ = this.serv.listar();
+  }
+
+  /*
   agregarResena() {
     if (this.resenaForm.invalid) {
       this.resenaForm.markAllAsTouched();
@@ -100,4 +106,5 @@ export class ResenaAdminComponent implements OnInit {
   get fecha() { return this.resenaForm.get('fecha'); }
   get id_usuario() { return this.resenaForm.get('id_usuario'); }
   get id_habitacion() { return this.resenaForm.get('id_habitacion'); }
+  */
 }

@@ -16,21 +16,15 @@
         [ngClass]="{ 'is-invalid': descripcion?.invalid && (descripcion?.touched || descripcion?.dirty) }" />
       <div class="invalid-feedback">La descripción es obligatoria.</div>
     </div>
-<div class="col-md-2">
-  <label for="precio" class="form-label">Precio</label>
-  <input
-    type="number"
-    id="precio"
-    class="form-control"
-    formControlName="precio"
-    step="0.01"
-    [ngClass]="{ 'is-invalid': precio?.invalid && (precio?.dirty || precio?.touched) }"
-  />
-  <div *ngIf="precio?.invalid && (precio?.dirty || precio?.touched)" class="invalid-feedback">
-    <small *ngIf="precio?.errors?.['required']">El precio es obligatorio.</small>
-    <small *ngIf="precio?.errors?.['min']">Debe ser mayor a 0.</small>
-  </div>
-</div>
+    <div class="col-md-2">
+      <label for="precio" class="form-label">Precio</label>
+      <input type="number" id="precio" class="form-control" formControlName="precio" step="0.01"
+        [ngClass]="{ 'is-invalid': precio?.invalid && (precio?.dirty || precio?.touched) }" />
+      <div *ngIf="precio?.invalid && (precio?.dirty || precio?.touched)" class="invalid-feedback">
+        <small *ngIf="precio?.errors?.['required']">El precio es obligatorio.</small>
+        <small *ngIf="precio?.errors?.['min']">Debe ser mayor a 0.</small>
+      </div>
+    </div>
 
 
 
@@ -60,17 +54,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let servicio of servicios">
-        <td>{{ servicio.id }}</td>
+      @for (servicio of servicio$ | async; track servicio.id_servicio) {
+      <tr>
+        <td>{{ servicio.id_servicio }}</td>
         <td>{{ servicio.nombre }}</td>
         <td>{{ servicio.descripcion }}</td>
         <td>{{ servicio.precio | number: '1.2-2' }}</td>
-        <td><img [src]="servicio.imagen" alt="{{servicio.nombre}}" width="60" /></td>
+        <td>
+          <img [src]="servicio.imagen" alt="{{servicio.nombre}}" width="60" />
+        </td>
         <td class="d-flex justify-content-center gap-2 align-middle">
           <button class="btn btn-primary btn-sm" (click)="editarServicio(servicio)">Editar</button>
-          <button class="btn btn-danger btn-sm" (click)="eliminarServicio(servicio.id)">Eliminar</button>
+          <button class="btn btn-danger btn-sm" (click)="eliminarServicio(servicio.id_servicio)">Eliminar</button>
         </td>
       </tr>
+      }
     </tbody>
   </table>
 </div>
