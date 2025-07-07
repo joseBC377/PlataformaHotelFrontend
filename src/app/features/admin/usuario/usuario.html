@@ -1,7 +1,7 @@
 <div class="container mt-4">
     <h2 class="mb-4">Gestión de Usuarios 👥</h2>
 
-    <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()" class="row g-3 mb-4 p-3 border rounded shadow-sm">
+    <form [formGroup]="usuarioForm" class="row g-3 mb-4 p-3 border rounded shadow-sm">
         <div class="col-md-4">
             <label for="nombre" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="nombre" formControlName="nombre"
@@ -55,22 +55,21 @@
         <div class="col-md-4">
             <label for="rol" class="form-label">Rol</label>
             <select class="form-select" id="rol" formControlName="rol">
-                <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
             </select>
         </div>
 
         <div class="col-12 mt-4">
-            <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
+            <!-- <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
                 [disabled]="usuarioForm.invalid">
                 {{ modoEdicion ? 'Actualizar Usuario' : 'Agregar Usuario' }}
             </button>
             <button type="button" class="btn btn-secondary ms-2" *ngIf="modoEdicion" (click)="resetFormulario()">
                 Cancelar Edición
-            </button>
+            </button> -->
         </div>
     </form>
 
-    <div class="table-responsive mt-4" *ngIf="usuarios.length > 0; else sinUsuarios">
+    <div class="table-responsive mt-4">
         <table class="table table-bordered table-hover">
             <thead class="table-hotel">
                 <tr>
@@ -84,18 +83,31 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let u of usuarios">
-                    <td>{{ u.id_usuario }}</td>
-                    <td>{{ u.nombre }}</td>
-                    <td>{{ u.apellido }}</td>
-                    <td>{{ u.correo }}</td>
-                    <td>{{ u.telefono }}</td>
-                    <td>{{ u.rol }}</td>
+                @if (usuario$|async; as user) {
+                @for (use of user; track use.id) {
+                <tr>
+                    <td>{{ use.id }}</td>
+                    <td>{{ use.nombre }}</td>
+                    <td>{{ use.apellido }}</td>
+                    <td>{{ use.correo }}</td>
+                    <td>{{ use.telefono }}</td>
+                    <td>{{ use.rol }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm me-1" (click)="editarUsuario(u)">Editar</button>
-                        <button class="btn btn-danger btn-sm" (click)="eliminarUsuario(u.id_usuario)">Eliminar</button>
+                        <button class="btn btn-warning btn-sm me-1">Editar</button>
+                        <button class="btn btn-danger btn-sm">Eliminar</button>
                     </td>
                 </tr>
+                }@empty {
+                    <tr>
+                        <td colspan="7">No hay usuarios registrados</td>
+                    </tr>
+                }
+                }@else {
+                    <tr>
+                        <td colspan="7">Cargando usuarios</td>
+                    </tr>
+                }
+
             </tbody>
         </table>
     </div>
@@ -103,5 +115,4 @@
     <ng-template #sinUsuarios>
         <div class="alert alert-info mt-4">No hay usuarios registrados.</div>
     </ng-template>
-
 </div>

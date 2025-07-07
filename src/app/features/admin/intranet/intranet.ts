@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { AdminServices } from '../services/admin.services';
 import { Observable } from 'rxjs';
-import { Usuario } from '../../auth/models/usuario';
 import { AsyncPipe } from '@angular/common';
 import { ConteoRol } from '../../auth/models/conteo-rol';
+import { UsuarioModel } from '../../auth/models/usuario';
 
 @Component({
   selector: 'app-intranet',
@@ -12,8 +12,8 @@ import { ConteoRol } from '../../auth/models/conteo-rol';
   styleUrl: './intranet.scss'
 })
 export class Intranet {
-  protected usuario$!: Observable<Usuario[]>;
-  protected usuarioReserva$!: Observable<Usuario[]>;
+  protected usuario$!: Observable<UsuarioModel[]>;
+  protected usuarioReserva$!: Observable<UsuarioModel[]>;
   protected contero$!: Observable<ConteoRol[]>;
   private serv = inject(AdminServices);
   ngOnInit() {

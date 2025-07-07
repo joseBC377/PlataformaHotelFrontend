@@ -1,8 +1,8 @@
-import { Usuario } from "./usuario";
+import { UsuarioModel } from "./usuario";
 
-export interface Reserva {
+export interface ReservaModel {
     id?:number,
     fecha_inicio:string,
     fecha_fin:string,
-    usuario:Usuario,
+    usuario:UsuarioModel,
 }
