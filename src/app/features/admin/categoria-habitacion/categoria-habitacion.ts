@@ -19,7 +19,7 @@ export class CategoriaHabitacionComponent {
   private fb = inject(FormBuilder);
 
   public categoriaForm: FormGroup = this.fb.group({
-    id_categoria_habitacion: [null],
+    id: [null],
     nombre: ['', [Validators.required, Validators.minLength(3)]],
     descripcion: ['', Validators.required],
     capacidad: [0, [Validators.required, Validators.min(1)]],
@@ -64,7 +64,7 @@ export class CategoriaHabitacionComponent {
 
   editarCategoria(cat: CategoriaHabitacion): void {
     this.categoriaForm.patchValue(cat);
-    this.idCategoriaEditar = cat.id_categoria_habitacion ?? null;
+    this.idCategoriaEditar = cat.id ?? null;
     this.modoEdicion = true;
   }
 
