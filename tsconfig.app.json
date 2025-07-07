@@ -8,6 +8,9 @@
       "node"
     ]
   },
+  "angularCompilerOptions": {
+    "controlFlow": true
+  },
   "include": [
     "src/**/*.ts"
   ],

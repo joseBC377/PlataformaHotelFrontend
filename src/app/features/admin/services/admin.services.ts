@@ -14,11 +14,32 @@ export class AdminServices {
   getAllUsers(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.API_URL}/todosCliente`);
   }
+
   getAllUserReservas(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.API_URL}/TodosUsuarioReserva`);
   }
+
   getCountUsersRol(): Observable<ConteoRol[]> {
     return this.http.get<ConteoRol[]>(`${this.API_URL}/contarUsuariosRol`);
   }
 
+  getSelectAllUsers(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.API_URL}/lista`);
+  }
+
+  getSelectIdUser(id: number): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.API_URL}/lista/${id}`);
+  }
+
+  postInsertIdUser(usuario: Usuario): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.API_URL}/insertar`, usuario);
+  }
+
+  putUpdateUser(id: number, usuario: Usuario): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.API_URL}/actualizar/${id}`, usuario);
+  }
+
+  deleteIdUser(id: number): Observable<Usuario> {
+    return this.http.delete<Usuario>(`${this.API_URL}/eliminar/${id}`);
+  }
 }
