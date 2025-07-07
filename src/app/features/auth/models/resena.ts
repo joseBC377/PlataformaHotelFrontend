@@ -1,10 +1,10 @@
-import { Usuario } from "../../admin/usuario/usuario";
 import { Habitacion } from "./habitacion";
+import { UsuarioModel } from "./usuario";
 
 export interface Resena {
     id?:number,
     calificacion:number,
     fecha:string,
-    usuario:Usuario,
+    usuario:UsuarioModel,
     habitacion:Habitacion
 }
