@@ -1,7 +1,7 @@
-import { Reserva } from "./reserva";
+import { ReservaModel } from "./reserva";
 import { Rol } from "./rol";
 
-export interface Usuario {
+export interface UsuarioModel {
     id?:number,
     nombre: string,
     apellido: string,
@@ -9,5 +9,5 @@ export interface Usuario {
     telefono:string,
     password:string,
     rol:Rol,
-    reserva:Reserva[]
+    reserva:ReservaModel[]
 }

@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <h2 class="mb-4">Gestión de Pagos 💳</h2>
 
-  <form [formGroup]="pagoForm" (ngSubmit)="guardarPago()" class="row g-3 mb-4 p-3 border rounded shadow-sm">
+  <form [formGroup]="pagoForm" class="row g-3 mb-4 p-3 border rounded shadow-sm">
 
     <div class="col-md-4">
       <label for="total" class="form-label">Total (S/.)</label>
@@ -16,7 +16,6 @@
       <label for="metodo_pago" class="form-label">Método de Pago</label>
       <select id="metodo_pago" class="form-select" formControlName="metodo_pago">
         <option value="" disabled>Seleccione un método...</option>
-        <option *ngFor="let metodo of metodosDePago" [value]="metodo">{{ metodo }}</option>
       </select>
       <div *ngIf="metodo_pago?.invalid && (metodo_pago?.dirty || metodo_pago?.touched)" class="text-danger mt-1">
         <small *ngIf="metodo_pago?.errors?.['required']">Seleccione un método de pago.</small>
@@ -27,7 +26,6 @@
       <label for="estado_pago" class="form-label">Estado del Pago</label>
       <select id="estado_pago" class="form-select" formControlName="estado_pago">
         <option value="" disabled>Seleccione un estado...</option>
-        <option *ngFor="let estado of estadosDePago" [value]="estado">{{ estado }}</option>
       </select>
       <div *ngIf="estado_pago?.invalid && (estado_pago?.dirty || estado_pago?.touched)" class="text-danger mt-1">
         <small *ngIf="estado_pago?.errors?.['required']">Seleccione un estado de pago.</small>
@@ -52,17 +50,17 @@
     </div>
 
     <div class="col-12 mt-4">
-      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
+      <!-- <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
         [disabled]="pagoForm.invalid">
         {{ modoEdicion ? 'Actualizar Pago' : 'Agregar Pago' }}
       </button>
       <button type="button" class="btn btn-secondary ms-2" *ngIf="modoEdicion" (click)="resetFormulario()">
         Cancelar Edición
-      </button>
+      </button> -->
     </div>
   </form>
 
-  <div class="table-responsive mt-4" *ngIf="pagos.length > 0; else sinPagos">
+  <div class="table-responsive mt-4">
     <table class="table table-bordered table-hover">
       <thead class="table-hotel">
         <tr>
@@ -76,18 +74,30 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let pago of pagos">
-          <td>{{ pago.id }}</td>
-          <td>{{ pago.total }}</td>
-          <td>{{ pago.metodo_pago }}</td>
-          <td>{{ pago.estado_pago }}</td>
-          <td>{{ pago.fecha_pago }}</td>
-          <td>{{ pago.id_reserva }}</td>
+        @if (pago$|async; as pago) {
+        @for (p of pago; track p.idPago ) {
+        <tr>
+          <td>{{ p.idPago }}</td>
+          <td>{{ p.total }}</td>
+          <td>{{ p.metodo_pago}}</td>
+          <td>{{ p.estado_pago }}</td>
+          <td>{{ p.fecha_pago }}</td>
+          <td>{{ p.id_reserva }}</td>
           <td>
-            <button class="btn btn-warning btn-sm me-1" (click)="editarPago(pago)">Editar</button>
-            <button class="btn btn-danger btn-sm" (click)="eliminarPago(pago.id_pago)">Eliminar</button>
+            <button class="btn btn-warning btn-sm me-1" >Editar</button>
+            <button class="btn btn-danger btn-sm" >Eliminar</button>
           </td>
         </tr>
+        }@empty {
+          <tr>
+            <td colspan="7">No hay pago registrados</td>
+          </tr>
+        }
+        }@else {
+          <tr>
+            <td colspan="7">Cargando pago</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
