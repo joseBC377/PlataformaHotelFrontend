@@ -13,7 +13,6 @@ import { Reservas } from './features/publico/reservas/reservas';
 import { Contactos } from './features/publico/contactos/contactos';
 import { HabitacionesAdminComponent } from './features/admin/habitacion/habitacion';
 import { ServiciosAdminComponent } from './features/admin/servicio/servicio';
-import { CategoriaHabitacionAdminComponent } from './features/admin/categoria-habitacion/categoria-habitacion';
 import { ReservaServicioAdminComponent } from './features/admin/reserva-servicio/reserva-servicio';
 import { ResenaAdminComponent } from './features/admin/resenas/resenas';
 import { Usuario } from './features/admin/usuario/usuario';
@@ -21,6 +20,8 @@ import { ReservaHabitacion } from './features/admin/reserva-habitacion/reserva-h
 import { Reserva } from './features/admin/reserva/reserva';
 import { Contacto } from './features/admin/contacto/contacto';
 import { Pago } from './features/admin/pago/pago';
+import { CategoriaHabitacionServices } from './features/admin/services/categoria_habitacion';
+import { CategoriaHabitacionComponent } from './features/admin/categoria-habitacion/categoria-habitacion';
 
 
 export const routes: Routes = [
@@ -51,7 +52,7 @@ export const routes: Routes = [
                 path: 'servicio', component: ServiciosAdminComponent, title: "Servicio"
             },
             {
-                path: 'categoria-habitacion', component: CategoriaHabitacionAdminComponent, title: "Categoria-Habitacion"
+                path: 'categoria-habitacion', component: CategoriaHabitacionComponent, title: "Categoria-Habitacion"
             },
              {
                 path: 'reserva-servicio', component: ReservaServicioAdminComponent, title: "Reserva-Servicio"

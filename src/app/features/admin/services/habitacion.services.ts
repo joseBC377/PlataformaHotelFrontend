@@ -1,0 +1,32 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Habitacion } from '../../auth/models/habitacion';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class HabitacionServices {
+  private API_URL = 'http://localhost:8081/api/habitacion';
+  private http = inject(HttpClient);
+
+  getAllHabitaciones(): Observable<Habitacion[]> {
+    return this.http.get<Habitacion[]>(`${this.API_URL}/listar`);
+  }
+
+  getHabitacionById(id: number): Observable<Habitacion> {
+    return this.http.get<Habitacion>(`${this.API_URL}/lista/${id}`);
+  }
+
+  postInsertarHabitacion(habitacion: Habitacion): Observable<Habitacion> {
+    return this.http.post<Habitacion>(`${this.API_URL}/insertar`, habitacion);
+  }
+
+  putEditarHabitacion(id: number, habitacion: Habitacion): Observable<Habitacion> {
+    return this.http.put<Habitacion>(`${this.API_URL}/actualizar/${id}`, habitacion);
+  }
+
+  deleteHabitacion(id: number): Observable<Habitacion> {
+    return this.http.delete<Habitacion>(`${this.API_URL}/eliminar/${id}`);
+  }
+}

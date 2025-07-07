@@ -1,120 +1,88 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { HabitacionServices } from '../services/habitacion.services';
+import { CategoriaHabitacionServices } from '../services/categoria_habitacion';
+import { Habitacion } from '../../auth/models/habitacion';
+import { CategoriaHabitacion } from '../../auth/models/categoria_habitacion';
 
 @Component({
   selector: 'app-habitaciones-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './habitacion.html',
-  styleUrls: ['./habitacion.scss']
+  styleUrl: './habitacion.scss'
 })
-export class HabitacionesAdminComponent implements OnInit {
-  habitacionForm!: FormGroup;
-  categorias = ['Doble', 'Doble Superior', 'Estándar Triple', 'Junior Suite', 'Superior Twin'];
-  habitaciones: any[] = [];
-  modoEdicion = false;
-  idHabitacionEditar: number | null = null;
+export class HabitacionesAdminComponent {
+  protected habitacion$!: Observable<Habitacion[]>;
+  protected categorias$!: Observable<CategoriaHabitacion[]>;
 
+  private fb = inject(FormBuilder);
+  private serv = inject(HabitacionServices);
+  private catServ = inject(CategoriaHabitacionServices);
 
-  constructor(private fb: FormBuilder) { }
+  public habitacionForm: FormGroup = this.fb.group({
+    id_habitacion: [null],
+    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    descripcion: ['', Validators.required],
+    estado: ['', Validators.required],
+    categoria_habitacion: [null, Validators.required]
+  });
 
-  ngOnInit(): void {
-    this.habitacionForm = this.fb.group({
-      nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      estado: ['', Validators.required],
-      categoria: [null, Validators.required]
-    });
+  get nombre() { return this.habitacionForm.get('nombre'); }
+  get descripcion() { return this.habitacionForm.get('descripcion'); }
+  get estado() { return this.habitacionForm.get('estado'); }
+  get categoria_habitacion() { return this.habitacionForm.get('categoria_habitacion'); }
 
-    // ✅ Carga inicial de habitaciones (con descripción completa)
-    this.habitaciones = [
-      {
-        id: 1,
-        nombre: 'Estándar Doble',
-        descripcion: 'Acogedora y moderna habitación, excelente para negocios o placer, recomendada para una o dos personas. Mide entre 16 M² y 18 M², con 1 cama matrimonial, vista interna o a la calle. Incluye cerradura electrónica con sistema de apertura de proximidad, ventana termoacústica, aire acondicionado central con termostato individual, sistema de calentamiento de agua central, Wifi GRATIS, baño, mini-frigorífico, TV, caja de seguridad digital, radio reloj con Bluetooth y puerto USB.',
-        estado: 'Disponible',
-        categoria: 'Doble',
-      },
-      {
-        id: 2,
-        nombre: 'Superior Doble',
-        descripcion: 'Magnífica y confortable habitación ideal para parejas y un niño. Miden entre 18 M² y 24 M², con cama Queen, vista interna o a la calle. Cuenta con cerradura electrónica, ventanas termoacústicas, aire acondicionado central con termostato individual, sistema de calentamiento de agua central, Wifi GRATIS, baño, mini-frigorífico, TV, caja de seguridad digital, radio reloj con Bluetooth y puerto USB.',
-        estado: 'Ocupada',
-        categoria: 'Doble Superior',
-      },
-      {
-        id: 3,
-        nombre: 'Superior Twin',
-        descripcion: 'Cómodas habitaciones de 18 M² a 19 M² con dos camas semidobles, vista interna. Incluye cerradura electrónica con sistema de apertura por proximidad, ventanas termoacústicas, aire acondicionado central con termostato individual, baño con ducha y calentador de agua central, TV, Wifi GRATIS, mini-frigorífico, caja de seguridad digital, radio reloj con Bluetooth y puerto USB.',
-        estado: 'Disponible',
-        categoria: 'Superior Twin',
-      },
-      {
-        id: 4,
-        nombre: 'Estándar Triple',
-        descripcion: 'Habitaciones de 19 M² con 3 camas de 1 metro, vista interna. Cuenta con cerradura electrónica con sistema de apertura por proximidad, ventanas termoacústicas, aire acondicionado central con termostato individual, sistema central de calentamiento de agua, Internet Wifi e Internet por cable GRATIS, minibar a solicitud, caja de seguridad digital, radio reloj con Bluetooth y puerto USB.',
-        estado: 'Ocupada',
-        categoria: 'Estándar Triple',
-      },
-      {
-        id: 5,
-        nombre: 'Junior Suite',
-        descripcion: 'Placentera y espaciosa habitación, la más amplia del hotel con 32 M², vista interna, con 1 cama King o dos camas semidobles. Cerradura electrónica con sistema de apertura por proximidad, ventanería termoacústica, aire acondicionado central con termostato individual, doble armario, sistema de calentamiento de agua central, Wifi GRATIS, baño, mini-frigorífico, TV, caja de seguridad digital, radio reloj con Bluetooth y puerto USB.',
-        estado: 'Disponible',
-        categoria: 'Junior Suite',
-      }
-    ];
-  }
-  agregarHabitacion() {
+  public modoEdicion: boolean = false;
+  public idHabitacionEditar: number | null = null;
+
+  registroHabitacion(): void {
     if (this.habitacionForm.invalid) {
-      this.habitacionForm.markAllAsTouched(); // Solo marca si está inválido al presionar "Agregar"
+      this.habitacionForm.markAllAsTouched();
+      console.warn('Formulario inválido');
       return;
     }
 
-    const nueva = {
-      ...this.habitacionForm.value,
-      id: this.idHabitacionEditar ?? (this.habitaciones.length > 0 ? Math.max(...this.habitaciones.map(h => h.id)) + 1 : 1)
-    };
+    const data = this.habitacionForm.value;
 
     if (this.modoEdicion) {
-      const index = this.habitaciones.findIndex(h => h.id === this.idHabitacionEditar);
-      if (index !== -1) this.habitaciones[index] = nueva;
+      this.serv.putEditarHabitacion(this.idHabitacionEditar!, data).subscribe(() => {
+        this.habitacion$ = this.serv.getAllHabitaciones();
+        this.resetFormulario();
+      });
     } else {
-      this.habitaciones.push(nueva);
+      this.serv.postInsertarHabitacion(data).subscribe(() => {
+        this.habitacion$ = this.serv.getAllHabitaciones();
+        this.resetFormulario();
+      });
     }
-
-    this.resetFormulario();
   }
 
-  editarHabitacion(h: any) {
-    this.habitacionForm.setValue({
-      nombre: h.nombre,
-      descripcion: h.descripcion,
-      estado: h.estado,
-      categoria: h.categoria
-    });
-    this.idHabitacionEditar = h.id;
+  editarHabitacion(h: Habitacion): void {
+    this.habitacionForm.patchValue(h);
+    this.idHabitacionEditar = h.id_habitacion ?? null;
     this.modoEdicion = true;
   }
 
-  eliminarHabitacion(id: number) {
-    const confirmar = confirm('¿Deseas eliminar esta habitación?');
-    if (confirmar) {
-      this.habitaciones = this.habitaciones.filter(h => h.id !== id);
-      if (this.idHabitacionEditar === id) this.resetFormulario();
+  eliminarHabitacion(id: number): void {
+    if (confirm('¿Seguro que deseas eliminar esta habitación?')) {
+      this.serv.deleteHabitacion(id).subscribe(() => {
+        this.habitacion$ = this.serv.getAllHabitaciones();
+        if (this.idHabitacionEditar === id) this.resetFormulario();
+      });
     }
   }
 
-  resetFormulario() {
+  resetFormulario(): void {
     this.habitacionForm.reset();
     this.modoEdicion = false;
     this.idHabitacionEditar = null;
   }
 
-  // Getters para validación
-  get nombre() { return this.habitacionForm.get('nombre'); }
-  get descripcion() { return this.habitacionForm.get('descripcion'); }
-  get estado() { return this.habitacionForm.get('estado'); }
-  get categoria() { return this.habitacionForm.get('categoria'); }
+  ngOnInit(): void {
+    this.habitacion$ = this.serv.getAllHabitaciones();
+    this.categorias$ = this.catServ.getAllCategorias();
+  }
 }
