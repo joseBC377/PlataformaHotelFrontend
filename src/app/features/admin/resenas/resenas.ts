@@ -31,7 +31,7 @@ export class ResenaAdminComponent implements OnInit {
 
   constructor(private fb: FormBuilder) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.resenaForm = this.fb.group({
       calificacion: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
       fecha: ['', Validators.required],

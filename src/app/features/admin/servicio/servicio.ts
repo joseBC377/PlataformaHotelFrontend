@@ -1,15 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Servicio } from '../../auth/models/servicio';
+import { ServicioService } from '../services/servicio.service';
 
 @Component({
   selector: 'app-servicios-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, AsyncPipe],
   templateUrl: './servicio.html',
   styleUrls: ['./servicio.scss']
 })
 export class ServiciosAdminComponent implements OnInit {
+
+  protected servicio$!: Observable<Servicio[]>;
+  private serv = inject(ServicioService);
+
   servicios: any[] = [];
 
   servicioForm: FormGroup;
@@ -25,31 +32,15 @@ export class ServiciosAdminComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.servicios = [
-      {
-        id: 1,
-        nombre: 'Restaurante',
-        descripcion: 'Disfruta de una experiencia gastronómica única en nuestro restaurante gourmet. Nuestro menú incluye platos internacionales y opciones locales, preparados por chefs reconocidos. El ambiente elegante y acogedor lo convierte en el lugar perfecto para desayunos, almuerzos y cenas inolvidables.',
-        precio: 40.00,
-        imagen: 'assets/images/servicios/restaurante.jpg'
-      },
-      {
-        id: 2,
-        nombre: 'Restobar',
-        descripcion: 'Relájate en nuestro restobar con una amplia variedad de cócteles, vinos y cervezas artesanales. Ideal para compartir una noche con amigos o disfrutar de música en vivo en un ambiente moderno y exclusivo.',
-        precio: 25.00,
-        imagen: 'assets/images/servicios/restobar.jpg'
-      },
-      {
-        id: 3,
-        nombre: 'Experiencias',
-        descripcion: 'Te ofrecemos experiencias únicas como tours guiados por la ciudad, actividades culturales, clases de cocina peruana y mucho más. Nuestro personal se encargará de organizar todo para que vivas momentos inolvidables durante tu estancia.',
-        precio: 55.00,
-        imagen: 'assets/images/servicios/experiencia.jpg'
-      }
-    ];
+  ngOnInit() {
+    this.obtenerServicios();
   }
+
+  obtenerServicios() {
+    this.servicio$ = this.serv.listar(); //Asignacion directa al observable
+  }
+
+
 
   agregarServicio() {
     if (this.servicioForm.invalid) {
