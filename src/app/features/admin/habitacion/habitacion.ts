@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { HabitacionServices } from '../services/habitacion.services';
@@ -14,7 +14,7 @@ import { CategoriaHabitacion } from '../../auth/models/categoria_habitacion';
   templateUrl: './habitacion.html',
   styleUrl: './habitacion.scss'
 })
-export class HabitacionesAdminComponent{
+export class HabitacionesAdminComponent implements OnInit {
   protected habitacion$!: Observable<Habitacion[]>;
   protected categorias$!: Observable<CategoriaHabitacion[]>;
 
@@ -33,7 +33,7 @@ export class HabitacionesAdminComponent{
   get nombre() { return this.habitacionForm.get('nombre'); }
   get descripcion() { return this.habitacionForm.get('descripcion'); }
   get estado() { return this.habitacionForm.get('estado'); }
-  get categoria_habitacion() { return this.habitacionForm.get('categoria_habitacion'); }
+  get categoriaHabitacion() { return this.habitacionForm.get('categoriaHabitacion'); }
 
   public modoEdicion: boolean = false;
   public idHabitacionEditar: number | null = null;
