@@ -17,7 +17,7 @@ import { ReservaServicioAdminComponent } from './features/admin/reserva-servicio
 import { ResenaAdminComponent } from './features/admin/resenas/resenas';
 import { Usuario } from './features/admin/usuario/usuario';
 import { ReservaHabitacion } from './features/admin/reserva-habitacion/reserva-habitacion';
-// import { Reserva } from './features/admin/reserva/reserva';
+import { ReservaComponent } from './features/admin/reserva/reserva';
 import { Contacto } from './features/admin/contacto/contacto';
 import { Pago } from './features/admin/pago/pago';
 import { CategoriaHabitacionServices } from './features/admin/services/categoria_habitacion';
@@ -39,9 +39,9 @@ export const routes: Routes = [
             {
                 path: 'pago', component: Pago, title: 'Pago de Reserva'
             },
-            // {
-            //     path: 'reserva', component: Reserva, title: 'Reserva'
-            // },
+            {
+                path: 'reserva', component: ReservaComponent, title: 'Reserva'
+            },
             {
                 path: 'contacto', component: Contacto, title: 'Contacto'
             },
