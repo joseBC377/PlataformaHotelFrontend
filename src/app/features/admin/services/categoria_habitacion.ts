@@ -18,14 +18,14 @@ export class CategoriaHabitacionServices {
     return this.http.get<CategoriaHabitacion>(`${this.API_URL}/${id}`);
   }
 
-  postInsertarCategoria(cat: CategoriaHabitacion): Observable<CategoriaHabitacion> {
-    return this.http.post<CategoriaHabitacion>(`${this.API_URL}`, cat);
-  }
+  postInsertarCategoria(data: FormData): Observable<any> {
+  return this.http.post('http://localhost:8081/api/categoriaHabitacion', data);
+}
 
-  putEditarCategoria(id: number, cat: CategoriaHabitacion): Observable<CategoriaHabitacion> {
-    return this.http.put<CategoriaHabitacion>(`${this.API_URL}/${id}`, cat);
-  }
-
+  
+putEditarCategoria(id: number, data: FormData): Observable<any> {
+  return this.http.put(`http://localhost:8081/api/categoriaHabitacion/${id}`, data);
+}
   deleteCategoria(id: number): Observable<CategoriaHabitacion> {
     return this.http.delete<CategoriaHabitacion>(`${this.API_URL}/${id}`);
   }

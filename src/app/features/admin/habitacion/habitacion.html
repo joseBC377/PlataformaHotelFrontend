@@ -32,7 +32,10 @@
 
     <div class="col-md-4">
       <label for="categoria" class="form-label">Categoría</label>
-      <select class="form-select" id="categoria" formControlName="categoriaHabitacion">
+   <select class="form-select" id="categoria"
+  formControlName="categoriaHabitacion"
+  [compareWith]="compararCategoria">
+
         <option [ngValue]="null" disabled selected>Seleccionar</option>
         @if (categorias$ | async; as categorias) {
           @for (cat of categorias; track cat.id) {
@@ -77,10 +80,13 @@
               <td>{{ use.descripcion }}</td>
               <td>{{ use.estado }}</td>
               <td>{{ use.categoriaHabitacion.nombre }}</td>
-              <td>
-                <button class="btn btn-warning btn-sm me-1" (click)="editarHabitacion(use)">Editar</button>
-                <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(use.id!)">Eliminar</button>
-              </td>
+     <td>
+  <div class="d-flex justify-content-center gap-2">
+    <button class="btn btn-warning btn-sm" (click)="editarHabitacion(use)">Editar</button>
+    <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(use.id!)">Eliminar</button>
+  </div>
+</td>
+
             </tr>
           } @empty {
             <tr>

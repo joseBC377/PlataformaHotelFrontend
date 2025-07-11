@@ -43,11 +43,13 @@
 
     <!-- IMAGEN -->
     <div class="col-md-6">
-      <label for="imagen" class="form-label">Imagen (URL)</label>
-      <input id="imagen" type="text" class="form-control" formControlName="imagen"
-        placeholder="https://ejemplo.com/imagen.jpg" />
-      <div *ngIf="imagen?.invalid && (imagen?.touched || imagen?.dirty)" class="text-danger mt-1">
-        <small>La imagen es obligatoria.</small>
+      <label for="imagen" class="form-label">Imagen (Archivo)</label>
+      <input id="imagen" type="file" class="form-control" (change)="onFileChange($event)" #fileInput />
+
+      <!-- VISTA PREVIA DE IMAGEN -->
+      <div class="col-md-6 mt-2" *ngIf="categoriaForm.value.imagen">
+        <label class="form-label">Vista previa de imagen:</label><br />
+        <img [src]="categoriaForm.value.imagen" alt="Vista previa" width="120" class="border rounded" />
       </div>
     </div>
 
@@ -88,8 +90,7 @@
           <td><img [src]="cat.imagen" alt="Imagen" width="80" /></td>
           <td>
             <button class="btn btn-warning btn-sm me-1" (click)="editarCategoria(cat)">Editar</button>
-            <button class="btn btn-danger btn-sm" *ngIf="cat.id"
-              (click)="eliminarCategoria(cat.id)">
+            <button class="btn btn-danger btn-sm" *ngIf="cat.id" (click)="eliminarCategoria(cat.id)">
               Eliminar
             </button>
 

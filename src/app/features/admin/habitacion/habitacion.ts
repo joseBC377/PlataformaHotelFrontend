@@ -27,7 +27,7 @@ export class HabitacionesAdminComponent implements OnInit {
     nombre: ['', [Validators.required, Validators.minLength(3)]],
     descripcion: ['', Validators.required],
     estado: ['', Validators.required],
-    categoriaHabitacion: [null, Validators.required]
+  categoriaHabitacion: [null, Validators.required] 
   });
 
   get nombre() { return this.habitacionForm.get('nombre'); }
@@ -59,12 +59,22 @@ export class HabitacionesAdminComponent implements OnInit {
       });
     }
   }
+editarHabitacion(hab: Habitacion): void {
+  console.log('Editando habitación:', hab);
 
-  editarHabitacion(h: Habitacion): void {
-    this.habitacionForm.patchValue(h);
-    this.idHabitacionEditar = h.id ?? null;
-    this.modoEdicion = true;
-  }
+  this.habitacionForm.patchValue({
+    id: hab.id,
+    nombre: hab.nombre,
+    descripcion: hab.descripcion,
+    estado: hab.estado,
+    categoriaHabitacion: hab.categoriaHabitacion 
+  });
+
+  this.modoEdicion = true;
+}
+
+
+
 
   eliminarHabitacion(id: number): void {
     if (confirm('¿Seguro que deseas eliminar esta habitación?')) {
@@ -84,5 +94,11 @@ export class HabitacionesAdminComponent implements OnInit {
   ngOnInit(): void {
     this.habitacion$ = this.serv.getAllHabitaciones();
     this.categorias$ = this.catServ.getAllCategorias();
+    
   }
+
+  compararCategoria = (c1: CategoriaHabitacion, c2: CategoriaHabitacion): boolean => {
+  return c1 && c2 ? c1.id === c2.id : c1 === c2;
+}
+
 }
