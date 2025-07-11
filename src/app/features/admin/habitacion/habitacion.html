@@ -1,52 +1,64 @@
 <div class="container mt-4">
   <h2 class="mb-4">Gestión de Habitaciones 🛏️</h2>
 
-  <form [formGroup]="habitacionForm" class="row g-3 mb-4 p-3 border rounded shadow-sm"
+<form [formGroup]="habitacionForm" class="row g-3 mb-4 p-3 border rounded shadow-sm"
     (ngSubmit)="registroHabitacion()">
     <div class="col-md-4">
       <label for="nombre" class="form-label">Nombre</label>
       <input type="text" class="form-control" id="nombre" formControlName="nombre"
         placeholder="Nombre de la habitación" />
-      <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)" class="text-danger mt-1">
-        <small *ngIf="nombre?.errors?.['required']">El nombre es obligatorio.</small>
-        <small *ngIf="nombre?.errors?.['minlength']">Mínimo 3 caracteres.</small>
+
+      @if (nombre?.invalid && (nombre?.dirty || nombre?.touched)) {
+      <div class="text-danger mt-1">
+        @if (nombre?.errors?.['required']) {
+        <small>El nombre es obligatorio.</small>
+        }
+        @if (nombre?.errors?.['minlength']) {
+        <small>Mínimo 3 caracteres.</small>
+        }
       </div>
+      }
     </div>
 
     <div class="col-md-4">
       <label for="descripcion" class="form-label">Descripción</label>
       <input type="text" class="form-control" id="descripcion" formControlName="descripcion"
         placeholder="Descripción" />
-      <div *ngIf="descripcion?.invalid && (descripcion?.dirty || descripcion?.touched)" class="text-danger mt-1">
+      @if (descripcion?.invalid && (descripcion?.dirty || descripcion?.touched)) {
+      <div class="text-danger mt-1">
         <small>La descripción es obligatoria.</small>
       </div>
+      }
     </div>
 
     <div class="col-md-4">
       <label for="estado" class="form-label">Estado</label>
       <input type="text" class="form-control" id="estado" formControlName="estado" placeholder="Disponible / Ocupado" />
-      <div *ngIf="estado?.invalid && (estado?.dirty || estado?.touched)" class="text-danger mt-1">
+
+      @if (estado?.invalid && (estado?.dirty || estado?.touched)) {
+      <div class="text-danger mt-1">
         <small>El estado es obligatorio.</small>
       </div>
+      }
     </div>
 
     <div class="col-md-4">
       <label for="categoria" class="form-label">Categoría</label>
-   <select class="form-select" id="categoria"
-  formControlName="categoriaHabitacion"
-  [compareWith]="compararCategoria">
-
+      <select class="form-select" id="categoria" formControlName="categoriaHabitacion"
+        [compareWith]="compararCategoria">
         <option [ngValue]="null" disabled selected>Seleccionar</option>
         @if (categorias$ | async; as categorias) {
-          @for (cat of categorias; track cat.id) {
-            <option [ngValue]="cat">{{ cat.nombre }}</option>
-          }
+        @for (cat of categorias; track cat.id) {
+        <option [ngValue]="cat">{{ cat.nombre }}</option>
+        }
         }
       </select>
-      <div *ngIf="categoriaHabitacion?.invalid && (categoriaHabitacion?.dirty || categoriaHabitacion?.touched)"
-        class="text-danger mt-1">
+
+      @if (categoriaHabitacion?.invalid && (categoriaHabitacion?.dirty || categoriaHabitacion?.touched)) {
+      <div class="text-danger mt-1">
         <small>Selecciona una categoría válida.</small>
       </div>
+      }
     </div>
 
     <div class="col-12 mt-3">
@@ -54,14 +66,16 @@
         [disabled]="habitacionForm.invalid">
         {{ modoEdicion ? 'Actualizar Habitación' : 'Agregar Habitación' }}
       </button>
-      <button type="button" class="btn btn-secondary ms-2" *ngIf="modoEdicion"
-        (click)="resetFormulario()">Cancelar</button>
+
+      @if (modoEdicion) {
+      <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar</button>
+      }
     </div>
   </form>
 
   <div class="table-responsive mt-4">
     <table class="table table-bordered table-hover">
-      <thead class="table-light">
+      <thead class="table-hotel">
         <tr>
           <th>ID</th>
           <th>Nombre</th>
@@ -73,30 +87,30 @@
       </thead>
       <tbody>
         @if (habitacion$ | async; as user) {
-          @for (use of user; track use.id) {
-            <tr>
-              <td>{{ use.id }}</td>
-              <td>{{ use.nombre }}</td>
-              <td>{{ use.descripcion }}</td>
-              <td>{{ use.estado }}</td>
-              <td>{{ use.categoriaHabitacion.nombre }}</td>
-     <td>
-  <div class="d-flex justify-content-center gap-2">
-    <button class="btn btn-warning btn-sm" (click)="editarHabitacion(use)">Editar</button>
-    <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(use.id!)">Eliminar</button>
-  </div>
-</td>
+        @for (use of user; track use.id) {
+        <tr>
+          <td>{{ use.id }}</td>
+          <td>{{ use.nombre }}</td>
+          <td>{{ use.descripcion }}</td>
+          <td>{{ use.estado }}</td>
+          <td>{{ use.categoriaHabitacion.nombre }}</td>
+          <td>
+            <div class="d-flex justify-content-center gap-2">
+              <button class="btn btn-warning btn-sm" (click)="editarHabitacion(use)">Editar</button>
+              <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(use.id!)">Eliminar</button>
+            </div>
+          </td>
 
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="6">No hay habitaciones registradas.</td>
-            </tr>
-          }
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="6">No hay habitaciones registradas.</td>
+        </tr>
+        }
         } @else {
-          <tr>
-            <td colspan="6">Cargando habitaciones...</td>
-          </tr>
+        <tr>
+          <td colspan="6">Cargando habitaciones...</td>
+        </tr>
         }
       </tbody>
     </table>

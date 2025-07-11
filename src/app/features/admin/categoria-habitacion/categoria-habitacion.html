@@ -2,65 +2,79 @@
   <h2 class="mb-4">Gestión de Categorías de Habitación 🏨</h2>
 
   <form [formGroup]="categoriaForm" class="row g-3 mb-4 p-3 border rounded shadow-sm" (ngSubmit)="registroCategoria()">
-    <!-- NOMBRE -->
+
     <div class="col-md-4">
       <label for="nombre" class="form-label">Nombre</label>
       <input id="nombre" type="text" class="form-control" formControlName="nombre"
         placeholder="Nombre de la categoría" />
-      <div *ngIf="nombre?.invalid && (nombre?.touched || nombre?.dirty)" class="text-danger mt-1">
-        <small *ngIf="nombre?.errors?.['required']">El nombre es obligatorio.</small>
-        <small *ngIf="nombre?.errors?.['minlength']">Mínimo 3 caracteres.</small>
+
+      @if (nombre?.invalid && (nombre?.touched || nombre?.dirty)) {
+      <div class="text-danger mt-1">
+        @if (nombre?.errors?.['required']) {
+        <small>El nombre es obligatorio.</small>
+        }
+        @if (nombre?.errors?.['minlength']) {
+        <small>Mínimo 3 caracteres.</small>
+        }
       </div>
+      }
     </div>
 
-    <!-- DESCRIPCIÓN -->
     <div class="col-md-4">
       <label for="descripcion" class="form-label">Descripción</label>
       <input id="descripcion" type="text" class="form-control" formControlName="descripcion"
         placeholder="Descripción de la categoría" />
-      <div *ngIf="descripcion?.invalid && (descripcion?.touched || descripcion?.dirty)" class="text-danger mt-1">
+
+      @if (descripcion?.invalid && (descripcion?.touched || descripcion?.dirty)) {
+      <div class="text-danger mt-1">
         <small>La descripción es obligatoria.</small>
       </div>
+      }
     </div>
 
-    <!-- CAPACIDAD -->
     <div class="col-md-2">
       <label for="capacidad" class="form-label">Capacidad</label>
       <input id="capacidad" type="number" class="form-control" formControlName="capacidad" />
-      <div *ngIf="capacidad?.invalid && (capacidad?.touched || capacidad?.dirty)" class="text-danger mt-1">
+
+      @if (capacidad?.invalid && (capacidad?.touched || capacidad?.dirty)) {
+      <div class="text-danger mt-1">
         <small>La capacidad es obligatoria y debe ser un número.</small>
       </div>
+      }
     </div>
 
-    <!-- PRECIO -->
     <div class="col-md-2">
       <label for="precio" class="form-label">Precio</label>
       <input id="precio" type="number" class="form-control" formControlName="precio" />
-      <div *ngIf="precio?.invalid && (precio?.touched || precio?.dirty)" class="text-danger mt-1">
+
+      @if (precio?.invalid && (precio?.touched || precio?.dirty)) {
+      <div class="text-danger mt-1">
         <small>El precio es obligatorio.</small>
       </div>
+      }
     </div>
 
-    <!-- IMAGEN -->
     <div class="col-md-6">
       <label for="imagen" class="form-label">Imagen (Archivo)</label>
       <input id="imagen" type="file" class="form-control" (change)="onFileChange($event)" #fileInput />
 
-      <!-- VISTA PREVIA DE IMAGEN -->
-      <div class="col-md-6 mt-2" *ngIf="categoriaForm.value.imagen">
+      @if (categoriaForm.value.imagen) {
+      <div class="col-md-6 mt-2">
         <label class="form-label">Vista previa de imagen:</label><br />
         <img [src]="categoriaForm.value.imagen" alt="Vista previa" width="120" class="border rounded" />
       </div>
+      }
     </div>
 
-    <!-- BOTONES -->
     <div class="col-12 mt-3">
       <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
         [disabled]="categoriaForm.invalid">
         {{ modoEdicion ? 'Actualizar Categoría' : 'Agregar Categoría' }}
       </button>
-      <button type="button" class="btn btn-secondary ms-2" *ngIf="modoEdicion" (click)="resetFormulario()">Cancelar
-        Edición</button>
+
+      @if (modoEdicion) {
+      <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar Edición</button>
+      }
     </div>
   </form>
 
