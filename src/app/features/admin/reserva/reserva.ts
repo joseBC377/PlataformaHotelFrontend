@@ -68,7 +68,7 @@ export class ReservaComponent implements OnInit {
 
   editarReserva(r: ReservaModel): void {
     this.reservaForm.patchValue(r);
-    this.idReservaEditar = r.id_reserva ?? null;
+    this.idReservaEditar = r.id ?? null;
     this.modoEdicion = true;
   }
 

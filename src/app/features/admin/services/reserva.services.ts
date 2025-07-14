@@ -7,7 +7,7 @@ import { ReservaModel } from '../../auth/models/reserva';
   providedIn: 'root'
 })
 export class ReservaService {
-  private API_URL = 'http://localhost:8081/api/reserva'; 
+  private API_URL = 'http://localhost:8081/api/reservas'; 
   private http = inject(HttpClient);
 
   getAllReservas(): Observable<ReservaModel[]> {
