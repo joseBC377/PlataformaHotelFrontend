@@ -42,6 +42,12 @@ export class AuthService {
     }
   }
   cerrarSesion():void{
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('nombre');
+    localStorage.removeItem('apellido');
+    localStorage.removeItem('id');
+    localStorage.removeItem('rol');
     this.clearTokens();
     this.isAuth.next(false);
     this.router.navigate(['/login']);
@@ -63,6 +69,10 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('access_token', token.access_token);
       localStorage.setItem('refresh_token', token.refresh_token);
+      localStorage.setItem('nombre',token.nombre);
+      localStorage.setItem('apellido',token.apellido);
+      localStorage.setItem('id',token.id.toString());
+      localStorage.setItem('rol',token.rol);
     }
   }
   getTokenAcces(): string | null {
