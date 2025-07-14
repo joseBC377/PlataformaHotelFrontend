@@ -60,13 +60,13 @@
       </thead>
       <tbody>
         <tr *ngFor="let reserva of reservas$ | async">
-          <td>{{ reserva.id_reserva }}</td>
+          <td>{{ reserva.id }}</td>
           <td>{{ reserva.fecha_inicio }}</td>
           <td>{{ reserva.fecha_fin }}</td>
           <td>{{ reserva.usuario.nombre }} {{ reserva.usuario.apellido }}</td>
           <td>
             <button class="btn btn-warning btn-sm me-1" (click)="editarReserva(reserva)">Editar</button>
-            <button class="btn btn-danger btn-sm" (click)="eliminarReserva(reserva.id_reserva!)">Eliminar</button>
+            <button class="btn btn-danger btn-sm" (click)="eliminarReserva(reserva.id!)">Eliminar</button>
           </td>
         </tr>
         <tr *ngIf="(reservas$ | async)?.length === 0">
