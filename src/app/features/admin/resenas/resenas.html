@@ -31,8 +31,10 @@
         <div class="col-md-3">
             <label class="form-label">ID Habitación</label>
             <select class="form-select" formControlName="id_habitacion">
-                <option [ngValue]="null" disabled>Seleccionar</option>
-                <option> </option>
+                <option value="">Seleccione una habitacion</option>
+                @for (habitacion of habit$ |async; track habitacion.id ) {
+                    <option [value]="habitacion.id" >{{habitacion.nombre + ' - ' +habitacion.estado}} </option>
+                }
             </select>
             <div class="invalid-feedback">Debe seleccionar una habitación.</div>
         </div>
