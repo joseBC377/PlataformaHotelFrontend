@@ -7,6 +7,9 @@ import { Resena } from '../../auth/models/resena';
 import { Habitacion } from '../../auth/models/habitacion';
 import { HabitacionServices } from '../services/habitacion.services';
 import { AuthService } from '../../../core/services/auth.service';
+import { RequestResenaModel } from '../../auth/models/request-resena-model';
+import { AdminServices } from '../services/admin.services';
+import { UsuarioModel } from '../../auth/models/usuario';
 
 @Component({
   selector: 'app-resena-admin',
@@ -17,19 +20,16 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class ResenaAdminComponent implements OnInit {
 
-  private authService = inject(AuthService);
+  private servUsuario = inject(AdminServices)
   private servHabitacion = inject(HabitacionServices);
   private servResena = inject(ResenaService);
-  protected rese$!: Observable<Resena[]>;
+  protected user$!: Observable<UsuarioModel[]>;
   protected habit$!: Observable<Habitacion[]>;
+  protected rese$!: Observable<Resena[]>;
+
 
   resenaForm!: FormGroup;
   resenas: Resena[] = [];
-  modoEdicion = false;
-  idEditar: number | null = null;
-
-  //Captura el idUsuario del localStorage
-  idUsuario = this.authService.getId();
 
 
   constructor(private fb: FormBuilder) { }
@@ -43,17 +43,89 @@ export class ResenaAdminComponent implements OnInit {
 
     });
 
-    this.cargarResena();
+    this.cargarUsuarios();
     this.cargarHabitacion();
+    this.cargarResena();
   }
 
-
-  cargarResena() {
-    this.rese$ = this.servResena.listar();
+  cargarUsuarios() {
+    this.user$ = this.servUsuario.getAllUsers();
   }
 
   cargarHabitacion() {
     this.habit$ = this.servHabitacion.getAllHabitaciones();
   }
+
+  cargarResena() {
+    this.rese$ = this.servResena.listar();
+  }
+
+
+  editando: boolean = false;
+  idEditando!: number;
+
+  editarResena(resena: Resena) {
+    this.editando = true;
+    this.idEditando = resena.id!;
+
+    this.resenaForm.patchValue({
+      calificacion: resena.calificacion,
+      fecha: resena.fecha,
+      id_usuario: resena.usuario.id,
+      id_habitacion: resena.habitacion.id,
+    });
+  }
+
+
+  guardarResena() {
+    if (this.resenaForm.invalid) {
+      this.resenaForm.markAllAsTouched();
+      return;
+    }
+
+    const form = this.resenaForm.value;
+
+    const resena: RequestResenaModel = {
+      calificacion: form.calificacion,
+      fecha: form.fecha,
+      usuario: { id: form.id_usuario },
+      habitacion: { id: form.id_habitacion }
+    };
+
+    if (this.editando) {
+      this.servResena.editar(this.idEditando, resena).subscribe({
+        next: () => {
+          this.editando = false
+          this.idEditando = 0;
+          this.resenaForm.reset();
+          this.cargarResena();
+        },
+        error: () => {
+          alert('Error al actualizar reseña')
+        }
+      });
+    } else {
+      this.servResena.insertar(resena).subscribe({
+        next: () => {
+          this.resenaForm.reset();
+          this.cargarResena();
+        },
+        error: () => {
+          alert('Error al registrar reseña')
+        }
+      });
+    }
+  }
+
+
+  eliminarResena(id: number) {
+    if (confirm('¿Deseas eliminar esta reseña?')) {
+      this.servResena.eliminar(id).subscribe({
+        next: () => this.cargarResena(),
+        error: () => alert('Error al eliminar reseña')
+      });
+    }
+  }
+
 
 }
