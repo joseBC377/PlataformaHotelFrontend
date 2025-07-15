@@ -23,7 +23,18 @@ export class AuthService {
     return this.http.post<Token>(`${this.URL}/autenticarse`, credenciales).pipe(tap(resp => {
       this.almacenarTokens(resp);
       this.isAuth.next(true);
-      this.router.navigate(['/admin/intranet'])
+
+       switch (resp.rol) {
+        case 'ADMIN':
+          this.router.navigate(['/admin/intranet']);
+          break;
+        case 'CLIENT':
+          this.router.navigate(['/habitaciones']);
+          break;
+        default:
+          this.router.navigate(['/login']); // ruta por defecto
+          break;
+      }
     }));
   }
   //refrescar token
@@ -52,18 +63,6 @@ export class AuthService {
     this.isAuth.next(false);
     this.router.navigate(['/login']);
   }
-
-
-
-  // cerrarSesion() {
-  //   if (isPlatformBrowser(this.platformId)) {
-  //     localStorage.removeItem('access_token');
-  //     localStorage.removeItem('refresh_token');
-  //   }
-  //   this.isAuth.next(false);
-  //   this.router.navigate(['/login']);
-  // }
-
 
   public almacenarTokens(token: Token) {
     if (isPlatformBrowser(this.platformId)) {

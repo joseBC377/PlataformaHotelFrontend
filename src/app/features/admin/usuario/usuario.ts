@@ -110,8 +110,8 @@ export class Usuario {
       this.serv.updateIdClient(this.idEditando, user).subscribe({
         next: () => {
           this.editando = false,
-            this.idEditando = 0,
-            this.usuarioForm.reset();
+          this.idEditando = 0,
+          this.usuarioForm.reset();
           this.listarUsuarios();
         },
         error: (err) => {
