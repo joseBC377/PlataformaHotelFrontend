@@ -133,7 +133,7 @@
                     <td>{{ use.rol }}</td>
                     <td>
                         <button class="btn btn-warning btn-sm me-1" (click)="editarUsuario(use)">Editar</button>
-                        <button class="btn btn-danger btn-sm">Eliminar</button>
+                        <button class="btn btn-danger btn-sm" (click)="eliminarUsuario(use.id!!)">Eliminar</button>
                     </td>
                 </tr>
                 }@empty {

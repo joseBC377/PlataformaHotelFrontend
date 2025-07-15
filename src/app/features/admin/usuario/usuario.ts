@@ -45,7 +45,8 @@ export class Usuario {
 
 
   ngOnInit(): void {
-    this.usuario$ = this.serv.getSeletAllUsers();
+    this.listarUsuarios();
+    this.setPasswordValidators();
   }
 
   editando: boolean = false;
@@ -67,7 +68,9 @@ export class Usuario {
       correo: usuario.correo,
       telefono: usuario.telefono,
       password: '',
+
     });
+    this.setPasswordValidators();
 
   }
 
@@ -77,10 +80,20 @@ export class Usuario {
     this.usuarioForm.reset();
   }
 
+
+  private setPasswordValidators() {
+    if (this.editando) {
+      this.password?.clearValidators();
+    } else {
+      this.password?.setValidators([Validators.required, Validators.minLength(6)]);
+    }
+    this.password?.updateValueAndValidity();
+  }
+
   registroFn() {
     if (this.usuarioForm.invalid) {
       this.usuarioForm.markAllAsTouched();
-
+      return;
     }
 
     const form = this.usuarioForm.value;
@@ -90,7 +103,7 @@ export class Usuario {
       lastname: form.apellido,
       email: form.correo,
       telefono: form.telefono,
-      password: form.password
+      password: form.password?.trim() || undefined
     };
 
     if (this.editando) {
@@ -117,9 +130,22 @@ export class Usuario {
         }
       });
     }
-
-
   }
+
+  eliminarUsuario(id: number) {
+    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+      this.serv.deleteIdUser(id).subscribe({
+        next: () => {
+          alert('Usuario eliminado correctamente');
+          this.listarUsuarios();
+        },
+        error: () => {
+          alert('Error al eliminar el usuario');
+        }
+      });
+    }
+  }
+
 
 
 
