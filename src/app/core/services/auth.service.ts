@@ -27,21 +27,21 @@ export class AuthService {
     }));
   }
   //refrescar token
-  refreshToken(refresh_token: string):Observable<Token>{
-    return this.http.post<Token>(`${this.URL}/refresh-token`,{refreshToken:refresh_token}).pipe(
-      tap(resp=>{
+  refreshToken(refresh_token: string): Observable<Token> {
+    return this.http.post<Token>(`${this.URL}/refresh-token`, { refreshToken: refresh_token }).pipe(
+      tap(resp => {
         this.almacenarTokens(resp);
         this.isAuth.next(true);
       })
     )
   }
-  clearTokens():void{
+  clearTokens(): void {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
     }
   }
-  cerrarSesion():void{
+  cerrarSesion(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('nombre');
@@ -69,19 +69,19 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('access_token', token.access_token);
       localStorage.setItem('refresh_token', token.refresh_token);
-      localStorage.setItem('nombre',token.nombre);
-      localStorage.setItem('apellido',token.apellido);
-      localStorage.setItem('id',token.id.toString());
-      localStorage.setItem('rol',token.rol);
+      localStorage.setItem('nombre', token.nombre);
+      localStorage.setItem('apellido', token.apellido);
+      localStorage.setItem('id', token.id.toString());
+      localStorage.setItem('rol', token.rol);
     }
   }
   getTokenAcces(): string | null {
     if (isPlatformBrowser(this.platformId)) {
-          return localStorage.getItem('access_token');
+      return localStorage.getItem('access_token');
     }
     return null;
   }
-  getRefreshToken(): string|null{
+  getRefreshToken(): string | null {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('refresh_token');
     }
@@ -89,8 +89,27 @@ export class AuthService {
   }
   hasToken(): boolean {
     if (isPlatformBrowser(this.platformId)) {
-          return !!localStorage.getItem('access_token');
+      return !!localStorage.getItem('access_token');
     }
     return false;
   }
+
+  //METODO PERSONALIZADO DEL USUARIO
+  getNombre(): string | null {
+    return isPlatformBrowser(this.platformId) ? localStorage.getItem('nombre') : null;
+  }
+
+  getApellido(): string | null {
+    return isPlatformBrowser(this.platformId) ? localStorage.getItem('apellido') : null;
+  }
+
+  getId(): number | null {
+    const id = isPlatformBrowser(this.platformId) ? localStorage.getItem('id') : null;
+    return id ? Number(id) : null;
+  }
+
+  getRol(): string | null {
+    return isPlatformBrowser(this.platformId) ? localStorage.getItem('rol') : null;
+  }
+
 }
