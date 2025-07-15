@@ -41,16 +41,11 @@ export class AdminServices {
     return this.http.delete<UsuarioModel>(`${this.API_URL}/eliminar/${id}`)
   }
 
-  /*CRUD
-  postInsertIdClient(usuario: RequestUserModel): Observable<RequestUserModel> {
-    return this.http.post<RequestUserModel>(`${this.URL}/registro`, usuario);
-  }*/
 
   insertIdClient(request: RequestUserModel): Observable<any> {
     return this.http.post(`${this.URL}/registro`, request);
   }
-
-
+  
   updateIdClient(id: number, usuario: RequestUserModel): Observable<string> {
     return this.http.put<string>(`${this.URL}/editar/${id}`, usuario);
   }

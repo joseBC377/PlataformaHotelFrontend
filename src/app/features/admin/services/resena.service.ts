@@ -22,11 +22,11 @@ export class ResenaService {
 
  
   editar(id: number, resena:RequestResenaModel): Observable<void>{
-    return this.http.put<void>(`${this.URL}${id}`, resena);
+    return this.http.put<void>(`${this.URL}/${id}`, resena);
   }
 
   eliminar(id: number): Observable<string> {
-    return this.http.delete(`${this.URL}${id}`,{ responseType: 'text' });
+    return this.http.delete(`${this.URL}/${id}`,{ responseType: 'text' });
   }
 
 

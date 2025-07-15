@@ -62,8 +62,8 @@
                 <td>{{ r.id }}</td>
                 <td>{{ r.calificacion }}</td>
                 <td>{{ r.fecha }}</td>
-                <td>{{ r.usuario.id }}</td>
-                <td>{{ r.habitacion.id }}</td>
+                <td>{{ r.usuario.nombre }}</td>
+                <td>{{ r.habitacion.nombre }}</td>
                 <td class="d-flex justify-content-center gap-2 align-middle">
                     <button class="btn btn-primary btn-sm" (click)="editarResena(r)">Editar</button>
                     <button class="btn btn-danger btn-sm" (click)="eliminarResena(r.id!)">Eliminar</button>

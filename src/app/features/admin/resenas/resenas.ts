@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { Resena } from '../../auth/models/resena';
 import { Habitacion } from '../../auth/models/habitacion';
 import { HabitacionServices } from '../services/habitacion.services';
-import { AuthService } from '../../../core/services/auth.service';
 import { RequestResenaModel } from '../../auth/models/request-resena-model';
 import { AdminServices } from '../services/admin.services';
 import { UsuarioModel } from '../../auth/models/usuario';
@@ -36,7 +35,7 @@ export class ResenaAdminComponent implements OnInit {
 
   ngOnInit() {
     this.resenaForm = this.fb.group({
-      calificacion: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
+      calificacion: [null, [Validators.required, Validators.min(1)]],
       fecha: ['', Validators.required],
       id_usuario: [null, Validators.required],
       id_habitacion: [null, Validators.required]
@@ -50,6 +49,8 @@ export class ResenaAdminComponent implements OnInit {
 
   cargarUsuarios() {
     this.user$ = this.servUsuario.getAllUsers();
+    this.user$.subscribe(data => console.log('Usuarios:', data));
+
   }
 
   cargarHabitacion() {
@@ -74,6 +75,7 @@ export class ResenaAdminComponent implements OnInit {
       id_usuario: resena.usuario.id,
       id_habitacion: resena.habitacion.id,
     });
+
   }
 
 
