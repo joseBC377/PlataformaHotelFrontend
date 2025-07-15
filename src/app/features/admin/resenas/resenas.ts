@@ -4,15 +4,12 @@ import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { ResenaService } from '../services/resena.service';
 import { Observable } from 'rxjs';
 import { Resena } from '../../auth/models/resena';
-/*
-interface Resena {
-  id: number;
-  calificacion: number;
-  fecha: string;
-  id_usuario: number;
-  id_habitacion: string;
-}
-*/
+import { Habitacion } from '../../auth/models/habitacion';
+import { HabitacionServices } from '../services/habitacion.services';
+import { RequestResenaModel } from '../../auth/models/request-resena-model';
+import { AdminServices } from '../services/admin.services';
+import { UsuarioModel } from '../../auth/models/usuario';
+
 @Component({
   selector: 'app-resena-admin',
   standalone: true,
@@ -22,89 +19,115 @@ interface Resena {
 })
 export class ResenaAdminComponent implements OnInit {
 
-  private serv = inject(ResenaService);
+  private servUsuario = inject(AdminServices)
+  private servHabitacion = inject(HabitacionServices);
+  private servResena = inject(ResenaService);
+  protected user$!: Observable<UsuarioModel[]>;
+  protected habit$!: Observable<Habitacion[]>;
   protected rese$!: Observable<Resena[]>;
+
 
   resenaForm!: FormGroup;
   resenas: Resena[] = [];
- 
+
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     this.resenaForm = this.fb.group({
-      calificacion: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
+      calificacion: [null, [Validators.required, Validators.min(1)]],
       fecha: ['', Validators.required],
       id_usuario: [null, Validators.required],
       id_habitacion: [null, Validators.required]
 
     });
 
-
+    this.cargarUsuarios();
+    this.cargarHabitacion();
     this.cargarResena();
+  }
+
+  cargarUsuarios() {
+    this.user$ = this.servUsuario.getAllUsers();
+    this.user$.subscribe(data => console.log('Usuarios:', data));
 
   }
 
+  cargarHabitacion() {
+    this.habit$ = this.servHabitacion.getAllHabitaciones();
+  }
 
   cargarResena() {
-    this.rese$ = this.serv.listar();
+    this.rese$ = this.servResena.listar();
   }
 
-  /*
-  agregarResena() {
+
+  editando: boolean = false;
+  idEditando!: number;
+
+  editarResena(resena: Resena) {
+    this.editando = true;
+    this.idEditando = resena.id!;
+
+    this.resenaForm.patchValue({
+      calificacion: resena.calificacion,
+      fecha: resena.fecha,
+      id_usuario: resena.usuario.id,
+      id_habitacion: resena.habitacion.id,
+    });
+
+  }
+
+
+  guardarResena() {
     if (this.resenaForm.invalid) {
       this.resenaForm.markAllAsTouched();
       return;
     }
 
-    const nueva = {
-      ...this.resenaForm.value,
-      id: this.idEditar ?? (this.resenas.length > 0 ? Math.max(...this.resenas.map(r => r.id)) + 1 : 1)
+    const form = this.resenaForm.value;
+
+    const resena: RequestResenaModel = {
+      calificacion: form.calificacion,
+      fecha: form.fecha,
+      usuario: { id: form.id_usuario },
+      habitacion: { id: form.id_habitacion }
     };
 
-    if (this.modoEdicion) {
-      const index = this.resenas.findIndex(r => r.id === this.idEditar);
-      if (index !== -1) this.resenas[index] = nueva;
+    if (this.editando) {
+      this.servResena.editar(this.idEditando, resena).subscribe({
+        next: () => {
+          this.editando = false
+          this.idEditando = 0;
+          this.resenaForm.reset();
+          this.cargarResena();
+        },
+        error: () => {
+          alert('Error al actualizar reseña')
+        }
+      });
     } else {
-      this.resenas.push(nueva);
+      this.servResena.insertar(resena).subscribe({
+        next: () => {
+          this.resenaForm.reset();
+          this.cargarResena();
+        },
+        error: () => {
+          alert('Error al registrar reseña')
+        }
+      });
     }
-
-    this.resetFormulario();
   }
 
-  editarResena(r: Resena) {
-    this.resenaForm.setValue({
-      calificacion: r.calificacion,
-      fecha: r.fecha,
-      id_usuario: r.id_usuario,
-      id_habitacion: r.id_habitacion
-    });
-    this.idEditar = r.id;
-    this.modoEdicion = true;
-  }
 
   eliminarResena(id: number) {
-    const confirmacion = confirm('¿Deseas eliminar esta reseña?');
-    if (confirmacion) {
-      this.resenas = this.resenas.filter(r => r.id !== id);
-      if (this.idEditar === id) this.resetFormulario();
+    if (confirm('¿Deseas eliminar esta reseña?')) {
+      this.servResena.eliminar(id).subscribe({
+        next: () => this.cargarResena(),
+        error: () => alert('Error al eliminar reseña')
+      });
     }
   }
 
-  actualizarResena() {
-    this.agregarResena();
-  }
 
-  resetFormulario() {
-    this.resenaForm.reset();
-    this.modoEdicion = false;
-    this.idEditar = null;
-  }
-
-  // Getters para validación
-  get calificacion() { return this.resenaForm.get('calificacion'); }
-  get fecha() { return this.resenaForm.get('fecha'); }
-  get id_usuario() { return this.resenaForm.get('id_usuario'); }
-  get id_habitacion() { return this.resenaForm.get('id_habitacion'); }
-  */
 }
