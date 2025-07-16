@@ -5,6 +5,7 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { CommonModule } from '@angular/common';
 import { RequestUserModel } from '../../models/request-user-model';
 import { AdminServices } from '../../../admin/services/admin.services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ export class Login {
   showSignUp() {
     this.toggled = true;
   }
+  
   //fomrulario login con guards
   private fb = inject(FormBuilder)
   private service = inject(AuthService);
@@ -103,7 +105,7 @@ export class Login {
     const user: RequestUserModel = {
       firstname: form.nombre,
       lastname: form.apellido,
-      email: form.correo,
+      email: form.correoRe,
       telefono: form.telefono,
       password: form.passwordRe?.trim() || undefined
     };
