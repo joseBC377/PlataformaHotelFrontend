@@ -51,21 +51,30 @@
 
     </ul>
   </div>
+  @if (nombre && rol) {
   <div class="nav-link d-none d-lg-block perfil dropdown"
     style="margin-left: 1rem; margin-right: 1rem; position: relative;">
+
     <button class="btn btn-link text-white dropdown-toggle" (click)="toggleDropdown()"
       style="padding: 0; border: none;">
       <i class="fas fa-user-circle fa-lg"></i>
     </button>
 
     @if (mostrarDropdown) {
-    <div class="dropdown-menu show text-center d-flex flex-column align-items-center"  style="top: 100%; right: 5%; min-width: 200px; z-index: 999;">
-        <p class="dropdown-item m-0"><strong>{{ nombre }} {{ apellido }}</strong></p>
-        <p class="dropdown-item m-0">Rol: {{ rol }}</p>
-        <div class="dropdown-divider"></div>
-        <button class="dropdown-item text-danger" (click)="logout()">Cerrar sesión</button>      
+    <div class="dropdown-menu show text-center d-flex flex-column align-items-center"
+      style="position: absolute; top: 100%; right: 0; min-width: 200px; z-index: 999;">
+      <p class="dropdown-item m-0"><strong>{{ nombre }} {{ apellido }}</strong></p>
+      <p class="dropdown-item m-0">Rol: {{ rol }}</p>
+      <div class="dropdown-divider"></div>
+      <button class="dropdown-item text-danger" (click)="logout()">Cerrar sesión</button>
     </div>
     }
   </div>
-
+  } @else {
+  <div class="nav-link d-none d-lg-block perfil" style="margin-left: 1rem; margin-right: 1rem;">
+    <a class="text-decoration-none text-white" routerLink="/login">
+      <i class="fas fa-user-circle fa-lg"></i>
+    </a>
+  </div>
+  }
 </nav>

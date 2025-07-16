@@ -97,7 +97,7 @@
                 @if (telefono?.invalid &&(telefono?.dirty||telefono?.touched)) {
                     <div class="text-danger">
                         @if (telefono?.errors?.['required']) {
-                            <small>El correo es obligatorio.</small>
+                            <small>El telefono es obligatorio.</small>
                         }
                         @if (telefono?.errors?.['pattern']) {
                             <small>El formato del teléfono no es válido (ej. 9 dígitos).</small>

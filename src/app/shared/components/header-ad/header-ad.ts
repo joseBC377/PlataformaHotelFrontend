@@ -25,7 +25,8 @@ export class HeaderAd {
     this.mostrarDropdown = !this.mostrarDropdown;
   }
 
-  ngOnInit() {
+  //Se ejecuta cuando angular detecta un cambio
+  ngDoCheck() { 
     this.nombre = this.auth.getNombre();
     this.apellido = this.auth.getApellido();
     this.rol = this.auth.getRol();

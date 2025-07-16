@@ -21,7 +21,7 @@ export class Usuario {
   // protected usuarioPut$!: Observable<Usuario>
   // protected usuarioDel$!: Observable<Usuario>
 
-  private serv = inject(AdminServices)
+  private serv = inject(AdminServices);
   private fb = inject(FormBuilder);
 
 
@@ -145,8 +145,5 @@ export class Usuario {
       });
     }
   }
-
-
-
 
 }
