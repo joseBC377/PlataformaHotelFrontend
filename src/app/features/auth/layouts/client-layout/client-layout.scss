@@ -1,0 +1,39 @@
+@use 'variables' as var;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.contenedor {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "header"
+        "main"
+        "footer";
+
+    header {
+        height: 3.5rem;
+        grid-area: header;
+    }
+
+    main {
+        grid-area: main;
+        overflow-x: auto;
+        // padding: 1rem;
+    }
+
+    footer {
+        grid-area: footer;
+        padding: 1rem;
+        background-color: var.$backgraound-primario;
+        color: var.$color-terciario;
+        //para el login
+        z-index: 2;
+        position: relative;
+        margin-top: auto;
+    }
+}
