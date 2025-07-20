@@ -1,52 +1,26 @@
 <div class="servicios-container">
   <h2 class="titulo-seccion">NUESTROS SERVICIOS</h2>
   <h3 class="subtitulo-seccion">Todo lo que necesitas</h3>
-  <div class="servicio-card">
+
+  @if (servicios.length > 0) {
+  @for (servicio of servicios; track servicio.id_servicio; let i = $index) {
+ <div class="servicio-card" [ngClass]="{ 'par': i % 2 === 1 }">
     <div class="servicio-contenido">
       <div class="servicio-carrusel">
         <div class="imagenes">
-          <img src="assets/images/servicios/restaurante.jpg" alt="Restaurante" />
+          <img [src]="servicio.imagen" [alt]="servicio.nombre" />
         </div>
       </div>
       <div class="servicio-info">
-        <h2 style="color: #2c3e75;">Restaurante</h2>
-        <p>Disfruta de una experiencia gastronómica única en nuestro restaurante gourmet.<br>
-          Nuestro menú incluye platos internacionales y opciones locales, preparados por chefs reconocidos.
-          <br> El ambiente elegante y acogedor lo convierte en el lugar perfecto para desayunos, almuerzos y cenas
-          inolvidables.
-        </p>
+        <h2 style="color: #2c3e75;">{{ servicio.nombre }}</h2>
+        <p [innerHTML]="servicio.descripcion"></p>
       </div>
     </div>
   </div>
-  <div class="servicio-card par">
-    <div class="servicio-contenido">
-      <div class="servicio-carrusel">
-        <div class="imagenes">
-          <img src="assets/images/servicios/restobar.jpg" alt="Restobar" />
-        </div>
-      </div>
-      <div class="servicio-info">
-        <h2 style="color: #2c3e75;">Restobar</h2>
-        <p>Relájate en nuestro restobar con una amplia variedad de cócteles, vinos y cervezas artesanales. <br>
-          Ideal para compartir una noche con amigos o disfrutar de música en vivo en un ambiente moderno y
-          exclusivo.</p>
-      </div>
-    </div>
+  }
+  } @else {
+  <div class="alert alert-warning mt-3">
+    No se encontraron servicios disponibles.
   </div>
-  <div class="servicio-card">
-    <div class="servicio-contenido">
-      <div class="servicio-carrusel">
-        <div class="imagenes">
-          <img src="assets/images/servicios/experiencia.jpg" alt="Experiencias" />
-        </div>
-      </div>
-      <div class="servicio-info">
-        <h2 style="color: #2c3e75;">Experiencias</h2>
-        <p>Te ofrecemos experiencias únicas como: tours guiados por la ciudad, actividades culturales, clases de
-          cocina peruana y mucho más. <br> Nuestro personal se encargará de organizar todo para que vivas momentos
-          inolvidables durante tu estancia.
-        </p>
-      </div>
-    </div>
-  </div>
+  }
 </div>

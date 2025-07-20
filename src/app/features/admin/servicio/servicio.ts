@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -13,91 +13,97 @@ import { ServicioService } from '../services/servicio.service';
   styleUrls: ['./servicio.scss']
 })
 export class ServiciosAdminComponent implements OnInit {
-
   protected servicio$!: Observable<Servicio[]>;
   private serv = inject(ServicioService);
+  private fb = inject(FormBuilder);
 
-  servicios: any[] = [];
+  public servicioForm: FormGroup = this.fb.group({
+    id_servicio: [null],
+    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    descripcion: ['', Validators.required],
+    precio: [0, [Validators.required, Validators.min(0)]],
+    imagen: ['', Validators.required]
+  });
 
-  servicioForm: FormGroup;
-  modoEdicion = false;
-  idServicioEditar: number | null = null;
+  public modoEdicion = false;
+  public idServicioEditar: number | null = null;
+  selectedFile: File | null = null;
+  imagenInvalida = false;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private fb: FormBuilder) {
-    this.servicioForm = this.fb.group({
-      nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      precio: [null, [Validators.required, Validators.min(0.01)]],
-      imagen: ['', Validators.required]
-    });
+  get nombre() { return this.servicioForm.get('nombre'); }
+  get descripcion() { return this.servicioForm.get('descripcion'); }
+  get precio() { return this.servicioForm.get('precio'); }
+  get imagen() { return this.servicioForm.get('imagen'); }
+
+
+  ngOnInit(): void {
+    this.servicio$ = this.serv.listar();
   }
 
-  ngOnInit() {
-    this.obtenerServicios();
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        this.servicioForm.patchValue({ imagen: base64 });
+        this.imagenInvalida = false;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.imagenInvalida = true;
+    }
   }
 
-  obtenerServicios() {
-    this.servicio$ = this.serv.listar(); //Asignacion directa al observable
-  }
-
-
-
-  agregarServicio() {
+  guardarServicio(): void {
     if (this.servicioForm.invalid) {
       this.servicioForm.markAllAsTouched();
       return;
     }
 
-    const nuevoServicio = this.servicioForm.value;
+    const data = this.servicioForm.value;
 
-    if (this.modoEdicion && this.idServicioEditar !== null) {
-      const index = this.servicios.findIndex(s => s.id === this.idServicioEditar);
-      if (index !== -1) {
-        this.servicios[index] = { ...nuevoServicio, id: this.idServicioEditar };
-      }
+    if (this.modoEdicion) {
+      this.serv.editar(this.idServicioEditar!, data).subscribe(() => {
+        this.servicio$ = this.serv.listar();
+        this.resetFormulario();
+      });
     } else {
-      const nuevo = {
-        ...nuevoServicio,
-        id: this.servicios.length > 0 ? Math.max(...this.servicios.map(s => s.id)) + 1 : 1
-      };
-      this.servicios.push(nuevo);
+      this.serv.insertar(data).subscribe(() => {
+        this.servicio$ = this.serv.listar();
+        this.resetFormulario();
+      });
     }
-
-    this.resetFormulario();
   }
 
-  editarServicio(servicio: any) {
-    this.servicioForm.setValue({
-      nombre: servicio.nombre,
-      descripcion: servicio.descripcion,
-      precio: servicio.precio,
-      imagen: servicio.imagen
-    });
-
+  editarServicio(servicio: Servicio): void {
+    this.servicioForm.patchValue(servicio);
+    this.idServicioEditar = servicio.id_servicio ?? null;
     this.modoEdicion = true;
-    this.idServicioEditar = servicio.id;
   }
 
-  eliminarServicio(id: number) {
-    this.servicios = this.servicios.filter(s => s.id !== id);
-    if (this.idServicioEditar === id) {
-      this.resetFormulario();
+  eliminarServicio(id: number): void {
+    if (!confirm('¿Estás seguro de que deseas eliminar este servicio?')) {
+      this.serv.eliminar(id).subscribe(() => {
+        this.servicio$ = this.serv.listar(); 
+        if (this.idServicioEditar === id) {
+          this.resetFormulario();
+        }
+      });
     }
   }
 
-  actualizarServicio() {
-    this.agregarServicio();
-  }
-
-  private resetFormulario() {
+  resetFormulario() {
     this.servicioForm.reset();
     this.modoEdicion = false;
     this.idServicioEditar = null;
-  }
+    this.selectedFile = null;
+    this.imagenInvalida = false;
 
-  // ✅ Getters para validación en HTML
-  get nombre() { return this.servicioForm.get('nombre'); }
-  get descripcion() { return this.servicioForm.get('descripcion'); }
-  get precio() { return this.servicioForm.get('precio'); }
-  get imagen() { return this.servicioForm.get('imagen'); }
+    if (this.fileInput?.nativeElement) {
+      this.fileInput.nativeElement.value = '';
+    }
+  }
 }

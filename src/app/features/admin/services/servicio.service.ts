@@ -21,11 +21,11 @@ export class ServicioService {
   }
 
   editar(id: number, servicio: Servicio): Observable<Servicio> {
-    return this.http.put<Servicio>(`${this.URL}${id}`, servicio);
+    return this.http.put<Servicio>(`${this.URL}/${id}`, servicio);
   }
 
   eliminar(id: number): Observable<string> {
-    return this.http.delete(`${this.URL}${id}`, { responseType: 'text' });
+    return this.http.delete(`${this.URL}/${id}`, { responseType: 'text' });
   }
 
 

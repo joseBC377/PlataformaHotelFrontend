@@ -35,8 +35,12 @@ export class ResenaAdminComponent implements OnInit {
 
   ngOnInit() {
     this.resenaForm = this.fb.group({
-      calificacion: [null, [Validators.required, Validators.min(1)]],
+      calificacion: [
+        '',
+        [Validators.required, Validators.min(1), Validators.max(5)]
+      ],
       fecha: ['', Validators.required],
+      descripcion: ['', Validators.required],
       id_usuario: [null, Validators.required],
       id_habitacion: [null, Validators.required]
 
@@ -72,6 +76,7 @@ export class ResenaAdminComponent implements OnInit {
     this.resenaForm.patchValue({
       calificacion: resena.calificacion,
       fecha: resena.fecha,
+      descripcion: resena.descripcion,
       id_usuario: resena.usuario.id,
       id_habitacion: resena.habitacion.id,
     });
@@ -89,6 +94,7 @@ export class ResenaAdminComponent implements OnInit {
 
     const resena: RequestResenaModel = {
       calificacion: form.calificacion,
+      descripcion: form.descripcion,
       fecha: form.fecha,
       usuario: { id: form.id_usuario },
       habitacion: { id: form.id_habitacion }

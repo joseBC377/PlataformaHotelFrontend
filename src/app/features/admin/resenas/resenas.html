@@ -5,13 +5,28 @@
 
         <div class="col-md-3">
             <label class="form-label">Calificación</label>
-            <input type="number" step="0.1" class="form-control" formControlName="calificacion" placeholder="1-5" />
+            <input type="number" step="0.1" min="1" max="5" class="form-control" formControlName="calificacion"
+                placeholder="1-5" />
             <div class="invalid-feedback">
+                @if (resenaForm.get('calificacion')?.hasError('required')) {
                 <small>La calificación es obligatoria.</small>
+                } @else if (resenaForm.get('calificacion')?.hasError('min') || resenaForm.get('calificacion')?.hasError('max')) {
                 <small>Debe estar entre 1 y 5.</small>
+                }
             </div>
         </div>
+        <div class="col-md-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <input id="descripcion" type="text" class="form-control" formControlName="descripcion"
+                placeholder="Descripción de la categoría" />
 
+            @if (resenaForm.get('descripcion')?.invalid && (resenaForm.get('descripcion')?.touched ||
+            resenaForm.get('descripcion')?.dirty)) {
+            <div class="text-danger mt-1">
+                <small>La descripción es obligatoria.</small>
+            </div>
+            }
+        </div>
         <div class="col-md-3">
             <label class="form-label">Fecha</label>
             <input type="date" class="form-control" formControlName="fecha" />
@@ -41,18 +56,20 @@
         </div>
 
         <div class="col-12 text-start">
-            <button type="submit" class="btn btn-success" (click)="guardarResena()">{{ editando ? 'Actualizar' : 'Agregar' }} Reseña </button>
+            <button type="submit" class="btn btn-success" (click)="guardarResena()">{{ editando ? 'Actualizar' :
+                'Agregar' }} Reseña </button>
         </div>
     </form>
 
     <table class="table table-bordered table-hover mt-4">
         <thead class="table-light">
             <tr>
-                <th>#</th>
+                <th>ID</th>
                 <th>Calificación</th>
+                <th>Descripción</th>
                 <th>Fecha</th>
                 <th>ID Usuario</th>
-                <th>ID Habitación</th>
+                <th>Nombre de la habitación</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -61,6 +78,7 @@
             <tr>
                 <td>{{ r.id }}</td>
                 <td>{{ r.calificacion }}</td>
+                <td>{{ r.descripcion }}</td>
                 <td>{{ r.fecha }}</td>
                 <td>{{ r.usuario.nombre }}</td>
                 <td>{{ r.habitacion.nombre }}</td>
