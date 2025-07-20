@@ -121,21 +121,34 @@ Asegúrate de que el backend esté corriendo en el puerto correcto (`8081`) y de
 
 <h2>📁 Estructura del proyecto</h2>
 
+<h2>📁 Estructura del proyecto</h2>
+
 <pre>
 PlataformaHotelFrontend/
-├── src/
-│   ├── app/
-│   │   ├── components/        # Componentes reutilizables (navbar, footer, etc.)
-│   │   ├── pages/             # Páginas del sistema (login, reservas, habitaciones, etc.)
-│   │   ├── services/          # Servicios para consumir la API REST
-│   │   ├── models/            # Interfaces y modelos de datos
-│   │   └── app.module.ts      # Módulo principal de la aplicación
-│
-├── assets/                    # Archivos estáticos (imágenes, íconos, etc.)
-├── environments/              # Configuración de entornos (dev y prod)
-├── angular.json               # Configuración del proyecto Angular
-├── package.json               # Dependencias y scripts del proyecto
-└── README.md                  # Documentación del proyecto
+├── node_modules/           # Módulos y dependencias instaladas por npm
+├── public/                 # Archivos públicos accesibles directamente por el navegador
+│   ├── assets/             # Recursos estáticos como imágenes
+│       └── images/         # Imágenes organizadas por sección (contactos, login, etc.)
+│   
+├── src/                    # Código fuente principal de la aplicación
+│   ├── app/                # Estructura base de la aplicación Angular
+│   │   ├── core/           # Módulos centrales reutilizables (autenticación, servicios base)
+│   │   ├── features/       # Funcionalidades principales divididas por dominio
+│   │   ├── auth/           # Módulo relacionado al login y autenticación
+│   │   └── shared/         # Archivos compartidos (header, estilos, foooter)
+│   ├── styles/             # Archivos globales de estilos
+│   ├── index.html          # HTML base de la aplicación
+│   ├── main.server.ts      # Entrada para la renderización en servidor (SSR)
+│   ├── main.ts             # Punto de arranque principal de la aplicación
+│   ├── server.ts           # Lógica del servidor para Angular Universal
+│   ├── style.scss          # Estilos globales (SCSS)
+├── .editorconfig           # Configuración del editor de texto
+├── .gitignore              # Archivos/carpetas ignorados por Git
+├── angular.json            # Configuración del proyecto Angular
 </pre>
+
+
+
+
 
 
