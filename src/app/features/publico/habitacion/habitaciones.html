@@ -2,21 +2,71 @@
     <h2 class="titulo-seccion">HABITACIONES</h2>
     <h3 class="subtitulo-seccion">El descanso que mereces</h3>
     <p class="descripcion">
-        En cada habitación encontrarás un refugio de paz. Ambientes tranquilos, <br> cuidadosamente decorados y equipados
+        En cada habitación encontrarás un refugio de paz. Ambientes tranquilos, <br> cuidadosamente decorados y
+        equipados
         para ofrecerte la mejor <br> experiencia de descanso, rodeado de confort y armonía.
     </p>
 
     <div class="tabs">
-        <button class="tab active">Todos</button>
-        <button class="tab">Doble</button>
-        <button class="tab">Doble Superior</button>
-        <button class="tab">Estándar Triple</button>
-        <button class="tab">Junior Suite</button>
-        <button class="tab">Superior Twin</button>
+        <button class="tab" [class.active]="categoriaSeleccionada === 'Todos'"
+            (click)="filtrarPorCategoria('Todos')">Todos</button>
+        <button class="tab" [class.active]="categoriaSeleccionada === 'Doble'"
+            (click)="filtrarPorCategoria('Doble')">Doble</button>
+        <button class="tab" [class.active]="categoriaSeleccionada === 'Doble Superior'"
+            (click)="filtrarPorCategoria('Doble Superior')">Doble Superior</button>
+        <button class="tab" [class.active]="categoriaSeleccionada === 'Estándar Triple'"
+            (click)="filtrarPorCategoria('Estándar Triple')">Estándar Triple</button>
+        <button class="tab" [class.active]="categoriaSeleccionada === 'Junior Suite'"
+            (click)="filtrarPorCategoria('Junior Suite')">Junior Suite</button>
+        <button class="tab" [class.active]="categoriaSeleccionada === 'Superior Twin'"
+            (click)="filtrarPorCategoria('Superior Twin')">Superior Twin</button>
+    </div>
+    <div class="row">
+        @if (cargando) {
+        <div>
+            <p>Cargando habitaciones</p>
+        </div>
+        }
+        @if (!cargando) {
+        @if (habitacionesFiltradas.length > 0) {
+        @for (hab of habitacionesFiltradas; track hab.id) {
+        <div class="habitacion-card">
+            <div class="habitacion-contenido">
+                <div class="habitacion-carrusel">
+                    <div class="imagenes">
+                        <img [src]="hab.categoriaHabitacion.imagen" alt="{{ hab.nombre }}" />
+                    </div>
+                </div>
+                <div class="habitacion-info">
+                    <h4>{{ hab.nombre }}</h4>
+                    <h2 style="color: #f4a300;">{{ hab.categoriaHabitacion.nombre }}</h2>
+                    <p>{{ hab.descripcion }}</p>
+                    <p><strong>Capacidad:</strong> {{ hab.categoriaHabitacion.capacidad }} personas</p>
+                    <p><strong>Precio:</strong> S/. {{ hab.categoriaHabitacion.precio }}</p>
+                    <div class="iconos">
+                        <i class="fas fa-wifi" style="color: #CC9F53;"></i>
+                        <i class="fas fa-tv" style="color: #CC9F53;"></i>
+                        <i class="fas fa-bed" style="color: #CC9F53;"></i>
+                        <i class="fas fa-shower" style="color: #CC9F53;"></i>
+                        <i class="fas fa-mug-hot" style="color: #CC9F53;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        } @else {
+        <div class="alert alert-info mt-4">
+            No se encontraron habitaciones para la categoría seleccionada.
+        </div>
+        }
+
+        }
+
     </div>
 
+
     <!-- Tarjeta 1 -->
-    <div class="habitacion-card">
+    <!-- <div class="habitacion-card">
         <div class="habitacion-contenido">
             <div class="habitacion-carrusel">
                 <div class="imagenes">
@@ -44,11 +94,9 @@
                 </div>
             </div>
         </div>
-    </div>
-
-
+    </div> -->
     <!-- Tarjeta 2 -->
-    <div class="habitacion-card par">
+    <!-- <div class="habitacion-card par">
         <div class="habitacion-contenido">
             <div class="habitacion-carrusel">
                 <div class="imagenes">
@@ -74,10 +122,9 @@
                 </div>
             </div>
         </div>
-    </div>
-
+    </div> -->
     <!-- Tarjeta 3 -->
-    <div class="habitacion-card">
+    <!-- <div class="habitacion-card">
         <div class="habitacion-contenido">
             <div class="habitacion-carrusel">
                 <div class="imagenes">
@@ -102,10 +149,9 @@
                 </div>
             </div>
         </div>
-    </div>
-
+    </div> -->
     <!-- Tarjeta 4 -->
-    <div class="habitacion-card par">
+    <!-- <div class="habitacion-card par">
         <div class="habitacion-contenido">
             <div class="habitacion-carrusel">
                 <div class="imagenes">
@@ -132,10 +178,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Tarjeta 5 -->
-    <div class="habitacion-card">
+    <!-- <div class="habitacion-card">
         <div class="habitacion-contenido">
             <div class="habitacion-carrusel">
                 <div class="imagenes">
@@ -160,5 +206,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
