@@ -1,13 +1,11 @@
 <div class="container mt-4">
   <h2 class="mb-4">Gestión de Reservas 📅</h2>
 
-  <!-- FORMULARIO DE RESERVAS -->
-  <form [formGroup]="reservaForm" (ngSubmit)="registrarReserva()" class="row g-3 mb-4 p-3 border rounded shadow-sm">
-    <!-- Fecha de Inicio -->
+  <form [formGroup]="reservaForm" class="row g-3 mb-4 p-3 border rounded shadow-sm" (ngSubmit)="registroReserva()">
     <div class="col-md-4">
       <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
-      <input type="date" id="fecha_inicio" class="form-control" formControlName="fecha_inicio" />
-      @if (fecha_inicio?.invalid &&(fecha_inicio?.touched || fecha_inicio?.dirty)) {
+      <input type="datetime-local" id="fecha_inicio" class="form-control" formControlName="fecha_inicio" />
+      @if (fecha_inicio?.invalid && (fecha_inicio?.touched || fecha_inicio?.dirty)) {
       <div class="text-danger mt-1">
         @if (fecha_inicio?.errors?.['required']) {
         <small>La fecha de Inicio es obligatoria</small>
@@ -15,15 +13,17 @@
         @if (fecha_inicio?.errors?.['futureOrPresent']) {
         <small>La fecha de inicio debe ser hoy o en el futuro</small>
         }
+        @if (fecha_inicio?.errors?.['invalidDateTime']) {
+        <small>Formato de fecha y hora inválido.</small>
+        }
       </div>
       }
     </div>
 
-    <!-- Fecha de Fin -->
     <div class="col-md-4">
       <label for="fecha_fin" class="form-label">Fecha de Fin</label>
-      <input type="date" id="fecha_fin" class="form-control" formControlName="fecha_fin" />
-      @if (fecha_fin?.invalid &&(fecha_fin?.touched || fecha_fin?.dirty)) {
+      <input type="datetime-local" id="fecha_fin" class="form-control" formControlName="fecha_fin" />
+      @if (fecha_fin?.invalid && (fecha_fin?.touched || fecha_fin?.dirty)) {
       <div class="text-danger mt-1">
         @if (fecha_fin?.errors?.['required']) {
         <small>La fecha de fin es obligatoria</small>
@@ -31,20 +31,25 @@
         @if (fecha_fin?.errors?.['futureOrPresent']) {
         <small>La fecha de fin debe ser hoy o en el futuro</small>
         }
+        @if (fecha_fin?.errors?.['invalidDateTime']) {
+        <small>Formato de fecha y hora inválido.</small>
+        }
+        @if (fecha_fin?.errors?.['dateRange']) {
+        <small>La fecha de fin debe ser posterior a la fecha de inicio.</small>
+        }
       </div>
       }
     </div>
 
-    <!-- Usuario -->
     <div class="col-md-4">
       <label for="usuario" class="form-label">Usuario</label>
-      <select id="usuario" class="form-select" formControlName="usuario">
-        <option [ngValue]="null">Seleccione un usuario</option>
-        @for (u of usuarios$|async; track u.id) {
-        <option [ngValue]="u">
-          {{u.id}} {{u.nombre}} {{u.apellido}}
-        </option>
-        }
+      <select id="usuario" class="form-select" formControlName="usuario" [compareWith]="compararUsuario">
+        <option [ngValue]="null" disabled selected>Seleccione un usuario</option>
+        <ng-container *ngIf="usuarios$ | async as usuariosList">
+          <option *ngFor="let u of usuariosList; track u.id" [ngValue]="u">
+            {{ u.id }} - {{ u.nombre }} {{ u.apellido }}
+          </option>
+        </ng-container>
       </select>
       @if (usuario?.invalid && (usuario?.touched || usuario?.dirty)) {
       <div class="text-danger mt-1">
@@ -55,53 +60,50 @@
       }
     </div>
 
-    <!-- Botones -->
-    <div class="d-flex flex-nowrap justify-content-start">
+    <div class="col-12 mt-3 d-flex flex-nowrap justify-content-start">
       <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
         [disabled]="reservaForm.invalid">
         {{ modoEdicion ? 'Actualizar Reserva' : 'Agregar Reserva' }}
       </button>
-      <button type="button" class="btn btn-secondary ms-2" *ngIf="modoEdicion" (click)="resetFormulario()">
-        Cancelar Edición
-      </button>
+      <button *ngIf="modoEdicion" type="button" class="btn btn-secondary ms-2"
+        (click)="resetFormulario()">Cancelar</button>
     </div>
   </form>
 
-  <!-- TABLA DE RESERVAS -->
   <div class="table-responsive mt-4">
     <table class="table table-bordered table-hover">
       <thead class="table-hotel">
         <tr>
           <th>ID</th>
-          <th>Fecha inicio</th>
-          <th>Fecha fin</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
           <th>Usuario</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        @if (reservas$|async; as reserva) {
-        @for (r of reserva; track r.id) {
+        @if (reservas$ | async; as reservas) {
+        @for (r of reservas; track r.id) {
         <tr>
           <td>{{ r.id }}</td>
-          <td>{{ r.fecha_inicio }}</td>
-          <td>{{ r.fecha_fin }}</td>
-          <td>{{ r.usuario?.nombre }} {{ r.usuario?.apellido }}</td>
+          <td>{{ r.fecha_inicio | date:'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ r.fecha_fin | date:'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ r.usuario?.nombre }} {{ r.usuario?.apellido }} (ID: {{ r.usuario?.id }})</td>
           <td>
             <div class="d-flex flex-nowrap justify-content-center">
               <button class="btn btn-warning btn-sm me-1" (click)="editarReserva(r)">Editar</button>
-            <button class="btn btn-danger btn-sm" (click)="eliminarReserva(r.id!)">Eliminar</button>
+              <button class="btn btn-danger btn-sm" [disabled]="!r.id" (click)="r.id && eliminarReserva(r.id)">Eliminar</button>
             </div>
           </td>
         </tr>
-        }@empty {
+        } @empty {
         <tr>
-          <td colspan="5"> No hay usuarios registrados</td>
+          <td colspan="5">No hay reservas registradas.</td>
         </tr>
         }
-        }@else {
+        } @else {
         <tr>
-          <td colspan="5">Cargando registro</td>
+          <td colspan="5">Cargando reservas...</td>
         </tr>
         }
       </tbody>

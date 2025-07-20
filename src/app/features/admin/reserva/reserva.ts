@@ -1,129 +1,185 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common'; // Mantener DatePipe para el display, no para el formulario input
 import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ReservaService } from '../services/reserva.services';
-// import { AuthService } from '../../../core/services/auth.service'; 
 import { ReservaModel } from '../../auth/models/reserva';
 import { UsuarioModel } from '../../auth/models/usuario';
-import { AdminServices } from '../../admin/services/admin.services';
-import { error } from 'console';
-
+import { AdminServices } from '../services/admin.services'; // Asumiendo que esta es la correcta
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // Para postear con token
 
 @Component({
-  selector: 'app-reserva',
+  selector: 'app-reservas-admin', // Nombre de tu componente
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe], // Agrega DatePipe aquí
   templateUrl: './reserva.html',
   styleUrl: './reserva.scss'
 })
-export class ReservaComponent implements OnInit {
+export class ReservasAdminComponent implements OnInit {
   protected reservas$!: Observable<ReservaModel[]>;
-  protected usuarios$!: Observable<UsuarioModel[]>;
+  protected usuarios$!: Observable<UsuarioModel[]>; // Cambiado de 'usuario$' para evitar confusión
 
   private fb = inject(FormBuilder);
   private serv = inject(ReservaService);
-  //   private usuarioServ = inject(AuthService);
   private adminServ = inject(AdminServices);
-  private datePipe = inject(DatePipe);
-  //validador para fechas futuras o presentes
-  dateFutureOrPresentValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      if (!control.value) {
-        return null;
-      }
-      const selectedDate = new Date(control.value);
-      selectedDate.setHours(0, 0, 0, 0);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0)
-      if (selectedDate < today) {
-        return { 'futureOrPresent': { value: control.value } }
-      }
-      return null;
-    };
-  }
-  public reservaForm: FormGroup = this.fb.group({
-    id: [null],
-    fecha_inicio: ['', [Validators.required, this.dateFutureOrPresentValidator()]],
-    fecha_fin: ['', [Validators.required, this.dateFutureOrPresentValidator()]],
-    usuario: [null,Validators.required]
-  });
-
-  get fecha_inicio() { return this.reservaForm.get('fecha_inicio'); }
-  get fecha_fin() { return this.reservaForm.get('fecha_fin'); }
-  get usuario() { return this.reservaForm.get('usuario'); }
+  private http = inject(HttpClient); // Inyectar HttpClient para la solicitud post directa
 
   public modoEdicion: boolean = false;
   public idReservaEditar: number | null = null;
 
-  ngOnInit(): void {
-    this.reservas$ = this.serv.getAllReservas();
-    this.usuarios$ = this.adminServ.getSeletAllUsers();
+  // *** Nuevas validaciones para datetime-local y rangos de fecha ***
+  dateTimeValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null; // No validar si está vacío, el Validators.required se encargará
+      }
+      // datetime-local retorna 'YYYY-MM-DDTHH:MM'
+      // Intentar crear un objeto Date. Si es 'Invalid Date', el formato es incorrecto.
+      const date = new Date(control.value);
+      if (isNaN(date.getTime())) {
+        return { 'invalidDateTime': true };
+      }
+      return null;
+    };
   }
 
-  registrarReserva(): void {
-    const formValue = this.reservaForm.value;
+  futureOrPresentValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null;
+      }
+      const selectedDateTime = new Date(control.value);
+      const now = new Date();
+
+      // Comparar fechas y horas
+      if (selectedDateTime.getTime() < now.getTime()) {
+        return { 'futureOrPresent': true };
+      }
+      return null;
+    };
+  }
+
+  dateRangeValidator(startControlName: string, endControlName: string): ValidatorFn {
+    return (formGroup: AbstractControl): { [key: string]: any } | null => {
+      const startDateControl = formGroup.get(startControlName);
+      const endDateControl = formGroup.get(endControlName);
+
+      if (!startDateControl || !endDateControl || !startDateControl.value || !endDateControl.value) {
+        return null; // No validar si alguna fecha no está presente
+      }
+
+      const startDate = new Date(startDateControl.value);
+      const endDate = new Date(endDateControl.value);
+
+      if (endDate.getTime() < startDate.getTime()) {
+        endDateControl.setErrors({ ...endDateControl.errors, dateRange: true }); // Establece el error en el campo de fecha fin
+        return { 'dateRange': true }; // También puedes retornar el error en el formGroup si quieres
+      } else {
+        // Asegúrate de limpiar el error si ya no es válido
+        if (endDateControl.errors && endDateControl.errors['dateRange']) {
+          const { dateRange, ...rest } = endDateControl.errors;
+          endDateControl.setErrors(Object.keys(rest).length ? rest : null);
+        }
+      }
+      return null;
+    };
+  }
+
+  // Fin de nuevas validaciones
+
+  public reservaForm: FormGroup = this.fb.group({
+    id: [null],
+    // Aplicamos las nuevas validaciones
+    fecha_inicio: ['', [Validators.required, this.dateTimeValidator(), this.futureOrPresentValidator()]],
+    fecha_fin: ['', [Validators.required, this.dateTimeValidator(), this.futureOrPresentValidator()]],
+    usuario: [null, Validators.required]
+  }, { validators: this.dateRangeValidator('fecha_inicio', 'fecha_fin') }); // Validador de rango aplicado a todo el formulario
+
+  // Getters para fácil acceso a los controles del formulario en el HTML
+  get fecha_inicio() { return this.reservaForm.get('fecha_inicio'); }
+  get fecha_fin() { return this.reservaForm.get('fecha_fin'); }
+  get usuario() { return this.reservaForm.get('usuario'); }
+
+  ngOnInit(): void {
+    this.reservas$ = this.serv.getAllReservas();
+    this.usuarios$ = this.adminServ.getAllUsers(); // Cambiado de usuario$ a usuarios$
+  }
+
+  registroReserva(): void {
     if (this.reservaForm.invalid) {
       this.reservaForm.markAllAsTouched();
       console.warn('Formulario de reserva inválido');
       return;
     }
-    //formato de fechas
-    const fechaInicioFormateada = this.datePipe.transform(formValue.fecha_inicio, 'yyyy-MM-dd HH:mm:ss');
-    const fechaFinFormateada = this.datePipe.transform(formValue.fecha_fin, 'yyyy-MM-dd HH:mm:ss');
-    // Manejo básico si por alguna razón el pipe devuelve null (aunque Validators.required ya ayuda)
-    if (!fechaInicioFormateada || !fechaFinFormateada) {
-      console.error('Error al formatear fechas. Fechas recibidas:', formValue.fecha_inicio, formValue.fecha_fin);
-      return;
-    }
 
-    // const data = this.reservaForm.value;
-    const reservaParaBackend: ReservaModel = {
-      fecha_inicio: fechaInicioFormateada,
-      fecha_fin: fechaFinFormateada,
-      usuario: formValue.usuario
-    };
-
-
-    if (this.modoEdicion) {
-      this.serv.putUpdateReserva(this.idReservaEditar!, reservaParaBackend).subscribe(() => { // Usa reservaParaBackend
-        this.reservas$ = this.serv.getAllReservas();
-        this.resetFormulario();
-      });
-    } else {
-      this.serv.postInsertReserva(reservaParaBackend).subscribe(() => { // Usa reservaParaBackend
-        this.reservas$ = this.serv.getAllReservas();
-        this.resetFormulario();
-      });
-    }
-
-  }
-
-  editarReserva(r: ReservaModel): void {
-    const formattedFechaInicio = this.datePipe.transform(r.fecha_inicio, 'yyyy-MM-dd');
-    const formattedFechaFin = this.datePipe.transform(r.fecha_fin, 'yyyy-MM-dd');
-
-    this.reservaForm.patchValue({
-      id: r.id,
-      fecha_inicio: formattedFechaInicio, // Usa la fecha formateada sin hora
-      fecha_fin: formattedFechaFin,     // Usa la fecha formateada sin hora
-      usuario: r.usuario
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      'Content-Type': 'application/json'
     });
 
-    this.idReservaEditar = r.id ?? null;
+    // Los valores de fecha_inicio y fecha_fin del formControl ya están en formato ISO 8601 (YYYY-MM-DDTHH:MM)
+    // que es compatible con LocalDateTime en Spring Boot si se envía como String.
+    const reservaParaBackend: ReservaModel = {
+      id: this.reservaForm.value.id, // Asegurarse de enviar el ID en modo edición
+      fecha_inicio: this.reservaForm.value.fecha_inicio,
+      fecha_fin: this.reservaForm.value.fecha_fin,
+      usuario: this.reservaForm.value.usuario
+    };
+
+    if (this.modoEdicion) {
+      this.serv.putUpdateReserva(this.idReservaEditar!, reservaParaBackend).subscribe({
+        next: () => {
+          this.reservas$ = this.serv.getAllReservas();
+          this.resetFormulario();
+        },
+        error: (err) => {
+          console.error('Error al actualizar reserva:', err);
+          alert('No se pudo actualizar la reserva. Verifica tus permisos o el token.');
+        }
+      });
+    } else {
+      this.http.post('http://localhost:8081/api/reservas', reservaParaBackend, { headers }).subscribe({
+        next: () => {
+          this.reservas$ = this.serv.getAllReservas();
+          this.resetFormulario();
+        },
+        error: (err) => {
+          console.error('Error al registrar reserva:', err);
+          alert('No se pudo registrar la reserva. Verifica tus permisos o el token.');
+        }
+      });
+    }
+  }
+
+  editarReserva(res: ReservaModel): void {
+    // Al editar, los valores de fecha_inicio y fecha_fin pueden venir del backend
+    // en un formato ISO String completo (e.g., "2025-07-20T15:00:00").
+    // El input type="datetime-local" espera "YYYY-MM-DDTHH:MM".
+    // Si tus fechas del backend tienen segundos o milisegundos, necesitas recortarlas.
+    const formattedFechaInicio = res.fecha_inicio ? new Date(res.fecha_inicio).toISOString().slice(0, 16) : null;
+    const formattedFechaFin = res.fecha_fin ? new Date(res.fecha_fin).toISOString().slice(0, 16) : null;
+
+    this.reservaForm.patchValue({
+      id: res.id,
+      fecha_inicio: formattedFechaInicio,
+      fecha_fin: formattedFechaFin,
+      usuario: res.usuario
+    });
+
+    this.idReservaEditar = res.id ?? null;
     this.modoEdicion = true;
   }
 
   eliminarReserva(id: number): void {
-    if (confirm('¿Deseas eliminar esta reserva?')) {
+    if (confirm('¿Estás seguro que deseas eliminar esta reserva?')) {
       this.serv.deleteIdReserva(id).subscribe({
         next: () => {
-          console.log(`Reserva con ID ${id} eliminada exitosamente.`);
           this.reservas$ = this.serv.getAllReservas();
           if (this.idReservaEditar === id) this.resetFormulario();
         },
-        error: (error) => {
-          console.error('Error al eliminar reserva:', error);
+        error: (err) => {
+          console.error('Error al eliminar:', err);
+          alert('Ocurrió un error al intentar eliminar la reserva.');
         }
       });
     }
@@ -133,5 +189,12 @@ export class ReservaComponent implements OnInit {
     this.reservaForm.reset();
     this.modoEdicion = false;
     this.idReservaEditar = null;
+    // Es buena práctica resetear validadores del formulario si tienes validadores a nivel de formulario
+    // this.reservaForm.setErrors(null); // Opcional: para limpiar errores de validadores de formulario
+  }
+
+  // compareWith para el select de usuario
+  compararUsuario = (u1: UsuarioModel, u2: UsuarioModel): boolean => {
+    return u1 && u2 ? u1.id === u2.id : u1 === u2;
   }
 }

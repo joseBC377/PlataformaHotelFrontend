@@ -15,11 +15,12 @@ import { HabitacionesAdminComponent } from './features/admin/habitacion/habitaci
 import { ServiciosAdminComponent } from './features/admin/servicio/servicio';
 import { ResenaAdminComponent } from './features/admin/resenas/resenas';
 import { Usuario } from './features/admin/usuario/usuario';
-import { ReservaComponent } from './features/admin/reserva/reserva';
 import { Contacto } from './features/admin/contacto/contacto';
-import { Pago } from './features/admin/pago/pago';
 import { CategoriaHabitacionServices } from './features/admin/services/categoria_habitacion';
 import { CategoriaHabitacionComponent } from './features/admin/categoria-habitacion/categoria-habitacion';
+import { PagosComponent } from './features/admin/pago/pago';
+import { ReservaService } from './features/admin/services/reserva.services';
+import { ReservasAdminComponent } from './features/admin/reserva/reserva';
 
 
 export const routes: Routes = [
@@ -33,10 +34,10 @@ export const routes: Routes = [
             },
       
             {
-                path: 'pago', component: Pago, title: 'Pago de Reserva'
+                path: 'pago', component: PagosComponent, title: 'Pago de Reserva'
             },
             {
-                path: 'reserva', component: ReservaComponent, title: 'Reserva'
+                path: 'reserva', component: ReservasAdminComponent, title: 'Reserva'
             },
             {
                 path: 'contacto', component: Contacto, title: 'Contacto'

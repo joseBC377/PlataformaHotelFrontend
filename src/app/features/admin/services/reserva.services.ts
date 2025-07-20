@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ReservaModel } from '../../auth/models/reserva'; 
+import { ReservaModel } from '../../auth/models/reserva';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservaService {
-  private API_URL = 'http://localhost:8081/api/reservas'; 
+  private API_URL = 'http://localhost:8081/api/reservas';
   private http = inject(HttpClient);
 
   getAllReservas(): Observable<ReservaModel[]> {
@@ -18,15 +18,29 @@ export class ReservaService {
     return this.http.get<ReservaModel>(`${this.API_URL}/${id}`);
   }
 
-  postInsertReserva(data: ReservaModel): Observable<ReservaModel> {
-    return this.http.post<ReservaModel>(`${this.API_URL}`, data);
+  postInsertReserva(reserva: ReservaModel): Observable<ReservaModel> {
+    return this.http.post<ReservaModel>(`${this.API_URL}`, reserva);
   }
 
-  putUpdateReserva(id: number, data: ReservaModel): Observable<ReservaModel> {
-    return this.http.put<ReservaModel>(`${this.API_URL}/${id}`, data);
+  putUpdateReserva(id: number, reserva: ReservaModel): Observable<ReservaModel> {
+    return this.http.put<ReservaModel>(`${this.API_URL}/${id}`, reserva);
   }
 
+<<<<<<< HEAD
   deleteIdReserva(id: number): Observable<string> { 
     return this.http.delete(`${this.API_URL}/${id}`, { responseType: 'text' });
   }
+=======
+
+deleteReserva(id: number): Observable<{ message: string }> {
+  return this.http.delete<{ message: string }>(
+    `${this.API_URL}/${id}`
+  );
+}
+
+
+
+
+
+>>>>>>> 2ea861184b833c6a7f8dc79dc1a0317266ef688c
 }

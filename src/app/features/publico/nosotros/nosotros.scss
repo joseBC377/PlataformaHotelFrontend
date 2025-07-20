@@ -104,36 +104,85 @@ section {
 
 // Reseñas
 .reviews {
-  background: $background-light;
-  border-radius: 0.7rem;
-  padding: 2rem 1rem;
+  background: linear-gradient(to bottom right, #f9fafc, #eef1f7);
+  border-radius: 1rem;
+  padding: 2.5rem 1.5rem;
+  box-shadow: 0 8px 24px rgba(44, 62, 117, 0.1);
+  transition: background 0.3s ease;
+
+  &-title {
+    font-size: 2rem;
+    text-align: center;
+    color: #2c3e75;
+    margin-bottom: 2rem;
+    font-weight: 700;
+  }
 
   .review {
-    background: $text-light;
-    border: 1px solid #ececec;
-    border-radius: 0.5rem;
-    padding: 1rem 1.2rem;
-    margin-bottom: 1.2rem;
-    box-shadow: 0 2px 6px rgba(90, 90, 158, 0.04);
+    background: #ffffff;
+    border-left: 6px solid #5c6bc0;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s;
+    animation: fadeInUp 0.6s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
     &__stars {
-      color: $primary-color;
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
+      color: #ffc107;
+      font-size: 1.3rem;
+    }
+
+    &__date {
+      font-size: 0.9rem;
+      color: #999;
     }
 
     &__text {
-      font-size: 1rem;
-      margin-bottom: 0.7rem;
+      font-size: 1.05rem;
+      font-style: italic;
+      margin: 0.8rem 0;
+      color: #333;
+      line-height: 1.5;
     }
 
     &__author {
-      font-size: 0.95rem;
-      color: $secondary-color;
-      font-weight: 500;
+      text-align: right;
+      font-weight: 600;
+      color: #2c3e75;
+    }
+
+    &__empty,
+    &__loading {
+      text-align: center;
+      font-style: italic;
+      color: #666;
     }
   }
 }
+
+// Animación
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 // Responsividad
 @media (max-width: 750px) {
