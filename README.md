@@ -7,7 +7,7 @@
 
 <h2>Introducción</h2>
 <p>
-  <strong>Plataforma Hotel</strong> es una moderna interfaz web diseñada para gestionar reservas de hotel, habitaciones, usuarios y tareas administrativas, todo en un mismo lugar. Está diseñada para ofrecer una experiencia de usuario clara, ágil y eficiente, tanto para clientes como para el personal del hotel.
+  <strong>Royal Suotes Hotel</strong> es una moderna interfaz web diseñada para gestionar reservas de hotel, habitaciones, usuarios y tareas administrativas, todo en un mismo lugar. Está diseñada para ofrecer una experiencia de usuario clara, ágil y eficiente, tanto para clientes como para el personal del hotel.
 </p>
 
 <ul>
