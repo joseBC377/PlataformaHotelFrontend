@@ -41,6 +41,7 @@
 - Control de usuarios y roles (ADMIN / CLIENT)
 - Controladores REST para exponer la API
 - Manejo de excepciones y validaciones personalizadas
+- CORS
 
 ### Herramientas adicionales
 - Visual Studio Code
