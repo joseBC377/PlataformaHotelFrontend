@@ -3,24 +3,24 @@
   <h3 class="subtitulo-seccion">Todo lo que necesitas</h3>
 
   @if (servicios.length > 0) {
-    @for (servicio of servicios; track servicio.id_servicio) {
-      <div class="servicio-card">
-        <div class="servicio-contenido">
-          <div class="servicio-carrusel">
-            <div class="imagenes">
-              <img [src]="servicio.imagen" [alt]="servicio.nombre" />
-            </div>
-          </div>
-          <div class="servicio-info">
-            <h2 style="color: #2c3e75;">{{ servicio.nombre }}</h2>
-            <p [innerHTML]="servicio.descripcion"></p>
-          </div>
+  @for (servicio of servicios; track servicio.id_servicio; let i = $index) {
+ <div class="servicio-card" [ngClass]="{ 'par': i % 2 === 1 }">
+    <div class="servicio-contenido">
+      <div class="servicio-carrusel">
+        <div class="imagenes">
+          <img [src]="servicio.imagen" [alt]="servicio.nombre" />
         </div>
       </div>
-    }
-  } @else {
-    <div class="alert alert-warning mt-3">
-      No se encontraron servicios disponibles.
+      <div class="servicio-info">
+        <h2 style="color: #2c3e75;">{{ servicio.nombre }}</h2>
+        <p [innerHTML]="servicio.descripcion"></p>
+      </div>
     </div>
+  </div>
+  }
+  } @else {
+  <div class="alert alert-warning mt-3">
+    No se encontraron servicios disponibles.
+  </div>
   }
 </div>

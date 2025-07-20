@@ -15,7 +15,7 @@ $colors: (
 $font-stack: 'Segoe UI', sans-serif;
 $max-width: 1200px;
 
-//Mixins
+// MIXINS
 @mixin center-text {
   text-align: center;
 }
@@ -49,6 +49,7 @@ $max-width: 1200px;
   }
 }
 
+// CONTENEDOR PRINCIPAL
 .habitaciones-container {
   padding: 2rem;
   font-family: $font-stack;
@@ -106,33 +107,10 @@ $max-width: 1200px;
   }
 }
 
+// TARJETAS DE HABITACIONES
 .habitacion-card {
   @include card;
   margin-bottom: 7rem;
-
-  .habitacion-card.par {
-  position: relative;
-  margin-bottom: 1.5rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  z-index: 1;
-}
-
-.habitacion-card.par::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
-  max-width: 100%;
-  height: 100%;
-  background-color: map.get($colors, purple-light);
-  z-index: -1;
-}
-
-
-  
 
   .habitacion-contenido {
     display: flex;
@@ -191,20 +169,37 @@ $max-width: 1200px;
   }
 }
 
+// TARJETA INTERCALADA (FONDO LILA + INVERSIÓN DE CONTENIDO)
+.habitacion-card.par {
+  position: relative;
+  z-index: 1;
 
-.habitacion-card.par .habitacion-contenido {
-  flex-direction: row-reverse;
-  gap: 4rem;
-  padding-left: 9rem;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    max-width: 100%;
+    height: 100%;
+    background-color: map.get($colors, purple-light);
+    z-index: -1;
+  }
 
-  .habitacion-carrusel {
-    margin-right: 8rem;
+  .habitacion-contenido {
+    flex-direction: row-reverse;
+    gap: 4rem;
+    padding-left: 9rem;
+
+    .habitacion-carrusel {
+      margin-right: 8rem;
+    }
   }
 }
 
-
+// RESPONSIVE
 @media (max-width: 1024px) {
-
   .habitacion-card .habitacion-contenido,
   .habitacion-card.par .habitacion-contenido {
     padding: 2rem;

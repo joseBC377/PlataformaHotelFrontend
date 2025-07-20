@@ -16,7 +16,6 @@ export class Nosotros implements OnInit {
 
   ngOnInit() {
     this.rese$ = this.servResena.listar().pipe(
-      tap(data => console.log('Reseñas públicas:', data)),
       catchError(error => {
         console.error('Error cargando reseñas:', error);
         return of([]);
