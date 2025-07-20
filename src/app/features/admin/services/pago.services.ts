@@ -16,9 +16,9 @@ export class PagoService {
     getSelectPagoId(id:number):Observable<PagoModel>{
       return this.http.get<PagoModel>(`${this.API_URL}/lista/${id}`);
     }
-    postInsertPago(pago:PagoModel):Observable<PagoModel>{
-      return this.http.post<PagoModel>(`${this.API_URL}/insertar`,pago);
-    }
+    postInsertarPagoConReserva(data: PagoReservaInfo): Observable<any> {
+    return this.http.post(`${this.API_URL}/completo`, data);
+  }
     putUpdatePago(id:number, pago:PagoModel):Observable<PagoModel>{
       return this.http.put<PagoModel>(`${this.API_URL}/actualizar/${id}`,pago);
     }

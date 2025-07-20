@@ -1,78 +1,71 @@
 <div class="container mt-4">
   <h2 class="mb-4">Gestión de Reservas 📅</h2>
 
-  <!-- FORMULARIO DE RESERVAS -->
-  <form [formGroup]="reservaForm" (ngSubmit)="registrarReserva()" class="row g-3 mb-4 p-3 border rounded shadow-sm">
-    <!-- Fecha de Inicio -->
+  <form [formGroup]="reservaForm" class="row g-3 mb-4 p-3 border rounded shadow-sm" (ngSubmit)="registroReserva()">
     <div class="col-md-4">
-      <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
-      <input type="date" id="fecha_inicio" class="form-control" formControlName="fecha_inicio" />
-      <div *ngIf="fecha_inicio?.invalid && (fecha_inicio?.touched || fecha_inicio?.dirty)" class="text-danger mt-1">
-        <small>La fecha de inicio es obligatoria.</small>
-      </div>
+      <label class="form-label">Fecha Inicio</label>
+      <input type="datetime-local" class="form-control" formControlName="fecha_inicio" />
     </div>
 
-    <!-- Fecha de Fin -->
     <div class="col-md-4">
-      <label for="fecha_fin" class="form-label">Fecha de Fin</label>
-      <input type="date" id="fecha_fin" class="form-control" formControlName="fecha_fin" />
-      <div *ngIf="fecha_fin?.invalid && (fecha_fin?.touched || fecha_fin?.dirty)" class="text-danger mt-1">
-        <small>La fecha de fin es obligatoria.</small>
-      </div>
+      <label class="form-label">Fecha Fin</label>
+      <input type="datetime-local" class="form-control" formControlName="fecha_fin" />
     </div>
 
-    <!-- Usuario -->
     <div class="col-md-4">
-      <label for="usuario" class="form-label">Usuario</label>
-      <select id="usuario" class="form-select" formControlName="usuario">
-        <option [ngValue]="null">Seleccione un usuario</option>
-        <option *ngFor="let u of usuarios$ | async" [ngValue]="u">
-          {{ u.nombre }} {{ u.apellido }}
-        </option>
+      <label class="form-label">Usuario</label>
+      <select class="form-select" formControlName="usuario" [compareWith]="compararUsuario">
+        <option [ngValue]="null" disabled selected>Seleccione un usuario</option>
+        <ng-container *ngIf="usuario$ | async as usuarios">
+          <option *ngFor="let u of usuarios" [ngValue]="u">{{ u.nombre }} {{ u.apellido }}</option>
+        </ng-container>
       </select>
-      <div *ngIf="usuario?.invalid && (usuario?.touched || usuario?.dirty)" class="text-danger mt-1">
-        <small>Debe seleccionar un usuario.</small>
-      </div>
     </div>
 
-    <!-- Botones -->
     <div class="col-12 mt-3">
-      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'" [disabled]="reservaForm.invalid">
+      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
+        [disabled]="reservaForm.invalid">
         {{ modoEdicion ? 'Actualizar Reserva' : 'Agregar Reserva' }}
       </button>
-      <button type="button" class="btn btn-secondary ms-2" *ngIf="modoEdicion" (click)="resetFormulario()">
-        Cancelar Edición
-      </button>
+      <button *ngIf="modoEdicion" type="button" class="btn btn-secondary ms-2"
+        (click)="resetFormulario()">Cancelar</button>
     </div>
   </form>
 
-  <!-- TABLA DE RESERVAS -->
   <div class="table-responsive mt-4">
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered">
       <thead class="table-light">
         <tr>
           <th>ID</th>
-          <th>Fecha inicio</th>
-          <th>Fecha fin</th>
-          <th>Usuario</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
+          <th>ID Usuario</th>
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let reserva of reservas$ | async">
-          <td>{{ reserva.id }}</td>
-          <td>{{ reserva.fecha_inicio }}</td>
-          <td>{{ reserva.fecha_fin }}</td>
-          <td>{{ reserva.usuario.nombre }} {{ reserva.usuario.apellido }}</td>
-          <td>
-            <button class="btn btn-warning btn-sm me-1" (click)="editarReserva(reserva)">Editar</button>
-            <button class="btn btn-danger btn-sm" (click)="eliminarReserva(reserva.id!)">Eliminar</button>
-          </td>
-        </tr>
-        <tr *ngIf="(reservas$ | async)?.length === 0">
-          <td colspan="5">No hay reservas registradas.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+     <tbody>
+  <ng-container *ngIf="reservas$ | async as reservas; else cargando">
+    <tr *ngFor="let res of reservas">
+      <td>{{ res.id }}</td>
+      <td>{{ res.fecha_inicio }}</td>
+      <td>{{ res.fecha_fin }}</td>
+      <td>{{ res.usuario.id }}</td>
+      <td>
+        <button class="btn btn-warning btn-sm" (click)="editarReserva(res)">Editar</button>
+  <button class="btn btn-danger btn-sm" [disabled]="!res.id" (click)="res.id && eliminarReserva(res.id)">Eliminar</button>
+
+
+      </td>
+    </tr>
+
+    <tr *ngIf="reservas.length === 0">
+      <td colspan="5">No hay reservas registradas.</td>
+    </tr>
+  </ng-container>
+
+  <ng-template #cargando>
+    <tr>
+      <td colspan="5">Cargando reservas...</td>
+    </tr>
+  </ng-template>
+</tbody>
