@@ -133,16 +133,16 @@ PlataformaHotelFrontend/
 │   │   ├── core/           # Módulos centrales reutilizables (autenticación, servicios base)
 │   │   ├── features/       # Funcionalidades principales divididas por dominio
 │   │   ├── auth/           # Módulo relacionado al login y autenticación
-│   │   └── shared/         # Archivos compartidos (header, estilos, foooter)
-│   ├── styles/             # Archivos globales de estilos
-│   ├── index.html          # HTML base de la aplicación
-│   ├── main.server.ts      # Entrada para la renderización en servidor (SSR)
-│   ├── main.ts             # Punto de arranque principal de la aplicación
-│   ├── server.ts           # Lógica del servidor para Angular Universal
-│   ├── style.scss          # Estilos globales (SCSS)
-├── .editorconfig           # Configuración del editor de texto
-├── .gitignore              # Archivos/carpetas ignorados por Git
-├── angular.json            # Configuración del proyecto Angular
+│   │   └── shared/         # Archivos compartidos (header, estilos, footer)
+│   ├── styles/          
+│   ├── index.html         
+│   ├── main.server.ts    
+│   ├── main.ts            
+│   ├── server.ts          
+│   ├── style.scss         
+├── .editorconfig          
+├── .gitignore              
+├── angular.json            
 </pre>
 
 
