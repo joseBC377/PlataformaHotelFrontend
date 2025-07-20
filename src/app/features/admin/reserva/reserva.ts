@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 import { ReservaService } from '../services/reserva.services';
 import { ReservaModel } from '../../auth/models/reserva';
 import { UsuarioModel } from '../../auth/models/usuario';
-import { AdminServices } from '../services/admin.services'; // Asumiendo que esta es la correcta
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // Para postear con token
+import { AdminServices } from '../services/admin.services'; 
+import { HttpClient, HttpHeaders } from '@angular/common/http'; 
 
 @Component({
-  selector: 'app-reservas-admin', // Nombre de tu componente
+  selector: 'app-reservas-admin', 
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, DatePipe], // Agrega DatePipe aquí
   templateUrl: './reserva.html',
@@ -17,8 +17,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'; // Para postear 
 })
 export class ReservasAdminComponent implements OnInit {
   protected reservas$!: Observable<ReservaModel[]>;
-  protected usuarios$!: Observable<UsuarioModel[]>; // Cambiado de 'usuario$' para evitar confusión
-
+  protected usuarios$!: Observable<UsuarioModel[]>; 
   private fb = inject(FormBuilder);
   private serv = inject(ReservaService);
   private adminServ = inject(AdminServices);

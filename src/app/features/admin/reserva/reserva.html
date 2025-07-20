@@ -41,15 +41,15 @@
       }
     </div>
 
-    <div class="col-md-4">
+   <div class="col-md-4">
       <label for="usuario" class="form-label">Usuario</label>
-      <select id="usuario" class="form-select" formControlName="usuario" [compareWith]="compararUsuario">
-        <option [ngValue]="null" disabled selected>Seleccione un usuario</option>
-        <ng-container *ngIf="usuarios$ | async as usuariosList">
-          <option *ngFor="let u of usuariosList; track u.id" [ngValue]="u">
-            {{ u.id }} - {{ u.nombre }} {{ u.apellido }}
-          </option>
-        </ng-container>
+      <select id="usuario" class="form-select" formControlName="usuario">
+        <option [ngValue]="null">Seleccione un usuario</option>
+        @for (u of usuarios$|async; track u.id) {
+        <option [ngValue]="u">
+          {{u.id}} {{u.nombre}} {{u.apellido}}
+        </option>
+        }
       </select>
       @if (usuario?.invalid && (usuario?.touched || usuario?.dirty)) {
       <div class="text-danger mt-1">
