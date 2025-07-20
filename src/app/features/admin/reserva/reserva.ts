@@ -46,7 +46,7 @@ export class ReservaComponent implements OnInit {
     id: [null],
     fecha_inicio: ['', [Validators.required, this.dateFutureOrPresentValidator()]],
     fecha_fin: ['', [Validators.required, this.dateFutureOrPresentValidator()]],
-    usuario: ['',Validators.required]
+    usuario: [null,Validators.required]
   });
 
   get fecha_inicio() { return this.reservaForm.get('fecha_inicio'); }
