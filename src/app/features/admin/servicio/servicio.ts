@@ -85,7 +85,7 @@ export class ServiciosAdminComponent implements OnInit {
   }
 
   eliminarServicio(id: number): void {
-    if (!confirm('¿Estás seguro de que deseas eliminar este servicio?')) {
+    if (confirm('¿Estás seguro de que deseas eliminar este servicio?')) {
       this.serv.eliminar(id).subscribe(() => {
         this.servicio$ = this.serv.listar(); 
         if (this.idServicioEditar === id) {
