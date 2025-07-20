@@ -32,7 +32,13 @@
       <input type="number" id="precio" class="form-control" formControlName="precio" step="0.01" />
       @if (precio?.invalid && (precio?.touched || precio?.dirty)) {
       <div class="text-danger mt-1">
+        @if (precio?.errors?.['required']) {
         <small>El precio es obligatorio.</small>
+        }
+        @if (precio?.errors?.['min']) {
+        <small>No se aceptan numeros negativos</small>
+        }
+
       </div>
       }
     </div>
@@ -48,46 +54,61 @@
       </div>
       }
     </div>
+    <div class="col-12 mt-4">
+      <div class="d-flex flex-nowrap justify-content-start">
+        <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
+          [disabled]="servicioForm.invalid">
+          {{ modoEdicion ? 'Actualizar Categoría' : 'Agregar Categoría' }}
+        </button>
 
-    <div class="col-12 mt-3">
-      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
-        [disabled]="servicioForm.invalid">
-        {{ modoEdicion ? 'Actualizar Categoría' : 'Agregar Categoría' }}
-      </button>
-
-      @if (modoEdicion) {
-      <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar Edición</button>
-      }
+        @if (modoEdicion) {
+        <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar Edición</button>
+        }
+      </div>
     </div>
-  </form>
 
-  <table class="table table-bordered table-hover mt-4">
-    <thead class="table-light">
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Precio (S/)</th>
-        <th>Imagen</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (servicio of servicio$ | async; track servicio.id_servicio) {
-      <tr>
-        <td>{{ servicio.id_servicio }}</td>
-        <td>{{ servicio.nombre }}</td>
-        <td>{{ servicio.descripcion }}</td>
-        <td>{{ servicio.precio | number: '1.2-2' }}</td>
-        <td>
-          <img [src]="servicio.imagen" alt="{{servicio.nombre}}" width="60" />
-        </td>
-        <td class="d-flex justify-content-center gap-2 align-middle">
-          <button class="btn btn-primary btn-sm" (click)="editarServicio(servicio)">Editar</button>
-          <button class="btn btn-danger btn-sm" (click)="eliminarServicio(servicio.id_servicio)">Eliminar</button>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
+  </form>
+  <div class="table-responsive mt-4">
+    <table class="table table-bordered table-hover">
+      <thead class="table-hotel">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio (S/)</th>
+          <th>Imagen</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (servicio$|async; as servicio) {
+        @for (s of servicio; track s.id_servicio) { <tr>
+          <td>{{ s.id_servicio }}</td>
+          <td>{{ s.nombre }}</td>
+          <td>{{ s.descripcion }}</td>
+          <td>{{ s.precio | number: '1.2-2' }}</td>
+          <td>
+            <img [src]="s.imagen" alt="{{s.nombre}}" width="80" />
+          </td>
+          <td class="d-flex flex-nowrap justify-content-center">
+            <button class="btn btn-warning btn-sm me-1" (click)="editarServicio(s)">Editar</button>
+            <button class="btn btn-danger btn-sm" *ngIf="s.id_servicio" (click)="eliminarServicio(s.id_servicio)"> Eliminar</button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="6">No hay servicios registrados</td>
+        </tr>
+        }
+        } @else {
+        <tr>
+          <td colspan="6">Cargando servicios</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <ng-template #sinServicios>
+    <div class="alert alert-info mt-4">No hay servicios registrados.</div>
+  </ng-template>
 </div>

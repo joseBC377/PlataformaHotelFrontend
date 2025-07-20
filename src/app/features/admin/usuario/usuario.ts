@@ -16,11 +16,6 @@ import { RequestUserModel } from '../../auth/models/request-user-model';
 export class Usuario {
 
   protected usuario$!: Observable<UsuarioModel[]>
-  // protected usuarioId$!: Observable<UsuarioService>
-  // protected usuarioPost$!: Observable<Usuario>
-  // protected usuarioPut$!: Observable<Usuario>
-  // protected usuarioDel$!: Observable<Usuario>
-
   private serv = inject(AdminServices);
   private fb = inject(FormBuilder);
 
@@ -29,9 +24,9 @@ export class Usuario {
   public usuarioForm: FormGroup = this.fb.group({
     id_usuario: [null],
     nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
-    apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+    apellido: ['', [Validators.required,Validators.minLength(3), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
     correo: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
+    password: ['', [Validators.required,Validators.minLength(8)]],
     telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
   });
 
@@ -46,14 +41,14 @@ export class Usuario {
 
   ngOnInit(): void {
     this.listarUsuarios();
-    this.setPasswordValidators();
+    // this.setPasswordValidators();
   }
 
   editando: boolean = false;
   idEditando!: number;
 
   listarUsuarios() {
-    this.usuario$ = this.serv.getAllUsers();
+    this.usuario$ = this.serv.getSeletAllUsers();
   }
 
 
@@ -70,7 +65,7 @@ export class Usuario {
       password: '',
 
     });
-    this.setPasswordValidators();
+    // this.setPasswordValidators();
 
   }
 
@@ -81,14 +76,14 @@ export class Usuario {
   }
 
 
-  private setPasswordValidators() {
-    if (this.editando) {
-      this.password?.clearValidators();
-    } else {
-      this.password?.setValidators([Validators.required, Validators.minLength(6)]);
-    }
-    this.password?.updateValueAndValidity();
-  }
+  // private setPasswordValidators() {
+  //   if (this.editando) {
+  //     this.password?.clearValidators();
+  //   } else {
+  //     this.password?.setValidators([Validators.required, Validators.minLength(6)]);
+  //   }
+  //   this.password?.updateValueAndValidity();
+  // }
 
   registroFn() {
     if (this.usuarioForm.invalid) {

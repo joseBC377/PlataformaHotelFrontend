@@ -13,10 +13,8 @@ import { Reservas } from './features/publico/reservas/reservas';
 import { Contactos } from './features/publico/contactos/contactos';
 import { HabitacionesAdminComponent } from './features/admin/habitacion/habitacion';
 import { ServiciosAdminComponent } from './features/admin/servicio/servicio';
-import { ReservaServicioAdminComponent } from './features/admin/reserva-servicio/reserva-servicio';
 import { ResenaAdminComponent } from './features/admin/resenas/resenas';
 import { Usuario } from './features/admin/usuario/usuario';
-import { ReservaHabitacion } from './features/admin/reserva-habitacion/reserva-habitacion';
 import { Contacto } from './features/admin/contacto/contacto';
 import { CategoriaHabitacionServices } from './features/admin/services/categoria_habitacion';
 import { CategoriaHabitacionComponent } from './features/admin/categoria-habitacion/categoria-habitacion';
@@ -34,9 +32,7 @@ export const routes: Routes = [
             {
                 path: 'usuario', component: Usuario, title: 'Usuario'
             },
-            {
-                path: 'habitacion-reserva', component: ReservaHabitacion, title: 'Habitacion-reserva'
-            },
+      
             {
                 path: 'pago', component: PagosComponent, title: 'Pago de Reserva'
             },
@@ -54,9 +50,6 @@ export const routes: Routes = [
             },
             {
                 path: 'categoria-habitacion', component: CategoriaHabitacionComponent, title: "Categoria-Habitacion"
-            },
-             {
-                path: 'reserva-servicio', component: ReservaServicioAdminComponent, title: "Reserva-Servicio"
             },
                {
                 path: 'resena', component: ResenaAdminComponent, title: "Resena"
