@@ -26,7 +26,7 @@ export class ReservaService {
     return this.http.put<ReservaModel>(`${this.API_URL}/${id}`, data);
   }
 
-  deleteIdReserva(id: number): Observable<ReservaModel> {
-    return this.http.delete<ReservaModel>(`${this.API_URL}/${id}`);
+  deleteIdReserva(id: number): Observable<string> { 
+    return this.http.delete(`${this.API_URL}/${id}`, { responseType: 'text' });
   }
 }

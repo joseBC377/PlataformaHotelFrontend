@@ -30,6 +30,9 @@
                 @if (apellido?.errors?.['required']) {
                 <small>El apellido es obligatorio.</small>
                 }
+                @if (apellido?.errors?.['minlength']) {
+                <small>Minimo 3 caracteres</small>
+                }
                 @if (apellido?.errors?.['pattern']) {
                 <small>El apellido solo puede contener letras y espacios.</small>
                 }
@@ -55,15 +58,14 @@
 
         <div class="col-md-4">
             <label for="contrasena" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" id="password" formControlName="password"
-                placeholder="••••••••">
+            <input type="password" class="form-control" id="password" formControlName="password" placeholder="••••••••">
             @if (password?.invalid && (password?.dirty || password?.touched)) {
             <div class="text-danger mt-1">
                 @if (password?.errors?.['required']) {
                 <small>La contraseña es obligatoria.</small>
                 }
                 @if (password?.errors?.['minlength']) {
-                <small>Mínimo 6 caracteres.</small>
+                <small>Mínimo 8 caracteres.</small>
                 }
             </div>
             }
@@ -93,7 +95,7 @@
         </div>
         -->
         <div class="col-12 mt-4">
-            <div class="col-12 mt-4">
+            <div class="d-flex flex-nowrap justify-content-start">
                 <button type="submit" class="btn" [ngClass]="editando ? 'btn-warning' : 'btn-success'"
                     [disabled]="usuarioForm.invalid">
                     {{ editando ? 'Actualizar Usuario' : 'Agregar Usuario' }}
@@ -132,8 +134,10 @@
                     <!-- <td>{{ use.rol }}</td> -->
                     <td>{{ use.rol }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm me-1" (click)="editarUsuario(use)">Editar</button>
-                        <button class="btn btn-danger btn-sm" (click)="eliminarUsuario(use.id!!)">Eliminar</button>
+                        <div class="d-flex flex-nowrap justify-content-center">
+                            <button class="btn btn-warning btn-sm me-2" (click)="editarUsuario(use)">Editar</button>
+                            <button class="btn btn-danger btn-sm" (click)="eliminarUsuario(use.id!!)">Eliminar</button>
+                        </div>
                     </td>
                 </tr>
                 }@empty {
