@@ -1,44 +1,63 @@
 <div class="container mt-4">
   <h2 class="mb-4">Gestión de Servicios 🛎️</h2>
 
-  <form [formGroup]="servicioForm" (ngSubmit)="modoEdicion ? actualizarServicio() : agregarServicio()" class="row g-3">
-
+  <form [formGroup]="servicioForm" (ngSubmit)="guardarServicio()" class="row g-3">
     <div class="col-md-3">
       <label class="form-label">Nombre</label>
-      <input type="text" class="form-control" placeholder="Nombre del Servicio" formControlName="nombre"
-        [ngClass]="{ 'is-invalid': nombre?.invalid && (nombre?.touched || nombre?.dirty) }" />
-      <div class="invalid-feedback">El nombre es obligatorio.</div>
+      <input type="text" class="form-control" placeholder="Nombre del Servicio" formControlName="nombre" />
+      @if (nombre?.invalid && (nombre?.touched || nombre?.dirty)) {
+      <div class="text-danger mt-1">
+        @if (nombre?.errors?.['required']) {
+        <small>El nombre es obligatorio.</small>
+        }
+        @if (nombre?.errors?.['minlength']) {
+        <small>Mínimo 3 caracteres.</small>
+        }
+      </div>
+      }
     </div>
 
     <div class="col-md-4">
       <label class="form-label">Descripción</label>
-      <input type="text" class="form-control" placeholder="Descripción" formControlName="descripcion"
-        [ngClass]="{ 'is-invalid': descripcion?.invalid && (descripcion?.touched || descripcion?.dirty) }" />
-      <div class="invalid-feedback">La descripción es obligatoria.</div>
+      <input type="text" class="form-control" placeholder="Descripción" formControlName="descripcion" />
+      @if (descripcion?.invalid && (descripcion?.touched || descripcion?.dirty)) {
+      <div class="text-danger mt-1">
+        <small>La descripción es obligatoria.</small>
+      </div>
+      }
     </div>
+
     <div class="col-md-2">
       <label for="precio" class="form-label">Precio</label>
-      <input type="number" id="precio" class="form-control" formControlName="precio" step="0.01"
-        [ngClass]="{ 'is-invalid': precio?.invalid && (precio?.dirty || precio?.touched) }" />
-      <div *ngIf="precio?.invalid && (precio?.dirty || precio?.touched)" class="invalid-feedback">
-        <small *ngIf="precio?.errors?.['required']">El precio es obligatorio.</small>
-        <small *ngIf="precio?.errors?.['min']">Debe ser mayor a 0.</small>
+      <input type="number" id="precio" class="form-control" formControlName="precio" step="0.01" />
+      @if (precio?.invalid && (precio?.touched || precio?.dirty)) {
+      <div class="text-danger mt-1">
+        <small>El precio es obligatorio.</small>
       </div>
+      }
     </div>
 
+    <div class="col-md-6">
+      <label for="imagen" class="form-label">Imagen (Archivo)</label>
+      <input id="imagen" type="file" class="form-control" (change)="onFileChange($event)" #fileInput />
 
-
-    <div class="col-md-3">
-      <label class="form-label">Ruta de Imagen</label>
-      <input type="text" class="form-control" placeholder="Ruta de Imagen" formControlName="imagen"
-        [ngClass]="{ 'is-invalid': imagen?.invalid && (imagen?.touched || imagen?.dirty) }" />
-      <div class="invalid-feedback">La ruta de imagen es obligatoria.</div>
+      @if (servicioForm.value.imagen) {
+      <div class="col-md-6 mt-2">
+        <label class="form-label">Vista previa de imagen:</label><br />
+        <img [src]="servicioForm.value.imagen" alt="Vista previa" width="120" class="border rounded" />
+      </div>
+      }
     </div>
 
-    <div class="col-12 text-start">
-      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'">
-        {{ modoEdicion ? 'Actualizar' : 'Agregar' }} Servicio
+    <div class="col-12 mt-3">
+      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
+        [disabled]="servicioForm.invalid">
+        {{ modoEdicion ? 'Actualizar Categoría' : 'Agregar Categoría' }}
       </button>
+
+      @if (modoEdicion) {
+      <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar Edición</button>
+      }
     </div>
   </form>
 
