@@ -121,8 +121,6 @@ Asegúrate de que el backend esté corriendo en el puerto correcto (`8081`) y de
 
 <h2>📁 Estructura del proyecto</h2>
 
-<h2>📁 Estructura del proyecto</h2>
-
 <pre>
 PlataformaHotelFrontend/
 ├── node_modules/           # Módulos y dependencias instaladas por npm
