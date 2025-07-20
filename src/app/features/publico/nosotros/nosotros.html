@@ -65,24 +65,30 @@
         </div>
     </div>
 </section>
-
-<!-- RESEÑAS -->
+<!-- SECCIÓN DE RESEÑAS -->
 <section class="reviews">
-    <div class="review">
-        <div class="review__stars">★★★★★</div>
-        <p class="review__text">Desde el momento en que llegamos fue una excelente experiencia</p>
-        <div class="review__author">Laura G. – Lima, Perú</div>
-    </div>
-    <div class="review">
-        <div class="review__stars">★★★★</div>
-        <p class="review__text">El personal fue muy amable y las habitaciones estaban impecables. Definitivamente
-            volveré en mi próximo viaje.</p>
-        <div class="review__author">Carlos M. – Lima, Perú</div>
-    </div>
-    <div class="review">
-        <div class="review__stars">★★★</div>
-        <p class="review__text">Buena relación calidad-precio. El wifi podría mejorar, pero en general fue una estancia
-            agradable.</p>
-        <div class="review__author">Javier R. – Lima, Perú</div>
-    </div>
+  <h2 class="reviews-title">💬 Lo que dicen nuestros clientes</h2>
+
+  @if (rese$ | async; as resenas) {
+    @for (r of resenas; track r.id) {
+      <div class="review">
+        <div class="review__header">
+          <div class="review__stars">
+            {{ '★'.repeat(r.calificacion) + '☆'.repeat(5 - r.calificacion) }}
+          </div>
+          <span class="review__date">{{ r.fecha | date: 'longDate' }}</span>
+        </div>
+        <p class="review__text">
+          “{{ r.descripcion || 'Sin comentario proporcionado.' }}”
+        </p>
+        <div class="review__author">
+          — {{ r.usuario.nombre }}
+        </div>
+      </div>
+    } @empty {
+      <p class="review__empty">No hay reseñas disponibles aún. ¡Sé el primero en dejar una!</p>
+    }
+  } @else {
+    <p class="review__loading">Cargando reseñas...</p>
+  }
 </section>
