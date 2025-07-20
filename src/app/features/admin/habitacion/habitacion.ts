@@ -26,7 +26,7 @@ export class HabitacionesAdminComponent implements OnInit {
     id: [null],
     nombre: ['', [Validators.required, Validators.minLength(3)]],
     descripcion: ['', Validators.required],
-    estado: ['', Validators.required],
+    estado: [null, Validators.required],
     categoriaHabitacion: [null, Validators.required]
   });
 

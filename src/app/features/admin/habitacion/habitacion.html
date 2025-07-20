@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <h2 class="mb-4">Gestión de Habitaciones 🛏️</h2>
 
-<form [formGroup]="habitacionForm" class="row g-3 mb-4 p-3 border rounded shadow-sm"
+  <form [formGroup]="habitacionForm" class="row g-3 mb-4 p-3 border rounded shadow-sm"
     (ngSubmit)="registroHabitacion()">
     <div class="col-md-4">
       <label for="nombre" class="form-label">Nombre</label>
@@ -33,11 +33,17 @@
 
     <div class="col-md-4">
       <label for="estado" class="form-label">Estado</label>
-      <input type="text" class="form-control" id="estado" formControlName="estado" placeholder="Disponible / Ocupado" />
+      <select id="estado" class="form-select" formControlName="estado">
+        <option [ngValue]="null" disabled selected>Seleccionar estado</option>
+        <option value="Disponible">Disponible</option>
+        <option value="Ocupado">Ocupado</option>
+      </select>
 
       @if (estado?.invalid && (estado?.dirty || estado?.touched)) {
       <div class="text-danger mt-1">
+        @if (estado?.errors?.['required']) {
         <small>El estado es obligatorio.</small>
+        }
       </div>
       }
     </div>
@@ -61,7 +67,7 @@
       }
     </div>
 
-    <div class="col-12 mt-3">
+    <div class="d-flex flex-nowrap justify-content-start">
       <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
         [disabled]="habitacionForm.invalid">
         {{ modoEdicion ? 'Actualizar Habitación' : 'Agregar Habitación' }}
