@@ -31,7 +31,7 @@
 - TypeScript
 - Angular Router
 - Angular Reactive Forms
-- Bootstrap 5 (para el diseño responsivo)
+- Bootstrap 5 
 
 ### Backend (Spring Boot) 
 - Spring Boot 3 (Java 17)
