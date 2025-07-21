@@ -54,4 +54,16 @@ describe('ServicioService', () => {
     req.flush(mockServicios);
   });
 
+  it('debe insertar un servicio (POST)', () => {
+    service.insertar(nuevoServicio).subscribe(servicio => {
+      expect(servicio.nombre).toBe('Servicio de Restaurante');
+      expect(servicio.precio).toBe(50);
+    });
+
+    const req = httpMock.expectOne(URL);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body.nombre).toBe('Servicio de Restaurante');
+    req.flush(nuevoServicio);
+  });
+
 });
