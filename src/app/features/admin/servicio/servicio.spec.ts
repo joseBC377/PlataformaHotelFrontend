@@ -78,5 +78,14 @@ describe('ServicioService', () => {
     req.flush(servicioEditado);
   });
 
+  it('debe eliminar un servicio (DELETE)', () => {
+    service.eliminar(2).subscribe(response => {
+      expect(response).toBe('Servicio eliminado');
+    });
 
+    const req = httpMock.expectOne(`${URL}/2`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush('Servicio eliminado');
+  });
+  
 });
