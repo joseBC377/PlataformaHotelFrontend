@@ -1,0 +1,57 @@
+import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { ServicioService } from "../services/servicio.service";
+import { Servicio } from "../../auth/models/servicio";
+import { TestBed } from "@angular/core/testing";
+
+
+describe('ServicioService', () => {
+  let service: ServicioService;
+  let httpMock: HttpTestingController;
+
+  const URL = 'http://localhost:8081/api/servicio';
+
+  // Mock de un servicio
+  const mockServicios: Servicio[] = [
+    {
+      id_servicio: 1,
+      nombre: 'Servicio de Spa',
+      descripcion: 'Masajes y relajación',
+      precio: 100,
+      imagen: 'spa.jpg'
+    }
+  ];
+
+  const nuevoServicio: Servicio = {
+    id_servicio: 2,
+    nombre: 'Servicio de Restaurante',
+    descripcion: 'Comidas gourmet',
+    precio: 50,
+    imagen: 'restaurante.jpg'
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [ServicioService]
+    });
+
+    service = TestBed.inject(ServicioService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify(); // Verifica que no queden requests pendientes
+  });
+
+  it('debe listar servicios (GET)', () => {
+    service.listar().subscribe(servicios => {
+      expect(servicios.length).toBe(1);
+      expect(servicios[0].nombre).toBe('Servicio de Spa');
+    });
+
+    const req = httpMock.expectOne(URL);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockServicios);
+  });
+
+});
