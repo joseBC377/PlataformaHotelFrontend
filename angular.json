@@ -26,13 +26,12 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"                
+                "input": "public"
               }
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
-              
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -105,7 +104,12 @@
             ],
             "styles": [
               "src/styles.scss"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles"
+              ]
+            }
           }
         }
       }
