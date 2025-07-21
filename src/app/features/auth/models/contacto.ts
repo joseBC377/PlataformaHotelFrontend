@@ -6,5 +6,5 @@ export interface ContactoModel {
     apellido:string;
     correo:string;
     mensaje:string;
-    id_usuario:UsuarioModel;
+    usuario?: UsuarioModel;
 }
