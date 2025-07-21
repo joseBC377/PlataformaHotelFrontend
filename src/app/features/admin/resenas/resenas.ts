@@ -24,7 +24,7 @@ export class ResenaAdminComponent implements OnInit {
   private servResena = inject(ResenaService);
   protected user$!: Observable<UsuarioModel[]>;
   protected habit$!: Observable<Habitacion[]>;
-  protected rese$!: Observable<Resena[]>;
+  public rese$!: Observable<Resena[]>;
 
   resenaForm!: FormGroup;
   resenas: Resena[] = [];
