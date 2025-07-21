@@ -29,5 +29,4 @@ export class ResenaService {
     return this.http.delete(`${this.URL}/${id}`,{ responseType: 'text' });
   }
 
-
 }
