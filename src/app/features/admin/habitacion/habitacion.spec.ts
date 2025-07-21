@@ -96,6 +96,14 @@ describe('HabitacionServices', () => {
     req.flush(habitacionEditada);
   });
 
- 
+  it('debe eliminar una habitación (DELETE)', () => {
+    service.deleteHabitacion(2).subscribe(response => {
+      expect(response).toEqual(mockHabitaciones[0]);
+    });
 
+    const req = httpMock.expectOne(`${API_URL}/2`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush(mockHabitaciones[0]);
+  });
+  
 });
