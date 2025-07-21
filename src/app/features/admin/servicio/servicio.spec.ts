@@ -66,4 +66,17 @@ describe('ServicioService', () => {
     req.flush(nuevoServicio);
   });
 
+  it('debe editar un servicio (PUT)', () => {
+    const servicioEditado = { ...nuevoServicio, nombre: 'Restaurante Deluxe' };
+
+    service.editar(2, servicioEditado).subscribe(servicio => {
+      expect(servicio.nombre).toBe('Restaurante Deluxe');
+    });
+
+    const req = httpMock.expectOne(`${URL}/2`);
+    expect(req.request.method).toBe('PUT');
+    req.flush(servicioEditado);
+  });
+
+
 });
