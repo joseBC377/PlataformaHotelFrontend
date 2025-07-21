@@ -73,4 +73,29 @@ describe('HabitacionServices', () => {
     req.flush(mockHabitaciones[0]);
   });
 
+  it('debe insertar una habitación (POST)', () => {
+    service.postInsertarHabitacion(nuevaHabitacion).subscribe(habitacion => {
+      expect(habitacion.nombre).toBe('Hab202');
+    });
+
+    const req = httpMock.expectOne(API_URL);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body.nombre).toBe('Hab202');
+    req.flush(nuevaHabitacion);
+  });
+
+  it('debe editar una habitación (PUT)', () => {
+    const habitacionEditada = { ...nuevaHabitacion, estado: 'DISPONIBLE' };
+
+    service.putEditarHabitacion(2, habitacionEditada).subscribe(habitacion => {
+      expect(habitacion.estado).toBe('DISPONIBLE');
+    });
+
+    const req = httpMock.expectOne(`${API_URL}/2`);
+    expect(req.request.method).toBe('PUT');
+    req.flush(habitacionEditada);
+  });
+
+ 
+
 });
