@@ -1,4 +1,4 @@
-name: Build Angular SSR with Docker
+name: Build and Push Angular SSR Docker Image
 
 on:
   push:
@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código fuente
+      - name: Checkout del código
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -24,14 +24,14 @@ jobs:
       - name: Compilar Angular SSR
         run: npm run build:ssr
 
-      - name: Login a Docker Hub
+      - name: Login en Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
+      - name: Build de imagen Docker
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/angular-ssr-app:latest .
 
-      - name: Push Docker image
+      - name: Push de imagen Docker
         run: docker push ${{ secrets.DOCKER_USERNAME }}/angular-ssr-app:latest
