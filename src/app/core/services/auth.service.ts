@@ -6,13 +6,14 @@ import { Credenciales } from '../../features/auth/models/credenciales';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Token } from '../../features/auth/models/token';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private URL = "http://localhost:8081/api/v1/auth"
+  private URL = `${environment.API_BASE_URL}/v1/auth`;
   private router = inject(Router);
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID); // ¡Inyectar PLATFORM_ID!

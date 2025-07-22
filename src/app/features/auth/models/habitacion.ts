@@ -1,4 +1,4 @@
-import { CategoriaHabitacion } from "./categoria_habitacion";
+import { CategoriaHabitacion } from "./categoria-habitacion";
 
 export interface Habitacion {
   id?: number;

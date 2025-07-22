@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Habitacion } from '../../auth/models/habitacion';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HabitacionServices {
-  private API_URL = 'http://localhost:8081/api/habitacion';
+  private API_URL = `${environment.API_BASE_URL}/habitacion`;
   private http = inject(HttpClient);
 
   getAllHabitaciones(): Observable<Habitacion[]> {

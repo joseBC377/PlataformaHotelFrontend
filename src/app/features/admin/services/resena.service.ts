@@ -3,13 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Resena } from '../../auth/models/resena';
 import { RequestResenaModel } from '../../auth/models/request-resena-model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResenaService {
 
-  private URL = "http://localhost:8081/api/resena"
+  private URL = `${environment.API_BASE_URL}/resena`;
   private http = inject(HttpClient)
 
   listar(): Observable <Resena[]>{
