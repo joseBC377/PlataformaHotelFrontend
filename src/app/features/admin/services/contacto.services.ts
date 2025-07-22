@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ContactoModel } from '../../auth/models/contacto';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactoService {
-  private API_URL = "http://localhost:8081/api/contacto"
+  private API_URL = `${environment.API_BASE_URL}/contacto`;
   private http = inject(HttpClient);
   getSelectContact(): Observable<ContactoModel[]> {
     return this.http.get<ContactoModel[]>(`${this.API_URL}/lista`);

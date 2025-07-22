@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { CategoriaHabitacion } from '../../auth/models/categoria_habitacion';
-import { CategoriaHabitacionServices } from '../services/categoria_habitacion';
+import { CategoriaHabitacion } from '../../auth/models/categoria-habitacion';
+import { CategoriaHabitacionServices } from '../services/categoria-habitacion';
 
 
 

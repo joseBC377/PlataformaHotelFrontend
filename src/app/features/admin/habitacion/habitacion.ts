@@ -3,9 +3,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { HabitacionServices } from '../services/habitacion.services';
-import { CategoriaHabitacionServices } from '../services/categoria_habitacion';
+import { CategoriaHabitacionServices } from '../services/categoria-habitacion';
 import { Habitacion } from '../../auth/models/habitacion';
-import { CategoriaHabitacion } from '../../auth/models/categoria_habitacion';
+import { CategoriaHabitacion } from '../../auth/models/categoria-habitacion';
 
 @Component({
   selector: 'app-habitaciones-admin',

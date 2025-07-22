@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CategoriaHabitacion } from '../../auth/models/categoria_habitacion';
+import { CategoriaHabitacion } from '../../auth/models/categoria-habitacion';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoriaHabitacionServices {
-  private API_URL = 'http://localhost:8081/api/categoriaHabitacion';
+  private API_URL = `${environment.API_BASE_URL}/categoriaHabitacion`;
   private http = inject(HttpClient);
 
   getAllCategorias(): Observable<CategoriaHabitacion[]> {

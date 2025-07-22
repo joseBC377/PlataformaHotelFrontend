@@ -4,14 +4,15 @@ import { Observable } from 'rxjs';
 import { ConteoRol } from '../../auth/models/conteo-rol';
 import { UsuarioModel } from '../../auth/models/usuario';
 import { RequestUserModel } from '../../auth/models/request-user-model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminServices {
 
-  private URL = "http://localhost:8081/api/v1/auth"
-  private API_URL = "http://localhost:8081/api/usuario"
+  private URL = `${environment.API_BASE_URL}/v1/auth`;
+  private API_URL =`${environment.API_BASE_URL}/usuario`;
   private http = inject(HttpClient);
 
   getAllUsers(): Observable<UsuarioModel[]> {

@@ -16,7 +16,7 @@ import { ServiciosAdminComponent } from './features/admin/servicio/servicio';
 import { ResenaAdminComponent } from './features/admin/resenas/resenas';
 import { Usuario } from './features/admin/usuario/usuario';
 import { Contacto } from './features/admin/contacto/contacto';
-import { CategoriaHabitacionServices } from './features/admin/services/categoria_habitacion';
+import { CategoriaHabitacionServices } from './features/admin/services/categoria-habitacion';
 import { CategoriaHabitacionComponent } from './features/admin/categoria-habitacion/categoria-habitacion';
 import { PagosComponent } from './features/admin/pago/pago';
 import { ReservaService } from './features/admin/services/reserva.services';

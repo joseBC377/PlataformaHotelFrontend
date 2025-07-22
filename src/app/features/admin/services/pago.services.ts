@@ -3,12 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { PagoModel } from '../../auth/models/pago';
 import { Observable } from 'rxjs';
 import { PagoReservaInfo } from '../../auth/models/pago-reserva-info';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PagoService {
-  private API_URL = "http://localhost:8081/api/pago"
+  private API_URL = `${environment.API_BASE_URL}/pago`;
   private http = inject(HttpClient);
     getSelectPago():Observable<PagoModel[]>{
       return this.http.get<PagoModel[]>(`${this.API_URL}/lista`);

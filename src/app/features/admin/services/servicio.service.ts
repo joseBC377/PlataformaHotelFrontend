@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Servicio } from '../../auth/models/servicio';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServicioService {
 
-  private URL = "http://localhost:8081/api/servicio"
+  private URL = `${environment.API_BASE_URL}/servicio`;
   private http = inject(HttpClient);
 
 
