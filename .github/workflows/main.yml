@@ -1,28 +1,37 @@
-# Etapa 1: Construcción de Angular SSR
-FROM node:20 AS builder
+name: Build Angular SSR with Docker
 
-WORKDIR /app
+on:
+  push:
+    branches:
+      - main
 
-# Copiar package.json e instalar dependencias
-COPY package*.json ./
-RUN npm install
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-# Copiar el resto del proyecto
-COPY . .
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v3
 
-# Construir la aplicación SSR (cliente + servidor)
-RUN npm run build:ssr
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-# Etapa 2: Producción - Ejecutar la app SSR
-FROM node:20-alpine AS runtime
+      - name: Instalar dependencias
+        run: npm install
 
-WORKDIR /app
+      - name: Compilar Angular SSR
+        run: npm run build:ssr
 
-# Copiar el build generado desde la etapa anterior
-COPY --from=builder /app/dist/PlataformaHotelFrontend /app
+      - name: Login a Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-# Exponer el puerto (por defecto Angular Universal usa el 4000, pero puede cambiar)
-EXPOSE 4000
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/angular-ssr-app:latest .
 
-# Comando para iniciar el servidor SSR
-CMD ["node", "server/main.js"]
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/angular-ssr-app:latest
