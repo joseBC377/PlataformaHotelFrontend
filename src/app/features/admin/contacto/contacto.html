@@ -19,7 +19,7 @@
         @for (c of cont; track c.id) {
         <tr>
           <td>{{ c.id }}</td>
-          <td>{{ c.usuario?.id }}</td>
+          <td>{{ c.usuario ? c.usuario.id : 'Publico' }}</td>
           <td>{{ c.nombre }}</td>
           <td>{{ c.apellido }}</td>
           <td>{{ c.correo }}</td>
