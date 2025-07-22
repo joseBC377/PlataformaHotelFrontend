@@ -19,13 +19,13 @@
         @for (c of cont; track c.id) {
         <tr>
           <td>{{ c.id }}</td>
-          <td>{{ c.id_usuario }}</td>
+          <td>{{ c.usuario ? c.usuario.id : 'Publico' }}</td>
           <td>{{ c.nombre }}</td>
           <td>{{ c.apellido }}</td>
           <td>{{ c.correo }}</td>
           <td>{{c.mensaje}}</td>
           <td>
-            <button class="btn btn-danger btn-sm">
+            <button class="btn btn-danger btn-sm" (click)="eliminarMensaje(c.id)">
               Eliminar
             </button>
           </td>
