@@ -25,7 +25,7 @@
           <td>{{ c.correo }}</td>
           <td>{{c.mensaje}}</td>
           <td>
-            <button class="btn btn-danger btn-sm">
+            <button class="btn btn-danger btn-sm" (click)="eliminarMensaje(c.id)">
               Eliminar
             </button>
           </td>

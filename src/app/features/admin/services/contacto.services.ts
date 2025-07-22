@@ -21,7 +21,7 @@ export class ContactoService {
   putUpdateContact(id: number, contacto: ContactoModel): Observable<ContactoModel> {
     return this.http.put<ContactoModel>(`${this.API_URL}/actualizar/${id}`, contacto);
   }
-  deleteIdContact(id: number): Observable<ContactoModel> {
-    return this.http.delete<ContactoModel>(`${this.API_URL}/eliminar/${id}`);
+  deleteIdContact(id: number): Observable<any> {
+    return this.http.delete(`${this.API_URL}/eliminar/${id}`,{responseType:'text'});
   }
 }
