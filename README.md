@@ -42,6 +42,7 @@
 - Controladores REST para exponer la API
 - Manejo de excepciones y validaciones personalizadas
 - CORS
+- Railway
 
 ### Herramientas adicionales
 - Visual Studio Code
