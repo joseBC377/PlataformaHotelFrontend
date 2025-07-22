@@ -7,7 +7,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "build:ssr": "ng build && ng run PlataformaHotelFrontend:server",
     "serve:ssr:PlataformaHotelFrontend": "node dist/PlataformaHotelFrontend/server/server.mjs"
+    
+
   },
   "private": true,
   "dependencies": {
