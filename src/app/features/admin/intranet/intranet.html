@@ -86,7 +86,21 @@
                         <td>{{c.correo}}</td>
                         <td>{{c.telefono}}</td>
                         <td>{{c.rol}}</td>
-                        <td>{{c.reserva}}</td>
+                     <td>
+                        @if (c.reserva.length > 0) {
+                            <ul class="list-unstyled mb-0">
+                                @for (r of c.reserva; track r.id) {
+                                    <li>
+                                        {{ r.fecha_inicio | date:'dd/MM/yyyy HH:mm' }} →
+                                        {{ r.fecha_fin | date:'dd/MM/yyyy HH:mm' }}
+
+                                    </li>
+                                }
+                            </ul>
+                        } @else {
+                            <span>Sin reservas</span>
+                        }
+                    </td>
                     </tr>
                     }@empty {
                     <tr>

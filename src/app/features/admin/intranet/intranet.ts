@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { AdminServices } from '../services/admin.services';
 import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { ConteoRol } from '../../auth/models/conteo-rol';
 import { UsuarioModel } from '../../auth/models/usuario';
 
 @Component({
   selector: 'app-intranet',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, CommonModule],
   templateUrl: './intranet.html',
   styleUrl: './intranet.scss'
 })
