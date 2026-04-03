@@ -4,7 +4,7 @@ import { Resena } from '../../auth/models/resena';
 import { Rol } from '../../auth/models/rol';
 import { RequestResenaModel } from '../../auth/models/request-resena-model';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-
+import { EstadoReserva } from '../../auth/models/habitacionEstado';
 
 
 describe('ResenaService', () => {
@@ -19,7 +19,7 @@ describe('ResenaService', () => {
         {
             id: 1,
             calificacion: 4.5,
-            descripcion: 'Muy buena',
+            comentario: 'Muy buena',
             fecha: '2025-01-01',
             usuario: {
                 id: 10,
@@ -34,8 +34,8 @@ describe('ResenaService', () => {
             habitacion: {
                 id: 20,
                 nombre: 'Habitación 1',
-                descripcion: 'Habitación de prueba',
-                estado: 'DISPONIBLE',
+                descripcion: 'Habitación con vista al mar',
+                estado: EstadoReserva.DISPONIBLE,
                 categoriaHabitacion: {
                     id: 1,
                     nombre: 'Suite',
@@ -50,7 +50,7 @@ describe('ResenaService', () => {
 
     const nuevaResena: RequestResenaModel = {
         calificacion: 5,
-        descripcion: 'Excelente',
+        comentario: 'Excelente',
         fecha: '2025-07-21',
         usuario: { id: 10 },
         habitacion: { id: 20 }
@@ -73,7 +73,7 @@ describe('ResenaService', () => {
     it('debe listar reseñas (GET)', () => {
         service.listar().subscribe(resenas => {
             expect(resenas.length).toBe(1);
-            expect(resenas[0].descripcion).toBe('Muy buena');
+            expect(resenas[0].comentario).toBe('Muy buena');
         });
 
         const req = httpMock.expectOne(URL);

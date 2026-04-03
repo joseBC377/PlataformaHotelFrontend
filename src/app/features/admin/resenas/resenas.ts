@@ -41,7 +41,7 @@ export class ResenaAdminComponent implements OnInit {
         [Validators.required, Validators.min(1), Validators.max(5)]
       ],
       fecha: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      comentario: ['', Validators.required],
       id_usuario: [null, Validators.required],
       id_habitacion: [null, Validators.required]
     });
@@ -56,7 +56,7 @@ export class ResenaAdminComponent implements OnInit {
 
   // Getters para los controles del formulario
   get calificacion() { return this.resenaForm.get('calificacion'); }
-  get descripcion() { return this.resenaForm.get('descripcion'); }
+  get comentario() { return this.resenaForm.get('comentario'); }
   get fecha() { return this.resenaForm.get('fecha'); }
   get id_usuario() { return this.resenaForm.get('id_usuario'); }
   get id_habitacion() { return this.resenaForm.get('id_habitacion'); }
@@ -89,9 +89,9 @@ export class ResenaAdminComponent implements OnInit {
     this.idEditando = resena.id!;
 
     this.resenaForm.patchValue({
-      calificacion: resena.calificacion, // Esto asignará el valor numérico a la calificación
+      calificacion: resena.calificacion, 
       fecha: resena.fecha,
-      descripcion: resena.descripcion,
+      comentario: resena.comentario,
       id_usuario: resena.usuario.id,
       id_habitacion: resena.habitacion.id,
     });
@@ -107,7 +107,7 @@ export class ResenaAdminComponent implements OnInit {
 
     const resena: RequestResenaModel = {
       calificacion: form.calificacion,
-      descripcion: form.descripcion,
+      comentario: form.comentario,
       fecha: form.fecha,
       usuario: { id: form.id_usuario },
       habitacion: { id: form.id_habitacion }

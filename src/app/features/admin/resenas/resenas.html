@@ -26,13 +26,13 @@
             }
         </div>
         <div class="col-md-3">
-            <label for="descripcion" class="form-label">Descripción</label>
-            <input id="descripcion" type="text" class="form-control" formControlName="descripcion"
-                placeholder="Descripción de la categoría" />
+            <label for="comentario" class="form-label">Comentario</label>
+            <input id="comentario" type="text" class="form-control" formControlName="comentario"
+                placeholder="Comentario de la reseña" />
 
-            @if (descripcion?.invalid && (descripcion?.touched || descripcion?.dirty)) {
+            @if (comentario?.invalid && (comentario?.touched || comentario?.dirty)) {
                 <div class="text-danger mt-1">
-                    <small>La descripción es obligatoria.</small>
+                    <small>La comentario es obligatoria.</small>
                 </div>
             }
         </div>
@@ -102,7 +102,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Calificación</th>
-                    <th>Descripción</th>
+                    <th>Comentario</th>
                     <th>Fecha</th>
                     <th>ID Usuario</th>
                     <th>Nombre de la habitación</th>
@@ -115,7 +115,7 @@
                     <tr>
                         <td>{{ r.id }}</td>
                         <td>{{ r.calificacion }}</td>
-                        <td>{{ r.descripcion }}</td>
+                        <td>{{ r.comentario }}</td>
                         <td>{{ r.fecha }}</td>
                         <td>{{ r.usuario.nombre }}</td>
                         <td>{{ r.habitacion.nombre }}</td>

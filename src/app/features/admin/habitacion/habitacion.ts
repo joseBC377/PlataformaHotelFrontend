@@ -7,6 +7,7 @@ import { CategoriaHabitacionServices } from '../services/categoria-habitacion';
 import { Habitacion } from '../../auth/models/habitacion';
 import { CategoriaHabitacion } from '../../auth/models/categoria-habitacion';
 
+
 @Component({
   selector: 'app-habitaciones-admin',
   standalone: true,
