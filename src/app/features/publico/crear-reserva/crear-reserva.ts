@@ -92,7 +92,7 @@ export class CrearReserva implements OnInit {
     };
     localStorage.setItem('temp_reserva', JSON.stringify(reservaData));
 
-    this.router.navigate(['/resumen-reserva'], {
+    this.router.navigate(['/resumen'], {
       state: { data: reservaData }
     });
   }

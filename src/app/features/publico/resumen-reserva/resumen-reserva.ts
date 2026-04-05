@@ -65,7 +65,7 @@ export class ResumenReserva {
     this.reservaService.postInsertReserva(bodyFinal).subscribe({
       next: (res) => {
         alert('¡Reserva registrada con éxito!');
-        this.router.navigate(['/publico/mis-reservas']);
+        this.router.navigate(['/crear-reserva']);
       },
       error: (err) => {
         console.error(err);
