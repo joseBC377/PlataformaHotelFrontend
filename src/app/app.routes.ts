@@ -23,6 +23,7 @@ import { ReservaService } from './features/admin/services/reserva.services';
 import { ReservasAdminComponent } from './features/admin/reserva/reserva';
 import { Pago } from './features/publico/pago/pago';
 import { CrearReserva } from './features/publico/crear-reserva/crear-reserva';
+import { ResumenReserva } from './features/publico/resumen-reserva/resumen-reserva';
 
 export const routes: Routes = [
     {
@@ -69,6 +70,9 @@ export const routes: Routes = [
             },
             {
                 path: 'crear-reserva', component: CrearReserva, title: "Crear Reserva"
+            },
+            {
+                path: 'resumen', component: ResumenReserva, title: "Resumen de Reserva"
             },
             {
                 path: 'habitaciones', component: Habitaciones, title: "Habitaciones"

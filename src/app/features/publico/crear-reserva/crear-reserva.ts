@@ -24,10 +24,22 @@ export class CrearReserva implements OnInit {
   constructor(
     private habitacionService: HabitacionServices,
     private servicioService: ServicioService,
-    private router: Router // Inyectamos el router
+    private router: Router
   ) { }
 
   ngOnInit() {
+    // 1. Intentamos recuperar los datos del "disco" del navegador
+    const guardado = localStorage.getItem('temp_reserva');
+
+    if (guardado) {
+      const data = JSON.parse(guardado); // Convertimos el texto de vuelta a objeto
+      this.fechaInicio = data.fechaInicio;
+      this.fechaFin = data.fechaFin;
+      this.habitacionSeleccionada = data.habitacion;
+      this.serviciosSeleccionados = data.servicios;
+    }
+
+    // 2. Cargamos las listas de la API normalmente
     this.habitacionService.getAllHabitaciones().subscribe(data => this.habitacionesList = data);
     this.servicioService.listar().subscribe(data => this.serviciosList = data);
   }
@@ -49,7 +61,7 @@ export class CrearReserva implements OnInit {
     return this.serviciosSeleccionados.some(s => s.id === servicio.id);
   }
 
-  // Método para validar y calcular noches (opcional pero útil)
+  // Método para validar y calcular noches
   calcularNoches(): number {
     if (!this.fechaInicio || !this.fechaFin) return 0;
     const inicio = new Date(this.fechaInicio);
@@ -57,7 +69,7 @@ export class CrearReserva implements OnInit {
     const dif = fin.getTime() - inicio.getTime();
     return Math.ceil(dif / (1000 * 3600 * 24));
   }
-  // Modificamos el método irAResumen para incluir las fechas
+
   irAResumen() {
     const noches = this.calcularNoches();
 
@@ -70,7 +82,6 @@ export class CrearReserva implements OnInit {
       alert('La fecha de fin debe ser posterior a la de inicio.');
       return;
     }
-
     const reservaData = {
       habitacion: this.habitacionSeleccionada,
       servicios: this.serviciosSeleccionados,
@@ -79,16 +90,26 @@ export class CrearReserva implements OnInit {
       noches: noches,
       total: this.calcularTotalConNoches(noches)
     };
+    localStorage.setItem('temp_reserva', JSON.stringify(reservaData));
 
-    this.router.navigate(['/resumen'], {
+    this.router.navigate(['/resumen-reserva'], {
       state: { data: reservaData }
     });
   }
 
   public calcularTotalConNoches(noches: number): number {
-    let totalHabitacion = (this.habitacionSeleccionada?.precio || 0) * noches;
+    // 1. Obtener precio de la habitación (asegúrate de usar categoriaHabitacion)
+    const precioHabitacion = this.habitacionSeleccionada?.categoriaHabitacion?.precio || 0;
+
+    // 2. Calcular subtotal de estancia
+    const totalEstancia = precioHabitacion * noches;
+
+    // 3. Sumar servicios
     let totalServicios = 0;
     this.serviciosSeleccionados.forEach(s => totalServicios += s.precio);
-    return totalHabitacion + totalServicios;
+
+    // 4. EL TOTAL REAL
+    return totalEstancia + totalServicios;
   }
+
 }
