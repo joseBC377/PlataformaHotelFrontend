@@ -74,7 +74,7 @@
         <tr>
           <td>{{ r.id }}</td>
           <td>{{ r.fecha_reserva | date:'yyyy-MM-dd' }}</td>
-          <td>{{ r.usuario?.nombre }} {{ r.usuario?.apellido }} (ID: {{ r.usuario?.id }})</td>
+          <td>{{ r.usuario.nombre }} {{ r.usuario.apellido }} (ID: {{ r.usuario.id }})</td>
           <td>{{ r.estado }}</td>
 
           <!-- ACCIONES -->
