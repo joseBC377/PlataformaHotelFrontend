@@ -1,9 +1,20 @@
 export interface PagoReservaInfo {
-    total:number,
-    metodo_Pago:string,
-    estado_pago:string,
-    fecha_inicio:string,
-    fecha_fin:string,
-    id_usuario:number
+    reserva: {
+        fechaEntrada: string;
+        fechaSalida: string;
+        adultos: number;
+        ninos: number;
+        habitaciones: number;
+        idUsuario: number;
+    };
+
+    pago: {
+        total: number;
+        igv: number;
+        metodoPago: string;
+        estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
+        fechaPago: string;
+    };
+
 }
 

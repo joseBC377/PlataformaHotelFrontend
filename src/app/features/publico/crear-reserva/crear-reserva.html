@@ -1,0 +1,95 @@
+<div class="container mt-4 pb-5">
+    <h2 class="mb-4">Crear Reserva</h2>
+
+    <section class="card p-3 mb-4 bg-light border-0 shadow-sm">
+        <h3 class="h5 text-primary">1. Configura tu Estancia</h3>
+        <hr>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Fecha de Entrada</label>
+                <input type="date" class="form-control" [(ngModel)]="fechaInicio" name="fechaInicio">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Fecha de Salida</label>
+                <input type="date" class="form-control" [(ngModel)]="fechaFin" name="fechaFin">
+            </div>
+        </div>
+        @if (calcularNoches() > 0) {
+        <div class="text-end">
+            <span class="badge bg-info text-dark font-monospace">Estancia de {{ calcularNoches() }} noches</span>
+        </div>
+        }
+    </section>
+
+    <section class="mb-5">
+        <h3 class="h5 text-primary">2. Selecciona tu Habitación</h3>
+        <hr>
+        <div class="row">
+            @for (h of habitacionesList; track h.id) {
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow-sm" [class.border-primary]="habitacionSeleccionada?.id === h.id">
+                    <div class="card-body">
+                        <h5 class="card-title">Habitación {{ h.nombre }}</h5>
+
+                        <p class="badge bg-info text-dark">{{ h.categoriaHabitacion?.nombre }}</p>
+
+                        <p class="card-text text-muted small">{{ h.categoriaHabitacion?.descripcion }}</p>
+
+                        <p class="fw-bold text-success">S/ {{ h.categoriaHabitacion?.precio }} / noche</p>
+
+                        <button class="btn w-100"
+                            [ngClass]="habitacionSeleccionada?.id === h.id ? 'btn-primary' : 'btn-outline-primary'"
+                            (click)="seleccionarHabitacion(h)">
+                            {{ habitacionSeleccionada?.id === h.id ? 'Seleccionada' : 'Seleccionar' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <h3 class="h5 text-primary">3. Servicios Adicionales</h3>
+        <hr>
+        <div class="list-group shadow-sm">
+            @for (s of serviciosList; track s.id) {
+            <button type="button"
+                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                [class.active]="estaSeleccionado(s)" (click)="toggleServicio(s)">
+                <div>
+                    <span class="fw-bold">{{ s.nombre }}</span>
+                    <small class="d-block" [class.text-white]="estaSeleccionado(s)"
+                        [class.text-muted]="!estaSeleccionado(s)">
+                        {{ s.descripcion }}
+                    </small>
+                </div>
+                <span class="badge bg-success rounded-pill">+ S/ {{ s.precio }}</span>
+            </button>
+            }
+        </div>
+    </section>
+
+    <div class="card bg-dark text-white p-3 fixed-bottom shadow-lg border-0 rounded-0">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-0 small text-secondary">Resumen de reserva:</p>
+                    <span class="fw-bold">
+                        {{ habitacionSeleccionada ? habitacionSeleccionada.nombre : 'Selecciona habitación' }}
+                    </span>
+                    <span class="ms-2 badge bg-secondary" *ngIf="calcularNoches() > 0">
+                        {{ calcularNoches() }} noches
+                    </span>
+                </div>
+                <div class="text-end">
+                    <h4 class="mb-0 text-success">Total: S/ {{ calcularTotalConNoches(calcularNoches()) }}</h4>
+                    <button class="btn btn-success px-4" [disabled]="!habitacionSeleccionada || calcularNoches() <= 0"
+                        (click)="irAResumen()">
+                        Confirmar Reserva
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

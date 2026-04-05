@@ -79,7 +79,7 @@
           <span class="review__date">{{ r.fecha | date: 'longDate' }}</span>
         </div>
         <p class="review__text">
-          “{{ r.descripcion || 'Sin comentario proporcionado.' }}”
+          “{{ r.comentario || 'Sin comentario proporcionado.' }}”
         </p>
         <div class="review__author">
           — {{ r.usuario.nombre }}

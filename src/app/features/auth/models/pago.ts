@@ -1,10 +1,10 @@
 import { ReservaModel } from "./reserva";
 
 export interface PagoModel {
-    idPago:number;
-    total:number;
-    metodo_pago:string;
-    estado_pago:string;
-    fecha_pago:string;
-    id_reserva:ReservaModel;
+  idPago: number;
+  total: number;
+  igv: number;
+  estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
+  fecha_pago: string;
+  reserva: ReservaModel;
 }

@@ -8,18 +8,18 @@
             <select
                 class="form-select"
                 formControlName="calificacion"
-                [class.is-invalid]="calificacion?.invalid && (calificacion?.touched || calificacion?.dirty)"
+                [class.is-invalid]="resenaForm.get('calificacion')?.invalid && (resenaForm.get('calificacion')?.touched || resenaForm.get('calificacion')?.dirty)"
             >
                 <option value="">Seleccione una calificación</option>
                 @for (rating of calificacionesDisponibles; track rating) {
                     <option [value]="rating">{{ rating | number: '1.1-1' }}</option>
                 }
             </select>
-            @if (calificacion?.invalid && (calificacion?.touched || calificacion?.dirty)) {
+            @if (resenaForm.get('calificacion')?.invalid && (resenaForm.get('calificacion')?.touched || resenaForm.get('calificacion')?.dirty)) {
                 <div class="text-danger mt-1">
-                    @if (calificacion?.errors?.['required']) {
+                    @if (resenaForm.get('calificacion')?.errors?.['required']) {
                         <small>La calificación es obligatoria.</small>
-                    } @else if (calificacion?.errors?.['min'] || calificacion?.errors?.['max']) {
+                    } @else if (resenaForm.get('calificacion')?.errors?.['min'] || resenaForm.get('calificacion')?.errors?.['max']) {
                         <small>Debe estar entre 1 y 5.</small>
                     }
                 </div>
@@ -30,7 +30,7 @@
             <input id="comentario" type="text" class="form-control" formControlName="comentario"
                 placeholder="Comentario de la reseña" />
 
-            @if (comentario?.invalid && (comentario?.touched || comentario?.dirty)) {
+            @if (resenaForm.get('comentario')?.invalid && (resenaForm.get('comentario')?.touched || resenaForm.get('comentario')?.dirty)) {
                 <div class="text-danger mt-1">
                     <small>La comentario es obligatoria.</small>
                 </div>
@@ -42,11 +42,11 @@
                 type="date"
                 class="form-control"
                 formControlName="fecha"
-                [class.is-invalid]="fecha?.invalid && (fecha?.touched || fecha?.dirty)"
+                [class.is-invalid]="resenaForm.get('fecha')?.invalid && (resenaForm.get('fecha')?.touched || resenaForm.get('fecha')?.dirty)"
             />
-            @if (fecha?.invalid && (fecha?.touched || fecha?.dirty)) {
+            @if (resenaForm.get('fecha')?.invalid && (resenaForm.get('fecha')?.touched || resenaForm.get('fecha')?.dirty)) {
                 <div class="text-danger mt-1">
-                    @if (fecha?.errors?.['required']) {
+                    @if (resenaForm.get('fecha')?.errors?.['required']) {
                         <small>La fecha es obligatoria</small>
                     }
                 </div>
@@ -58,14 +58,14 @@
             <select
                 class="form-select"
                 formControlName="id_usuario"
-                [class.is-invalid]="id_usuario?.invalid && (id_usuario?.touched || id_usuario?.dirty)"
+                [class.is-invalid]="resenaForm.get('id_usuario')?.invalid && (resenaForm.get('id_usuario')?.touched || resenaForm.get('id_usuario')?.dirty)"
             >
                 <option value="null" disabled selected>Seleccione un usuario</option>
                 @for (user of user$ |async; track user.id ) {
                     <option [value]="user.id">{{user.nombre + ' - ' +user.apellido}} </option>
                 }
             </select>
-            @if (id_usuario?.invalid && (id_usuario?.touched || id_usuario?.dirty)) {
+            @if (resenaForm.get('id_usuario')?.invalid && (resenaForm.get('id_usuario')?.touched || resenaForm.get('id_usuario')?.dirty)) {
                 <div class="text-danger mt-1">
                     <small>Debe seleccionar un usuario.</small>
                 </div>
@@ -77,14 +77,14 @@
             <select
                 class="form-select"
                 formControlName="id_habitacion"
-                [class.is-invalid]="id_habitacion?.invalid && (id_habitacion?.touched || id_habitacion?.dirty)"
+                [class.is-invalid]="resenaForm.get('id_habitacion')?.invalid && (resenaForm.get('id_habitacion')?.touched || resenaForm.get('id_habitacion')?.dirty)"
             >
                 <option value="null" disabled selected>Seleccione una habitacion</option>
                 @for (habitacion of habit$ |async; track habitacion.id ) {
                     <option [value]="habitacion.id">{{habitacion.nombre + ' - ' +habitacion.estado}} </option>
                 }
             </select>
-            @if (id_habitacion?.invalid && (id_habitacion?.touched || id_habitacion?.dirty)) {
+            @if (resenaForm.get('id_habitacion')?.invalid && (resenaForm.get('id_habitacion')?.touched || resenaForm.get('id_habitacion')?.dirty)) {
                 <div class="text-danger mt-1">
                     <small>Debe seleccionar una habitación.</small>
                 </div>
