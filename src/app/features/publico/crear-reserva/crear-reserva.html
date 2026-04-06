@@ -27,44 +27,69 @@
         <div class="row">
             @for (h of habitacionesList; track h.id) {
             <div class="col-md-4 mb-3">
-                <div class="card h-100 shadow-sm" [class.border-primary]="habitacionSeleccionada?.id === h.id">
+                <div class="card h-100 shadow-sm position-relative"
+                    [class.border-primary]="estaHabitacionSeleccionada(h.id)"
+                    [class.opacity-50]="h.estado === 'OCUPADA'">
+
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <span class="badge" [ngClass]="h.estado === 'DISPONIBLE' ? 'bg-success' : 'bg-danger'">
+                            {{ h.estado }}
+                        </span>
+                    </div>
+
                     <div class="card-body">
-                        <h5 class="card-title">Habitación {{ h.nombre }}</h5>
-
+                        <h5 class="card-title pe-5">Habitación {{ h.nombre }}</h5>
                         <p class="badge bg-info text-dark">{{ h.categoriaHabitacion?.nombre }}</p>
-
                         <p class="card-text text-muted small">{{ h.categoriaHabitacion?.descripcion }}</p>
-
                         <p class="fw-bold text-success">S/ {{ h.categoriaHabitacion?.precio }} / noche</p>
 
+                        @if (h.estado === 'DISPONIBLE') {
                         <button class="btn w-100"
-                            [ngClass]="habitacionSeleccionada?.id === h.id ? 'btn-primary' : 'btn-outline-primary'"
+                            [ngClass]="estaHabitacionSeleccionada(h.id) ? 'btn-primary' : 'btn-outline-primary'"
                             (click)="seleccionarHabitacion(h)">
-                            {{ habitacionSeleccionada?.id === h.id ? 'Seleccionada' : 'Seleccionar' }}
+                            <i class="bi"
+                                [ngClass]="estaHabitacionSeleccionada(h.id) ? 'bi-check-circle-fill' : 'bi-plus-circle'"></i>
+                            {{ estaHabitacionSeleccionada(h.id) ? ' Seleccionada' : ' Seleccionar' }}
                         </button>
+                        } @else {
+                        <button class="btn btn-secondary w-100" disabled>
+                            <i class="bi bi-slash-circle"></i> No Disponible
+                        </button>
+                        }
                     </div>
                 </div>
             </div>
             }
         </div>
     </section>
-
     <section class="mb-5">
-        <h3 class="h5 text-primary">3. Servicios Adicionales</h3>
+        <h3 class="h5 text-primary">3. Servicios Adicionales (Puedes elegir varios)</h3>
         <hr>
         <div class="list-group shadow-sm">
             @for (s of serviciosList; track s.id) {
             <button type="button"
-                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3"
                 [class.active]="estaSeleccionado(s)" (click)="toggleServicio(s)">
-                <div>
-                    <span class="fw-bold">{{ s.nombre }}</span>
-                    <small class="d-block" [class.text-white]="estaSeleccionado(s)"
-                        [class.text-muted]="!estaSeleccionado(s)">
-                        {{ s.descripcion }}
-                    </small>
+
+                <div class="d-flex align-items-center">
+                    <i class="bi me-3 fs-4"
+                        [ngClass]="estaSeleccionado(s) ? 'bi-check-square-fill text-white' : 'bi-square text-primary'">
+                    </i>
+
+                    <div>
+                        <span class="fw-bold d-block">{{ s.nombre }}</span>
+                        <small [class.text-white-50]="estaSeleccionado(s)" [class.text-muted]="!estaSeleccionado(s)">
+                            {{ s.descripcion }}
+                        </small>
+                    </div>
                 </div>
-                <span class="badge bg-success rounded-pill">+ S/ {{ s.precio }}</span>
+
+                <div class="text-end">
+                    <span class="badge rounded-pill"
+                        [ngClass]="estaSeleccionado(s) ? 'bg-white text-primary' : 'bg-success'">
+                        + S/ {{ s.precio }}
+                    </span>
+                </div>
             </button>
             }
         </div>
@@ -74,9 +99,9 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <p class="mb-0 small text-secondary">Resumen de reserva:</p>
+                    <p class="mb-0 small text-secondary">Resumen de selección:</p>
                     <span class="fw-bold">
-                        {{ habitacionSeleccionada ? habitacionSeleccionada.nombre : 'Selecciona habitación' }}
+                        {{ habitacionesSeleccionadas.length }} hab. seleccionadas
                     </span>
                     <span class="ms-2 badge bg-secondary" *ngIf="calcularNoches() > 0">
                         {{ calcularNoches() }} noches
@@ -84,7 +109,8 @@
                 </div>
                 <div class="text-end">
                     <h4 class="mb-0 text-success">Total: S/ {{ calcularTotalConNoches(calcularNoches()) }}</h4>
-                    <button class="btn btn-success px-4" [disabled]="!habitacionSeleccionada || calcularNoches() <= 0"
+                    <button class="btn btn-success px-4"
+                        [disabled]="habitacionesSeleccionadas.length === 0 || calcularNoches() <= 0"
                         (click)="irAResumen()">
                         Confirmar Reserva
                     </button>
