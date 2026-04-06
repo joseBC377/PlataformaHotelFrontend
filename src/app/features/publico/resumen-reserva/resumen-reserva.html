@@ -1,0 +1,64 @@
+<div class="container mt-5 mb-5" *ngIf="reservaData">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0">
+        <div class="card-header bg-dark text-white text-center py-3">
+          <h4 class="mb-0">Verifica los datos de tu reserva</h4>
+        </div>
+        
+        <div class="card-body p-4">
+          <div class="row mb-4 text-center">
+            <div class="col-6 border-end">
+              <p class="text-muted small mb-0">Entrada (Check-in)</p>
+              <h5 class="fw-bold">{{ reservaData.fechaInicio }}</h5>
+            </div>
+            <div class="col-6">
+              <p class="text-muted small mb-0">Salida (Check-out)</p>
+              <h5 class="fw-bold">{{ reservaData.fechaFin }}</h5>
+            </div>
+            <div class="col-12 mt-2">
+                <span class="badge bg-secondary">{{ reservaData.noches }} noches de estancia</span>
+            </div>
+          </div>
+
+          <h6 class="text-primary text-uppercase small fw-bold">Habitación Seleccionada</h6>
+          <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded mb-4">
+            <div>
+              <p class="mb-0 fw-bold">Habitación {{ reservaData.habitacion.nombre }}</p>
+              <small class="text-muted">{{ reservaData.habitacion.categoriaHabitacion.nombre }}</small>
+            </div>
+            <span class="fw-bold text-success">S/ {{ reservaData.habitacion.categoriaHabitacion.precio }} / noche</span>
+          </div>
+
+          <div class="mb-4" *ngIf="reservaData.servicios.length > 0">
+            <h6 class="text-primary text-uppercase small fw-bold">Servicios Adicionales</h6>
+            <ul class="list-group list-group-flush">
+              @for (s of reservaData.servicios; track s.id) {
+                <li class="list-group-item d-flex justify-content-between px-0">
+                  <span>{{ s.nombre }}</span>
+                  <span class="text-muted">+ S/ {{ s.precio }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+
+          <div class="border-top pt-3 text-end">
+            <p class="mb-1 text-muted">Monto total a pagar:</p>
+            <h2 class="text-success fw-bold">S/ {{ reservaData.total }}</h2>
+          </div>
+        </div>
+
+        <div class="card-footer bg-white border-0 p-4">
+          <div class="d-grid gap-2">
+            <button class="btn btn-success btn-lg shadow-sm" (click)="confirmarYGuardar()">
+              Confirmar y Registrar Reserva
+            </button>
+            <button class="btn btn-outline-secondary" (click)="cancelar()">
+              Modificar Selección
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

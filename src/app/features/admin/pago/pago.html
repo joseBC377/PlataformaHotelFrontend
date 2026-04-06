@@ -85,10 +85,10 @@
             <tr>
               <td>{{ pago.idPago }}</td>
               <td>{{ pago.total }}</td>
-              <td>{{ pago.metodo_pago }}</td>
-              <td>{{ pago.estado_pago }}</td>
+              <td>{{ pago.igv }}</td>
+              <td>{{ pago.estado }}</td>
               <td>{{ pago.fecha_pago }}</td>
-              <td>{{ pago.id_reserva }}</td>
+              <td>{{ pago.reserva.id }}</td>
               <td>
                 <button class="btn btn-sm btn-warning" (click)="editarPago(pago)">Editar</button>
                 <button class="btn btn-sm btn-danger ms-2" (click)="eliminarPago(pago.idPago)">Eliminar</button>

@@ -4,7 +4,7 @@ import { UsuarioModel } from "./usuario";
 export interface Resena {
     id?:number,
     calificacion:number,
-    descripcion:string,
+    comentario:string,
     fecha:string,
     usuario:UsuarioModel,
     habitacion:Habitacion

@@ -1,6 +1,6 @@
 export interface RequestResenaModel {
     calificacion:number,
-    descripcion:string,
+    comentario:string,
     fecha:string,
     usuario:{id : number},
     habitacion:{id : number}

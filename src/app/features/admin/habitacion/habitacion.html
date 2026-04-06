@@ -31,13 +31,19 @@
       }
     </div>
 
-    <div class="col-md-4">
-      <label for="estado" class="form-label">Estado</label>
-      <select id="estado" class="form-select" formControlName="estado">
-        <option [ngValue]="null" disabled selected>Seleccionar estado</option>
-        <option value="Disponible">Disponible</option>
-        <option value="Ocupado">Ocupado</option>
-      </select>
+    
+<div class="col-md-4">
+  <label for="estado" class="form-label">Estado</label>
+
+  <select
+    id="estado"
+    class="form-select"
+    formControlName="estado"
+  >
+    <option [ngValue]="null" disabled>Seleccionar estado</option>
+    <option value="DISPONIBLE">Disponible</option>
+    <option value="OCUPADA">Ocupada</option>
+  </select>
 
       @if (estado?.invalid && (estado?.dirty || estado?.touched)) {
       <div class="text-danger mt-1">

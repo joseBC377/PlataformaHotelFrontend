@@ -1,7 +1,7 @@
 import { HttpTestingController, HttpClientTestingModule } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { CategoriaHabitacion } from "../../auth/models/categoria_habitacion";
-import { CategoriaHabitacionServices } from "../services/categoria_habitacion";
+import { CategoriaHabitacion } from "../../auth/models/categoria-habitacion";
+import { CategoriaHabitacionServices } from "../services/categoria-habitacion";
 
 describe('CategoriaHabitacionServices', () => {
   let service: CategoriaHabitacionServices;

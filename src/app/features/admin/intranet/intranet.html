@@ -4,7 +4,8 @@
         <div class="container my-4">
             <div class="row align-items-center g-2">
                 <div class="col-12 col-md-6 d-flex align-items-center p-3">
-                    <p>¡Hola, administrador&#64;! Nos alegra verte por aquí. Esta es tu área dedicada para tener una vista
+                    <p>¡Hola, administrador&#64;! Nos alegra verte por aquí. Esta es tu área dedicada para tener una
+                        vista
                         completa de todos los clientes que usan la plataforma web de nuestro hotel. Desde aquí, podrás
                         consultar rápidamente los datos de cada usuario, explorar sus reservas activas e históricas, y
                         revisar los conteos por rol para mantener un control total sobre nuestra comunidad de usuarios.
@@ -86,7 +87,20 @@
                         <td>{{c.correo}}</td>
                         <td>{{c.telefono}}</td>
                         <td>{{c.rol}}</td>
-                        <td>{{c.reserva}}</td>
+                        <td>
+                            @if (c.reserva && c.reserva.length > 0) {
+                            <ul class="mb-0">
+                                @for (r of c.reserva; track r.id) {
+                                <a>
+                                    {{ r.fecha_reserva | date:'yyyy-MM-dd' }}
+                                </a>
+                                }
+                            </ul>
+                            } @else {
+                            <span class="text-muted">Sin reservas</span>
+                            }
+                        </td>
+
                     </tr>
                     }@empty {
                     <tr>
