@@ -82,7 +82,7 @@
           “{{ r.comentario || 'Sin comentario proporcionado.' }}”
         </p>
         <div class="review__author">
-          — {{ r.usuario.nombre }}
+          — {{ r.usuario.nombre_usuario || 'Anónimo' }}
         </div>
       </div>
     } @empty {

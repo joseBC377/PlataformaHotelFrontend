@@ -69,27 +69,35 @@ export class Login {
   }
   //formulario registro
   public registrForm: FormGroup = this.fb.group({
-    nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z\s]*$/)]],
-    apellido: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z]*$/)]],
+    nombre_usuario: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    apellido_paterno: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z]*$/)]],
+    apellido_materno: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z\s]*$/)]],
     telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-    correoRe: ['', [Validators.required, Validators.email]],
-    passwordRe: ['', [Validators.required, Validators.minLength(6)]]
+    correo: ['', [Validators.required, Validators.email]],
+    fecha_nacimiento: ['', [Validators.required]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   })
   //getters and setters
-  get nombre(): AbstractControl | null {
-    return this.registrForm.get('nombre');
+  get nombre_usuario(): AbstractControl | null {
+    return this.registrForm.get('nombre_usuario');
   }
-  get apellido(): AbstractControl | null {
-    return this.registrForm.get('apellido');
+  get apellido_paterno(): AbstractControl | null {
+    return this.registrForm.get('apellido_paterno');
+  }
+  get apellido_materno(): AbstractControl | null {
+    return this.registrForm.get('apellido_materno');
   }
   get telefono(): AbstractControl | null {
     return this.registrForm.get('telefono');
   }
   get correoRegistro(): AbstractControl | null {
-    return this.registrForm.get('correoRe');
+    return this.registrForm.get('correo');
+  }
+  get fecha_nacimiento(): AbstractControl | null {
+    return this.registrForm.get('fecha_nacimiento');
   }
   get passwordRegistro(): AbstractControl | null {
-    return this.registrForm.get('passwordRe');
+    return this.registrForm.get('password');
   }
 
 
@@ -103,11 +111,13 @@ export class Login {
     const form = this.registrForm.value;
 
     const user: RequestUserModel = {
-      firstname: form.nombre,
-      lastname: form.apellido,
-      email: form.correoRe,
+      nombre_usuario: form.nombre_usuario,
+      apellido_paterno: form.apellido_paterno,
+      apellido_materno: form.apellido_materno,
+      correo: form.correo,
       telefono: form.telefono,
-      password: form.passwordRe?.trim() || undefined
+      fecha_nacimiento: form.fecha_nacimiento,
+      password: form.password?.trim() || undefined
     };
       
       this.serv.insertIdClient(user).subscribe({

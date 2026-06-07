@@ -3,18 +3,18 @@
 
     <form [formGroup]="usuarioForm" (ngSubmit)="registroFn()" class="row g-3 mb-4 p-3 border rounded shadow-sm">
         <div class="col-md-4">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombre" formControlName="nombre"
+            <label for="nombre_usuario" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre_usuario" formControlName="nombre_usuario"
                 placeholder="Nombre del usuario">
-            @if (nombre?.invalid && (nombre?.dirty || nombre?.touched)) {
+            @if (nombre_usuario?.invalid && (nombre_usuario?.dirty || nombre_usuario?.touched)) {
             <div class="text-danger mt-1">
-                @if (nombre?.errors?.['required']) {
+                @if (nombre_usuario?.errors?.['required']) {
                 <small>El nombre es obligatorio.</small>
                 }
-                @if (nombre?.errors?.['minlength']) {
+                @if (nombre_usuario?.errors?.['minlength']) {
                 <small>Mínimo 3 caracteres.</small>
                 }
-                @if (nombre?.errors?.['pattern']) {
+                @if (nombre_usuario?.errors?.['pattern']) {
                 <small>El nombre solo puede contener letras y espacios.</small>
                 }
             </div>
@@ -22,24 +22,55 @@
         </div>
 
         <div class="col-md-4">
-            <label for="apellido" class="form-label">Apellido</label>
-            <input type="text" class="form-control" id="apellido" formControlName="apellido"
-                placeholder="Apellido del usuario">
-            @if (apellido?.invalid && (apellido?.dirty || apellido?.touched)) {
+            <label for="apellido" class="form-label">Apellido Paterno</label>
+            <input type="text" class="form-control" id="apellido" formControlName="apellido_paterno"
+                placeholder="Apellido paterno del usuario">
+            @if (apellido_paterno?.invalid && (apellido_paterno?.dirty || apellido_paterno?.touched)) {
             <div class="text-danger mt-1">
-                @if (apellido?.errors?.['required']) {
-                <small>El apellido es obligatorio.</small>
+                @if (apellido_paterno?.errors?.['required']) {
+                <small>El apellido paterno es obligatorio.</small>
                 }
-                @if (apellido?.errors?.['minlength']) {
+                @if (apellido_paterno?.errors?.['minlength']) {
                 <small>Minimo 3 caracteres</small>
                 }
-                @if (apellido?.errors?.['pattern']) {
-                <small>El apellido solo puede contener letras y espacios.</small>
+                @if (apellido_paterno?.errors?.['pattern']) {
+                <small>El apellido paterno solo puede contener letras y espacios.</small>
                 }
             </div>
             }
         </div>
-
+        <div class="col-md-4">
+            <label for="apellido" class="form-label">Apellido Materno</label>
+            <input type="text" class="form-control" id="apellido" formControlName="apellido_materno"
+                placeholder="Apellido materno del usuario">
+            @if (apellido_materno?.invalid && (apellido_materno?.dirty || apellido_materno?.touched)) {
+            <div class="text-danger mt-1">
+                @if (apellido_materno?.errors?.['required']) {
+                <small>El apellido materno es obligatorio.</small>
+                }
+                @if (apellido_materno?.errors?.['minlength']) {
+                <small>Minimo 3 caracteres</small>
+                }
+                @if (apellido_materno?.errors?.['pattern']) {
+                <small>El apellido materno solo puede contener letras y espacios.</small>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-4">
+            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+            <input type="date" class="form-control" id="fecha_nacimiento" formControlName="fecha_nacimiento">
+            @if (fecha_nacimiento?.invalid && (fecha_nacimiento?.dirty || fecha_nacimiento?.touched)) {
+            <div class="text-danger mt-1">
+                @if (fecha_nacimiento?.errors?.['required']) {
+                <small>La fecha de nacimiento es obligatoria.</small>
+                }
+                @if (fecha_nacimiento?.errors?.['pattern']) {
+                <small>Formato de fecha inválido.</small>
+                }
+            </div>
+            }
+        </div>
         <div class="col-md-4">
             <label for="correo" class="form-label">Correo</label>
             <input type="email" class="form-control" id="correo" formControlName="correo"
@@ -86,6 +117,19 @@
             }
 
         </div>
+        <div class="col-md-4">
+            <label for="rol" class="form-label">Rol</label>
+            <select class="form-select" id="rol" formControlName="rol">
+                <option value="ADMIN">ADMIN</option>
+                <option value="CLIENT">CLIENT</option>
+                <option value="RECEPCION">RECEPCION</option>
+            </select>
+            @if (rol?.invalid && (rol?.dirty || rol?.touched)) {
+            <div class="text-danger mt-1">
+                <small>El rol es obligatorio.</small>
+            </div>
+            }
+        </div>
 
         <!--
         <div class="col-md-4">
@@ -115,7 +159,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>Fecha de Nacimiento</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
                     <th>Rol</th>
@@ -124,19 +170,21 @@
             </thead>
             <tbody>
                 @if (usuario$|async; as user) {
-                @for (use of user; track use.id) {
+                @for (use of user; track use.id_usuario) {
                 <tr>
-                    <td>{{ use.id }}</td>
-                    <td>{{ use.nombre }}</td>
-                    <td>{{ use.apellido }}</td>
+                    <td>{{ use.id_usuario }}</td>
+                    <td>{{ use.nombre_usuario }}</td>
+                    <td>{{ use.apellido_paterno }}</td>
+                    <td>{{ use.apellido_materno }}</td>
+                    <td>{{ use.fecha_nacimiento }}</td>
                     <td>{{ use.correo }}</td>
                     <td>{{ use.telefono }}</td>
-                    <!-- <td>{{ use.rol }}</td> -->
                     <td>{{ use.rol }}</td>
                     <td>
                         <div class="d-flex flex-nowrap justify-content-center">
                             <button class="btn btn-warning btn-sm me-2" (click)="editarUsuario(use)">Editar</button>
-                            <button class="btn btn-danger btn-sm" (click)="eliminarUsuario(use.id!!)">Eliminar</button>
+                            <button class="btn btn-danger btn-sm"
+                                (click)="eliminarUsuario(use.id_usuario!)">Eliminar</button>
                         </div>
                     </td>
                 </tr>

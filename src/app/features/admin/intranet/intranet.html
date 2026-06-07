@@ -39,11 +39,12 @@
                 </thead>
                 <tbody>
                     @if (usuario$|async; as client) {
-                    @for (c of client; track c.id) {
+                    @for (c of client; track c.id_usuario) {
                     <tr>
-                        <td>{{c.id}}</td>
-                        <td>{{c.nombre}}</td>
-                        <td>{{c.apellido}}</td>
+                        <td>{{c.id_usuario}}</td>
+                        <td>{{c.nombre_usuario}}</td>
+                        <td>{{c.apellido_paterno}}</td>
+                        <td>{{c.apellido_materno}}</td>
                         <td>{{c.correo}}</td>
                         <td>{{c.telefono}}</td>
                         <td>{{c.rol}}</td>
@@ -79,11 +80,12 @@
                 </thead>
                 <tbody>
                     @if (usuarioReserva$|async; as userRes) {
-                    @for (c of userRes; track c.id) {
+                    @for (c of userRes; track c.id_usuario) {
                     <tr>
-                        <td>{{c.id}}</td>
-                        <td>{{c.nombre}}</td>
-                        <td>{{c.apellido}}</td>
+                        <td>{{c.id_usuario}}</td>
+                        <td>{{c.nombre_usuario}}</td>
+                        <td>{{c.apellido_paterno}}</td>
+                        <td>{{c.apellido_materno}}</td>
                         <td>{{c.correo}}</td>
                         <td>{{c.telefono}}</td>
                         <td>{{c.rol}}</td>

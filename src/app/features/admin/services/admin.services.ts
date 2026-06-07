@@ -12,7 +12,7 @@ import { environment } from '../../../../environments/environment';
 export class AdminServices {
 
   private URL = `${environment.API_BASE_URL}/v1/auth`;
-  private API_URL =`${environment.API_BASE_URL}/usuario`;
+  private API_URL = `${environment.API_BASE_URL}/usuario`;
   private http = inject(HttpClient);
 
   getAllUsers(): Observable<UsuarioModel[]> {
@@ -43,12 +43,12 @@ export class AdminServices {
   }
 
 
-  insertIdClient(request: RequestUserModel): Observable<any> {
-    return this.http.post(`${this.URL}/registro`, request);
+  insertIdClient(request: RequestUserModel): Observable<UsuarioModel> {
+    return this.http.post<UsuarioModel>(`${this.API_URL}/insertar`, request);
   }
-  
-  updateIdClient(id: number, usuario: RequestUserModel): Observable<string> {
-    return this.http.put<string>(`${this.URL}/editar/${id}`, usuario);
+
+  updateIdClient(id: number, usuario: RequestUserModel): Observable<UsuarioModel> {
+    return this.http.put<UsuarioModel>(`${this.API_URL}/actualizar/${id}`, usuario);
   }
 
 }

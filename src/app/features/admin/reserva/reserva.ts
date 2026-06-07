@@ -129,6 +129,6 @@ editarReserva(res: ReservaModel): void {
 
 
   compararUsuario = (u1: UsuarioModel, u2: UsuarioModel): boolean => {
-    return u1 && u2 ? u1.id === u2.id : u1 === u2;
+    return u1 && u2 ? u1.id_usuario === u2.id_usuario : u1 === u2;
   }
 }

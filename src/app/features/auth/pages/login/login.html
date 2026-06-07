@@ -60,15 +60,15 @@
                     <i class="fa-solid fa-user"></i>
                     <input formControlName="nombre" type="text" placeholder="Nombre">
                 </div>
-                @if (nombre?.invalid &&(nombre?.dirty||nombre?.touched)) {
+                @if (nombre_usuario?.invalid &&(nombre_usuario?.dirty||nombre_usuario?.touched)) {
                     <div class="text-danger">
-                        @if (nombre?.errors?.['required']) {
+                        @if (nombre_usuario?.errors?.['required']) {
                             <small>El nombre es obligatorio.</small>
                         }
-                        @if (nombre?.errors?.['minlength']) {
-                            <small>Mínimo {{ nombre?.errors?.['minlength']?.requiredLength }} caracteres.</small>
+                        @if (nombre_usuario?.errors?.['minlength']) {
+                            <small>Mínimo {{ nombre_usuario?.errors?.['minlength']?.requiredLength }} caracteres.</small>
                         }
-                        @if (nombre?.errors?.['pattern']) {
+                        @if (nombre_usuario?.errors?.['pattern']) {
                             <small>El nombre solo puede contener letras y espacios.</small>
                         }
                     </div>
@@ -77,15 +77,15 @@
                     <i class="fa-solid fa-user"></i>
                     <input formControlName="apellido" type="text" placeholder="Apellido">
                 </div>
-                @if (apellido?.invalid &&(apellido?.dirty||apellido?.touched)) {
+                @if (apellido_paterno?.invalid &&(apellido_paterno?.dirty||apellido_paterno?.touched)) {
                     <div class="text-danger">
-                        @if (apellido?.errors?.['required']) {
+                        @if (apellido_paterno?.errors?.['required']) {
                             <small>El apellido es obligatorio.</small>
                         }
-                        @if (apellido?.errors?.['minlength']) {
-                            <small>Minimo{{apellido?.errors?.['minlength']}} caracteres.</small>
+                        @if (apellido_paterno?.errors?.['minlength']) {
+                            <small>Minimo{{apellido_paterno?.errors?.['minlength']}} caracteres.</small>
                         }
-                        @if (apellido?.errors?.['pattern']) {
+                        @if (apellido_paterno?.errors?.['pattern']) {
                             <small>El apellido solo puede contener letras y espacios.</small>
                         }
                     </div>

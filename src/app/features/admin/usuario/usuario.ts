@@ -23,20 +23,27 @@ export class Usuario {
 
   public usuarioForm: FormGroup = this.fb.group({
     id_usuario: [null],
-    nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
-    apellido: ['', [Validators.required,Validators.minLength(3), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+    nombre_usuario: ['', [Validators.required, Validators.minLength(3), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+    apellido_paterno: ['', [Validators.required,Validators.minLength(3), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+    apellido_materno: ['', [Validators.required,Validators.minLength(3), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
     correo: ['', [Validators.required, Validators.email]],
+    fecha_nacimiento: ['', [Validators.required]],
     password: ['', [Validators.required,Validators.minLength(8)]],
     telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
+    rol: ['', [Validators.required]] 
   });
 
 
 
-  get nombre() { return this.usuarioForm.get('nombre'); }
-  get apellido() { return this.usuarioForm.get('apellido'); }
+  get nombre_usuario() { return this.usuarioForm.get('nombre_usuario'); }
+  get apellido_paterno() { return this.usuarioForm.get('apellido_paterno'); }
+  get apellido_materno() { return this.usuarioForm.get('apellido_materno'); }
   get correo() { return this.usuarioForm.get('correo'); }
+  get fecha_nacimiento() { return this.usuarioForm.get('fecha_nacimiento'); }
   get password() { return this.usuarioForm.get('password'); }
   get telefono() { return this.usuarioForm.get('telefono'); }
+  get rol() { return this.usuarioForm.get('rol'); }
+
 
 
   ngOnInit(): void {
@@ -54,13 +61,15 @@ export class Usuario {
 
   editarUsuario(usuario: UsuarioModel) {
     this.editando = true;
-    this.idEditando = usuario.id ?? 0;
+    this.idEditando = usuario.id_usuario ?? 0;
 
     this.usuarioForm.patchValue({
-      id_usuario: usuario.id,
-      nombre: usuario.nombre,
-      apellido: usuario.apellido,
+      id_usuario: usuario.id_usuario,
+      nombre_usuario: usuario.nombre_usuario,
+      apellido_paterno: usuario.apellido_paterno,
+      apellido_materno: usuario.apellido_materno,
       correo: usuario.correo,
+      fecha_nacimiento: usuario.fecha_nacimiento,
       telefono: usuario.telefono,
       password: '',
 
@@ -93,12 +102,15 @@ export class Usuario {
 
     const form = this.usuarioForm.value;
 
-    const user: RequestUserModel = {
-      firstname: form.nombre,
-      lastname: form.apellido,
-      email: form.correo,
+    const user: RequestUserModel & { rol: string } = {
+      nombre_usuario: form.nombre_usuario,
+      apellido_paterno: form.apellido_paterno,
+      apellido_materno: form.apellido_materno,
+      fecha_nacimiento: form.fecha_nacimiento,
+      correo: form.correo,
       telefono: form.telefono,
-      password: form.password?.trim() || undefined
+      password: form.password?.trim() || undefined,
+      rol: form.rol
     };
 
     if (this.editando) {

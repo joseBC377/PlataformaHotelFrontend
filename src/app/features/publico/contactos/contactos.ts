@@ -47,7 +47,7 @@ export class Contactos {
   this.auth.getAllUsers().subscribe({
     next: (usuarios: UsuarioModel[]) => {
       if (usuarios.length > 0) {
-        this.contactoForm.get('usuario')?.setValue({ id: usuarios[0].id });
+        this.contactoForm.get('usuario')?.setValue({ id: usuarios[0].id_usuario });
       }
     },
     error: () => {
