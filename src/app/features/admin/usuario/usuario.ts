@@ -72,6 +72,7 @@ export class Usuario {
       fecha_nacimiento: usuario.fecha_nacimiento,
       telefono: usuario.telefono,
       password: '',
+      rol: usuario.rol
 
     });
     // this.setPasswordValidators();
