@@ -46,9 +46,10 @@ export class ResumenReserva {
     }
 
     const bodyFinal = {
-      fecha_reserva: new Date().toISOString().split('T')[0],
+      fechaCreacion: new Date().toISOString().split('T')[0],
       usuario: this.usuarioLogueado,
       estado: EstadoReserva.PENDIENTE,
+      pago: null,
       detallesHabitaciones: [{
         fecha_inicio: this.reservaData.fechaInicio,
         fecha_fin: this.reservaData.fechaFin,
@@ -62,7 +63,8 @@ export class ResumenReserva {
       }))
     };
 
-    this.reservaService.postInsertReserva(bodyFinal).subscribe({
+    // Cast to any to satisfy ReservaModel requirement for pago when it's not provided here
+    this.reservaService.postInsertReserva(bodyFinal as any).subscribe({
       next: (res) => {
         alert('¡Reserva registrada con éxito!');
         this.router.navigate(['/crear-reserva']);

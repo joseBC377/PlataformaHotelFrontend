@@ -24,6 +24,7 @@ import { ReservasAdminComponent } from './features/admin/reserva/reserva';
 import { Pago } from './features/publico/pago/pago';
 import { CrearReserva } from './features/publico/crear-reserva/crear-reserva';
 import { ResumenReserva } from './features/publico/resumen-reserva/resumen-reserva';
+import { Metodopago } from './features/admin/metodopago/metodopago';
 
 export const routes: Routes = [
     {
@@ -54,6 +55,9 @@ export const routes: Routes = [
             },
             {
                 path: 'resena', component: ResenaAdminComponent, title: "Resena"
+            },
+            {
+                path: 'metodo', component: Metodopago, title: "Método de Pago"
             },
         ]
     },

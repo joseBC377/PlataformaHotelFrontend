@@ -92,9 +92,9 @@
                         <td>
                             @if (c.reserva && c.reserva.length > 0) {
                             <ul class="mb-0">
-                                @for (r of c.reserva; track r.id) {
+                                @for (r of c.reserva; track r.id_reserva) {
                                 <a>
-                                    {{ r.fecha_reserva | date:'yyyy-MM-dd' }}
+                                    {{ r.fechaCreacion | date:'yyyy-MM-dd' }}
                                 </a>
                                 }
                             </ul>

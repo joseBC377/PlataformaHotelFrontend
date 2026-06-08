@@ -1,0 +1,103 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Gestión de Métodos de Pago 💳</h2>
+
+  <form [formGroup]="metodoPagoForm" class="row g-3 mb-4 p-3 border rounded shadow-sm"
+    (ngSubmit)="guardar()">
+
+    <div class="col-md-4">
+      <label class="form-label">Tipo de Pago</label>
+      <select class="form-select" formControlName="tipo">
+        <option value="" disabled>Seleccione un tipo</option>
+        @for (t of tiposPago; track t) {
+          <option [value]="t">{{ t }}</option>
+        }
+      </select>
+      @if (tipo?.invalid && (tipo?.touched || tipo?.dirty)) {
+        <div class="text-danger mt-1"><small>El tipo es obligatorio.</small></div>
+      }
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Últimos 4 dígitos</label>
+      <input type="text" class="form-control" formControlName="ultimoscuatrodigitos"
+        placeholder="Ej: 1234" maxlength="4" />
+      @if (metodoPagoForm.get('ultimoscuatrodigitos')?.errors?.['pattern']) {
+        <div class="text-danger mt-1"><small>Debe contener exactamente 4 dígitos.</small></div>
+      }
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Fecha Vencimiento (MM/AA)</label>
+      <input type="text" class="form-control" formControlName="fechaVencimiento"
+        placeholder="Ej: 08/27" maxlength="5" />
+      @if (metodoPagoForm.get('fechaVencimiento')?.errors?.['pattern']) {
+        <div class="text-danger mt-1"><small>Formato inválido. Use MM/AA.</small></div>
+      }
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Token</label>
+      <input type="text" class="form-control" formControlName="token"
+        placeholder="Token de pago (opcional)" />
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end">
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="activo" formControlName="activo" />
+        <label class="form-check-label" for="activo">Activo</label>
+      </div>
+    </div>
+
+    <div class="col-12 mt-3 d-flex gap-2">
+      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
+        [disabled]="metodoPagoForm.invalid">
+        {{ modoEdicion ? 'Actualizar' : 'Registrar' }}
+      </button>
+      @if (modoEdicion) {
+        <button type="button" class="btn btn-secondary" (click)="resetFormulario()">Cancelar</button>
+      }
+    </div>
+  </form>
+
+  <div class="table-responsive mt-4">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Tipo</th>
+          <th>Últimos 4 dígitos</th>
+          <th>Vencimiento</th>
+          <th>Activo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (metodosPago$ | async; as metodos) {
+          @for (mp of metodos; track mp.id_metodo_pago) {
+            <tr>
+              <td>{{ mp.id_metodo_pago }}</td>
+              <td>{{ mp.tipo }}</td>
+              <td>{{ mp.ultimoscuatrodigitos ?? '—' }}</td>
+              <td>{{ mp.fechaVencimiento ?? '—' }}</td>
+              <td>
+                <span class="badge" [ngClass]="mp.activo ? 'bg-success' : 'bg-danger'">
+                  {{ mp.activo ? 'Sí' : 'No' }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex gap-1">
+                  <button class="btn btn-warning btn-sm" (click)="editar(mp)">Editar</button>
+                  <button class="btn btn-danger btn-sm" (click)="eliminar(mp.id_metodo_pago!)">Eliminar</button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="text-center">No hay métodos de pago registrados.</td></tr>
+          }
+        } @else {
+          <tr><td colspan="6" class="text-center">Cargando...</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

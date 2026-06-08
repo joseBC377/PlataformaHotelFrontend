@@ -6,18 +6,14 @@
     <!-- Fecha Reserva -->
     <div class="col-md-4">
       <label class="form-label">Fecha Reserva</label>
-      <input type="date" class="form-control" formControlName="fecha_reserva" />
+      <input type="date" class="form-control" formControlName="fechaCreacion" />
     </div>
 
     <!-- Rol usuario -->
 
     <div class="col-md-4">
       <label for="usuario" class="form-label">Usuario</label>
-     <select
-      id="usuario"
-      class="form-select"
-      formControlName="usuario"
-      [compareWith]="compararUsuario">
+      <select id="usuario" class="form-select" formControlName="usuario" [compareWith]="compararUsuario">
         <option [ngValue]="null">Seleccione un usuario</option>
         @for (u of usuarios$|async; track u.id_usuario) {
         <option [ngValue]="u">
@@ -35,15 +31,42 @@
     </div>
 
     <!-- Estado -->
-  <div class="col-md-4">
-    <label class="form-label">Estado</label>
-    <select class="form-select" formControlName="estado">
-      <option value="" disabled>Seleccione un estado</option>
-      <option value="PENDIENTE">PENDIENTE</option>
-      <option value="CANCELADO">CANCELADO</option>
-      <option value="CONFIRMADO">CONFIRMADO</option>
-    </select>
-  </div>
+    <div class="col-md-4">
+      <label class="form-label">Estado</label>
+      <select class="form-select" formControlName="estado">
+        <option value="" disabled>Seleccione un estado</option>
+        <option value="PENDIENTE">PENDIENTE</option>
+        <option value="CANCELADO">CANCELADO</option>
+        <option value="CONFIRMADO">CONFIRMADO</option>
+      </select>
+    </div>
+
+    <!-- Sección Pago - reemplaza el div con formControlName="pago" -->
+    <div class="col-12" formGroupName="pago">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Total</label>
+          <input type="number" class="form-control" formControlName="total" />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">IGV</label>
+          <input type="number" class="form-control" formControlName="igv" />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Estado Pago</label>
+          <select class="form-select" formControlName="estado_pago">
+            <option value="">Seleccione</option>
+            <option value="PENDIENTE">PENDIENTE</option>
+            <option value="PAGADO">PAGADO</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Fecha Pago</label>
+          <input type="date" class="form-control" formControlName="fecha_pago" />
+        </div>
+      </div>
+    </div>
+
 
     <div class="col-12 mt-3 d-flex flex-nowrap justify-content-start">
       <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
@@ -70,18 +93,19 @@
 
       <tbody>
         @if (reservas$ | async; as reservas) {
-        @for (r of reservas; track r.id) {
+        @for (r of reservas; track r.id_reserva) {
         <tr>
-          <td>{{ r.id }}</td>
-          <td>{{ r.fecha_reserva | date:'yyyy-MM-dd' }}</td>
-          <td>{{ r.usuario.nombre_usuario }} {{ r.usuario.apellido_paterno }} {{ r.usuario.apellido_materno }} (ID: {{ r.usuario.id_usuario }})</td>
-          <td>{{ r.estado }}</td>
+          <td>{{ r.id_reserva }}</td>
+          <td>{{ r.fechaCreacion | date:'yyyy-MM-dd' }}</td>
+          <td>{{ r.usuario.nombre_usuario }} {{ r.usuario.apellido_paterno }}</td>
+          <td>{{ r.pago?.total }}</td>
+
 
           <!-- ACCIONES -->
           <td>
             <div class="d-flex flex-nowrap justify-content-center">
               <button class="btn btn-warning btn-sm me-1" (click)="editarReserva(r)">Editar</button>
-              <button class="btn btn-danger btn-sm" (click)="eliminarReserva(r.id!)">Eliminar</button>
+              <button class="btn btn-danger btn-sm" (click)="eliminarReserva(r.id_reserva!)">Eliminar</button>
             </div>
           </td>
         </tr>

@@ -1,10 +1,12 @@
 import { ReservaModel } from "./reserva";
 
+// pago.model.ts - asegúrate que tenga estos campos
 export interface PagoModel {
-  idPago: number;
+  id_pago?: number;
   total: number;
   igv: number;
-  estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
+  estado_pago: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
   fecha_pago: string;
-  reserva: ReservaModel;
+  reserva?: any;      // puedes usar ReservaModel si lo necesitas
+  metodoPago?: any;   // puedes usar MetodoPagoModel si lo necesitas
 }
