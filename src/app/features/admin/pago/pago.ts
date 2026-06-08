@@ -23,7 +23,7 @@ export class PagosComponent implements OnInit {
   private reservaServ = inject(ReservaService);
 
   public pagoForm: FormGroup = this.fb.group({
-    idPago: [null],
+    id_pago: [null],
     total: [0, [Validators.required, Validators.min(1)]],
     metodo_pago: ['', Validators.required],
     estado_pago: ['', Validators.required],
@@ -37,7 +37,7 @@ export class PagosComponent implements OnInit {
   get total() { return this.pagoForm.get('total'); }
 
   ngOnInit(): void {
-    this.pagos$ = this.pagoServ.getSelectPago();
+    this.pagos$ = this.pagoServ.getAll();
     this.reservas$ = this.reservaServ.getAllReservas();
   }
 
@@ -52,13 +52,13 @@ export class PagosComponent implements OnInit {
   // Aquí ya data.id_reserva es un objeto ReservaModel seleccionado desde el <select>
 
   if (this.modoEdicion) {
-    this.pagoServ.putUpdatePago(this.idPagoEditar!, data).subscribe(() => {
-      this.pagos$ = this.pagoServ.getSelectPago();
+    this.pagoServ.put(this.idPagoEditar!, data).subscribe(() => {
+      this.pagos$ = this.pagoServ.getAll();
       this.resetFormulario();
     });
   } else {
-    this.pagoServ.postInsertarPagoConReserva(data).subscribe(() => {
-      this.pagos$ = this.pagoServ.getSelectPago();
+    this.pagoServ.post(data).subscribe(() => {
+      this.pagos$ = this.pagoServ.getAll();
       this.resetFormulario();
     });
   }
@@ -67,14 +67,14 @@ export class PagosComponent implements OnInit {
 
   editarPago(pago: PagoModel): void {
     this.pagoForm.patchValue(pago);
-    this.idPagoEditar = pago.idPago;
+    this.idPagoEditar = pago.id_pago ?? null;
     this.modoEdicion = true;
   }
 
   eliminarPago(id: number): void {
     if (confirm('¿Eliminar este pago?')) {
-      this.pagoServ.deleteIdPago(id).subscribe(() => {
-        this.pagos$ = this.pagoServ.getSelectPago();
+      this.pagoServ.delete(id).subscribe(() => {
+        this.pagos$ = this.pagoServ.getAll();
         if (this.idPagoEditar === id) this.resetFormulario();
       });
     }
