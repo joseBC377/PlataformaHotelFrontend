@@ -93,7 +93,7 @@ export class ResenaAdminComponent implements OnInit {
       fecha: resena.fecha,
       comentario: resena.comentario,
       id_usuario: resena.usuario.id_usuario,
-      id_habitacion: resena.habitacion.id,
+      id_habitacion: resena.habitacion.id_habitacion,
     });
   }
 

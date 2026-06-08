@@ -12,21 +12,22 @@ export class CategoriaHabitacionServices {
   private http = inject(HttpClient);
 
   getAllCategorias(): Observable<CategoriaHabitacion[]> {
-    return this.http.get<CategoriaHabitacion[]>(`${this.API_URL}`);
+    return this.http.get<CategoriaHabitacion[]>(this.API_URL); // sin /categorias
   }
+
 
   getCategoriaById(id: number): Observable<CategoriaHabitacion> {
     return this.http.get<CategoriaHabitacion>(`${this.API_URL}/${id}`);
   }
 
   postInsertarCategoria(data: FormData): Observable<any> {
-  return this.http.post('http://localhost:8081/api/categoriaHabitacion', data);
-}
+    return this.http.post('http://localhost:8081/api/categoriaHabitacion', data);
+  }
 
-  
-putEditarCategoria(id: number, data: FormData): Observable<any> {
-  return this.http.put(`http://localhost:8081/api/categoriaHabitacion/${id}`, data);
-}
+
+  putEditarCategoria(id: number, data: FormData): Observable<any> {
+    return this.http.put(`http://localhost:8081/api/categoriaHabitacion/${id}`, data);
+  }
   deleteCategoria(id: number): Observable<CategoriaHabitacion> {
     return this.http.delete<CategoriaHabitacion>(`${this.API_URL}/${id}`);
   }

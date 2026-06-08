@@ -4,16 +4,16 @@
   <form [formGroup]="habitacionForm" class="row g-3 mb-4 p-3 border rounded shadow-sm"
     (ngSubmit)="registroHabitacion()">
     <div class="col-md-4">
-      <label for="nombre" class="form-label">Nombre</label>
-      <input type="text" class="form-control" id="nombre" formControlName="nombre"
+      <label for="nombre_habitacion" class="form-label">Nombre</label>
+      <input type="text" class="form-control" id="nombre_habitacion" formControlName="nombre_habitacion"
         placeholder="Nombre de la habitación" />
 
-      @if (nombre?.invalid && (nombre?.dirty || nombre?.touched)) {
+      @if (nombre_habitacion?.invalid && (nombre_habitacion?.dirty || nombre_habitacion?.touched)) {
       <div class="text-danger mt-1">
-        @if (nombre?.errors?.['required']) {
+        @if (nombre_habitacion?.errors?.['required']) {
         <small>El nombre es obligatorio.</small>
         }
-        @if (nombre?.errors?.['minlength']) {
+        @if (nombre_habitacion?.errors?.['minlength']) {
         <small>Mínimo 3 caracteres.</small>
         }
       </div>
@@ -21,29 +21,25 @@
     </div>
 
     <div class="col-md-4">
-      <label for="descripcion" class="form-label">Descripción</label>
-      <input type="text" class="form-control" id="descripcion" formControlName="descripcion"
+      <label for="descripcion_habitacion" class="form-label">Descripción</label>
+      <input type="text" class="form-control" id="descripcion_habitacion" formControlName="descripcion_habitacion"
         placeholder="Descripción" />
-      @if (descripcion?.invalid && (descripcion?.dirty || descripcion?.touched)) {
+      @if (descripcion_habitacion?.invalid && (descripcion_habitacion?.dirty || descripcion_habitacion?.touched)) {
       <div class="text-danger mt-1">
         <small>La descripción es obligatoria.</small>
       </div>
       }
     </div>
 
-    
-<div class="col-md-4">
-  <label for="estado" class="form-label">Estado</label>
 
-  <select
-    id="estado"
-    class="form-select"
-    formControlName="estado"
-  >
-    <option [ngValue]="null" disabled>Seleccionar estado</option>
-    <option value="DISPONIBLE">Disponible</option>
-    <option value="OCUPADA">Ocupada</option>
-  </select>
+    <div class="col-md-4">
+      <label for="estado" class="form-label">Estado</label>
+
+      <select id="estado" class="form-select" formControlName="estado">
+        <option [ngValue]="null" disabled>Seleccionar estado</option>
+        <option value="DISPONIBLE">Disponible</option>
+        <option value="OCUPADA">Ocupada</option>
+      </select>
 
       @if (estado?.invalid && (estado?.dirty || estado?.touched)) {
       <div class="text-danger mt-1">
@@ -56,19 +52,36 @@
 
     <div class="col-md-4">
       <label for="categoria" class="form-label">Categoría</label>
-      <select class="form-select" id="categoria" formControlName="categoriaHabitacion"
-        [compareWith]="compararCategoria">
+      <select class="form-select" id="categoria" formControlName="categoriaHabitacion">
         <option [ngValue]="null" disabled selected>Seleccionar</option>
         @if (categorias$ | async; as categorias) {
-        @for (cat of categorias; track cat.id) {
-        <option [ngValue]="cat">{{ cat.nombre }}</option>
+        @for (cat of categorias; track cat.id_categoria_habitacion) {
+        <option [value]="cat.id_categoria_habitacion">{{ cat.nombre_categoria }}</option>
         }
         }
       </select>
 
+
       @if (categoriaHabitacion?.invalid && (categoriaHabitacion?.dirty || categoriaHabitacion?.touched)) {
       <div class="text-danger mt-1">
         <small>Selecciona una categoría válida.</small>
+      </div>
+      }
+    </div>
+
+    <div class="col-md-4">
+      <label for="tipo" class="form-label">Tipo</label>
+      <select id="tipo" class="form-select" formControlName="tipo">
+        <option [ngValue]="null" disabled selected>Seleccionar tipo</option>
+        <option value="LIMPIO">Limpio</option>
+        <option value="EN_LIMPIEZA">En limpieza</option>
+        <option value="MANTENIMIENTO">Mantenimiento</option>
+        <option value="SUCIO">Sucio</option>
+      </select>
+
+      @if (tipo?.invalid && (tipo?.dirty || tipo?.touched)) {
+      <div class="text-danger mt-1">
+        <small>El tipo es obligatorio.</small>
       </div>
       }
     </div>
@@ -93,23 +106,25 @@
           <th>Nombre</th>
           <th>Descripción</th>
           <th>Estado</th>
+          <th>Tipo</th>
           <th>Categoría</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         @if (habitacion$ | async; as user) {
-        @for (use of user; track use.id) {
+        @for (use of user; track use.id_habitacion) {
         <tr>
-          <td>{{ use.id }}</td>
-          <td>{{ use.nombre }}</td>
-          <td>{{ use.descripcion }}</td>
+          <td>{{ use.id_habitacion }}</td>
+          <td>{{ use.nombre_habitacion }}</td>
+          <td>{{ use.descripcion_habitacion }}</td>
           <td>{{ use.estado }}</td>
-          <td>{{ use.categoriaHabitacion.nombre }}</td>
+          <td>{{ use.tipo }}</td>
+          <td>{{ use.categoriaHabitacion.id_categoria_habitacion }}</td>
           <td>
             <div class="d-flex justify-content-center gap-2">
               <button class="btn btn-warning btn-sm" (click)="editarHabitacion(use)">Editar</button>
-              <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(use.id!)">Eliminar</button>
+              <button class="btn btn-danger btn-sm" (click)="eliminarHabitacion(use.id_habitacion!)">Eliminar</button>
             </div>
           </td>
 

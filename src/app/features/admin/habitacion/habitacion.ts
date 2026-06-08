@@ -24,17 +24,19 @@ export class HabitacionesAdminComponent implements OnInit {
   private catServ = inject(CategoriaHabitacionServices);
 
   public habitacionForm: FormGroup = this.fb.group({
-    id: [null],
-    nombre: ['', [Validators.required, Validators.minLength(3)]],
-    descripcion: ['', Validators.required],
+    id_habitacion: [null],
+    nombre_habitacion: ['', [Validators.required, Validators.minLength(3)]],
+    descripcion_habitacion: ['', Validators.required],
     estado: [null, Validators.required],
-    categoriaHabitacion: [null, Validators.required]
+    categoriaHabitacion: [null, Validators.required],
+    tipo: [null, Validators.required]
   });
 
-  get nombre() { return this.habitacionForm.get('nombre'); }
-  get descripcion() { return this.habitacionForm.get('descripcion'); }
+  get nombre_habitacion() { return this.habitacionForm.get('nombre_habitacion'); }
+  get descripcion_habitacion() { return this.habitacionForm.get('descripcion_habitacion'); }
   get estado() { return this.habitacionForm.get('estado'); }
   get categoriaHabitacion() { return this.habitacionForm.get('categoriaHabitacion'); }
+  get tipo() { return this.habitacionForm.get('tipo'); }
 
   public modoEdicion: boolean = false;
   public idHabitacionEditar: number | null = null;
@@ -66,14 +68,15 @@ export class HabitacionesAdminComponent implements OnInit {
     console.log('Editando habitación:', hab);
 
     this.habitacionForm.patchValue({
-      id: hab.id,
-      nombre: hab.nombre,
-      descripcion: hab.descripcion,
+      id_habitacion: hab.id_habitacion,
+      nombre_habitacion: hab.nombre_habitacion,
+      descripcion_habitacion: hab.descripcion_habitacion,
       estado: hab.estado,
+      tipo: hab.tipo,
       categoriaHabitacion: hab.categoriaHabitacion
     });
 
-    this.idHabitacionEditar = hab.id!;
+    this.idHabitacionEditar = hab.id_habitacion!;
     this.modoEdicion = true;
   }
 
@@ -99,7 +102,7 @@ export class HabitacionesAdminComponent implements OnInit {
   }
 
   compararCategoria = (c1: CategoriaHabitacion, c2: CategoriaHabitacion): boolean => {
-    return c1 && c2 ? c1.id === c2.id : c1 === c2;
+    return c1 && c2 ? c1.id_categoria_habitacion === c2.id_categoria_habitacion : c1 === c2;
   }
 
 }
