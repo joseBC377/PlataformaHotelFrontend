@@ -5,15 +5,15 @@
 
     <div class="col-md-4">
       <label for="nombre" class="form-label">Nombre</label>
-      <input id="nombre" type="text" class="form-control" formControlName="nombre"
+      <input id="nombre" type="text" class="form-control" formControlName="nombre_categoria"
         placeholder="Nombre de la categoría" />
-
-      @if (nombre?.invalid && (nombre?.touched || nombre?.dirty)) {
+        
+      @if (nombre_categoria?.invalid && (nombre_categoria?.touched || nombre_categoria?.dirty)) {
       <div class="text-danger mt-1">
-        @if (nombre?.errors?.['required']) {
+        @if (nombre_categoria?.errors?.['required']) {
         <small>El nombre es obligatorio.</small>
         }
-        @if (nombre?.errors?.['minlength']) {
+        @if (nombre_categoria?.errors?.['minlength']) {
         <small>Mínimo 3 caracteres.</small>
         }
       </div>
@@ -22,10 +22,10 @@
 
     <div class="col-md-4">
       <label for="descripcion" class="form-label">Descripción</label>
-      <input id="descripcion" type="text" class="form-control" formControlName="descripcion"
+      <input id="descripcion" type="text" class="form-control" formControlName="descripcion_categoria"
         placeholder="Descripción de la categoría" />
 
-      @if (descripcion?.invalid && (descripcion?.touched || descripcion?.dirty)) {
+      @if (descripcion_categoria?.invalid && (descripcion_categoria?.touched || descripcion_categoria?.dirty)) {
       <div class="text-danger mt-1">
         <small>La descripción es obligatoria.</small>
       </div>
@@ -94,18 +94,18 @@
       </thead>
       <tbody>
         @if (categorias$ | async; as catList) {
-        @for (cat of catList; track cat.id) {
+        @for (cat of catList; track cat.id_categoria_habitacion) {
         <tr>
-          <td>{{ cat.id }}</td>
-          <td>{{ cat.nombre }}</td>
-          <td>{{ cat.descripcion }}</td>
+          <td>{{ cat.id_categoria_habitacion }}</td>
+          <td>{{ cat.nombre_categoria }}</td>
+          <td>{{ cat.descripcion_categoria }}</td>
           <td>{{ cat.capacidad }}</td>
           <td>S/ {{ cat.precio }}</td>
           <td><img [src]="cat.imagen" alt="Imagen" width="80" /></td>
           <td>
             <div class="d-flex flex-nowrap justify-content-center">
                <button class="btn btn-warning btn-sm me-1" (click)="editarCategoria(cat)">Editar</button>
-            <button class="btn btn-danger btn-sm" *ngIf="cat.id" (click)="eliminarCategoria(cat.id)">
+            <button class="btn btn-danger btn-sm" *ngIf="cat.id_categoria_habitacion" (click)="eliminarCategoria(cat.id_categoria_habitacion)">
               Eliminar
             </button>
             </div>

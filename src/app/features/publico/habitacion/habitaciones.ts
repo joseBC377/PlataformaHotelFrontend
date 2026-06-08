@@ -44,7 +44,7 @@ export class Habitaciones {
       this.habitacionesFiltradas = this.habitaciones;
     } else {
       this.habitacionesFiltradas = this.habitaciones.filter(
-        h => h.categoriaHabitacion.nombre.toLowerCase() === categoria.toLowerCase()
+        h => h.categoriaHabitacion.nombre_categoria.toLowerCase() === categoria.toLowerCase()
       );
     }
   }
