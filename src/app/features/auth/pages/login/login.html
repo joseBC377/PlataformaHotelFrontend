@@ -58,7 +58,7 @@
                 <span>Use su correo electronico para registrarse</span>
                 <div class="container-input">
                     <i class="fa-solid fa-user"></i>
-                    <input formControlName="nombre" type="text" placeholder="Nombre">
+                    <input formControlName="nombre_usuario" type="text" placeholder="Nombre">
                 </div>
                 @if (nombre_usuario?.invalid &&(nombre_usuario?.dirty||nombre_usuario?.touched)) {
                     <div class="text-danger">
@@ -75,7 +75,7 @@
                 }
                 <div class="container-input">
                     <i class="fa-solid fa-user"></i>
-                    <input formControlName="apellido" type="text" placeholder="Apellido">
+                    <input formControlName="apellido_paterno" type="text" placeholder="Apellido Paterno">
                 </div>
                 @if (apellido_paterno?.invalid &&(apellido_paterno?.dirty||apellido_paterno?.touched)) {
                     <div class="text-danger">
@@ -90,6 +90,24 @@
                         }
                     </div>
                 }
+                                <div class="container-input">
+                    <i class="fa-solid fa-user"></i>
+                    <input formControlName="apellido_materno" type="text" placeholder="Apellido Materno">
+                </div>
+                @if (apellido_materno?.invalid &&(apellido_materno?.dirty||apellido_materno?.touched)) {
+                    <div class="text-danger">
+                        @if (apellido_materno?.errors?.['required']) {
+                            <small>El apellido es obligatorio.</small>
+                        }
+                        @if (apellido_materno?.errors?.['minlength']) {
+                            <small>Minimo{{apellido_materno?.errors?.['minlength']}} caracteres.</small>
+                        }
+                        @if (apellido_materno?.errors?.['pattern']) {
+                            <small>El apellido solo puede contener letras y espacios.</small>
+                        }
+                    </div>
+                }
+                
                 <div class="container-input">
                     <i class="fa-solid fa-phone"></i>
                     <input formControlName="telefono" type="tel" placeholder="Telefono">
@@ -106,7 +124,7 @@
                 }
                 <div class="container-input">
                     <i class="fa-solid fa-envelope"></i>
-                    <input formControlName="correoRe" type="email" placeholder="Correo">
+                    <input formControlName="correo" type="email" placeholder="Correo">
                 </div>
                 @if (correoRegistro?.invalid && (correoRegistro?.dirty|| correoRegistro?.touched)) {
                     <div class="text-danger">
@@ -118,9 +136,23 @@
                         }
                     </div>
                 }
+                                <div class="container-input">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input formControlName="fecha_nacimiento" type="date" placeholder="Fecha de Nacimiento">
+                </div>
+                @if (fecha_nacimiento?.invalid && (fecha_nacimiento?.dirty|| fecha_nacimiento?.touched)) {
+                    <div class="text-danger">
+                        @if (fecha_nacimiento?.errors?.['required']) {
+                            <small>La fecha de nacimiento es obligatoria.</small>
+                        }
+                        @if (fecha_nacimiento?.errors?.['fecha_nacimiento']) {
+                            <small>Por favor, ingresa un formato de fecha válido.</small>
+                        }
+                    </div>
+                }
                 <div class="container-input">
                     <i class="fa-solid fa-lock"></i>
-                    <input formControlName="passwordRe" type="password" placeholder="Contraseña">
+                    <input formControlName="password" type="password" placeholder="Contraseña">
                 </div>
                 @if (passwordRegistro?.invalid && (passwordRegistro?.dirty||passwordRegistro?.touched)) {
                     <div class="text-danger">

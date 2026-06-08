@@ -5,8 +5,7 @@
     <table class="table table-bordered table-hover">
       <thead class="table-hotel">
         <tr>
-          <th>ID</th>
-          <th>ID-Usuario</th>
+          <th>ID_Contacto</th>
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Correo</th>
@@ -16,16 +15,15 @@
       </thead>
       <tbody>
         @if (contacto$|async; as cont) {
-        @for (c of cont; track c.id) {
+        @for (c of cont; track c.id_contacto) {
         <tr>
-          <td>{{ c.id }}</td>
-          <td>{{ c.usuario ? c.usuario.id_usuario : 'Publico' }}</td>
+          <td>{{ c.id_contacto }}</td>
           <td>{{ c.nombre }}</td>
           <td>{{ c.apellido }}</td>
           <td>{{ c.correo }}</td>
           <td>{{c.mensaje}}</td>
           <td>
-            <button class="btn btn-danger btn-sm" (click)="eliminarMensaje(c.id)">
+            <button class="btn btn-danger btn-sm" (click)="eliminarMensaje(c.id_contacto)">
               Eliminar
             </button>
           </td>
