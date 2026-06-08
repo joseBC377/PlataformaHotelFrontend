@@ -48,8 +48,25 @@ export class HabitacionesAdminComponent implements OnInit {
       return;
     }
 
-    const data = this.habitacionForm.value;
-    console.log('Actualizando habitación con ID:', this.idHabitacionEditar);
+    // Construimos el objeto correctamente
+    const formValue = this.habitacionForm.value;
+    const data: Habitacion = {
+      id_habitacion: formValue.id_habitacion,
+      nombre_habitacion: formValue.nombre_habitacion,
+      descripcion_habitacion: formValue.descripcion_habitacion,
+      estado: formValue.estado,
+      tipo: formValue.tipo,
+      categoriaHabitacion: {
+        id_categoria_habitacion: formValue.categoriaHabitacion,
+        nombre_categoria: '', // opcional si tu backend solo necesita el id
+        descripcion_categoria: '',
+        capacidad: 0,
+        precio: 0,
+        imagen: ''
+      }
+    };
+
+
     console.log('Datos a enviar:', data);
 
     if (this.modoEdicion) {
@@ -64,6 +81,8 @@ export class HabitacionesAdminComponent implements OnInit {
       });
     }
   }
+
+
   editarHabitacion(hab: Habitacion): void {
     console.log('Editando habitación:', hab);
 
@@ -73,7 +92,7 @@ export class HabitacionesAdminComponent implements OnInit {
       descripcion_habitacion: hab.descripcion_habitacion,
       estado: hab.estado,
       tipo: hab.tipo,
-      categoriaHabitacion: hab.categoriaHabitacion
+      categoriaHabitacion: hab.categoriaHabitacion.id_categoria_habitacion
     });
 
     this.idHabitacionEditar = hab.id_habitacion!;

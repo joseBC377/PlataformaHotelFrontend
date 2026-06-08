@@ -56,7 +56,7 @@
         <option [ngValue]="null" disabled selected>Seleccionar</option>
         @if (categorias$ | async; as categorias) {
         @for (cat of categorias; track cat.id_categoria_habitacion) {
-        <option [value]="cat.id_categoria_habitacion">{{ cat.nombre_categoria }}</option>
+        <option [value]="cat.id_categoria_habitacion">{{ cat.id_categoria_habitacion }}</option>
         }
         }
       </select>
