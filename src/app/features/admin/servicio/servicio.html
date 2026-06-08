@@ -4,23 +4,19 @@
   <form [formGroup]="servicioForm" (ngSubmit)="guardarServicio()" class="row g-3">
     <div class="col-md-3">
       <label class="form-label">Nombre</label>
-      <input type="text" class="form-control" placeholder="Nombre del Servicio" formControlName="nombre" />
-      @if (nombre?.invalid && (nombre?.touched || nombre?.dirty)) {
+      <input type="text" class="form-control" placeholder="Nombre del Servicio" formControlName="nombre_servicio" />
+      @if (nombre_servicio?.invalid && (nombre_servicio?.touched || nombre_servicio?.dirty)) {
       <div class="text-danger mt-1">
-        @if (nombre?.errors?.['required']) {
-        <small>El nombre es obligatorio.</small>
-        }
-        @if (nombre?.errors?.['minlength']) {
-        <small>Mínimo 3 caracteres.</small>
-        }
+        @if (nombre_servicio?.errors?.['required']) { <small>El nombre es obligatorio.</small> }
+        @if (nombre_servicio?.errors?.['minlength']) { <small>Mínimo 3 caracteres.</small> }
       </div>
       }
     </div>
 
     <div class="col-md-4">
       <label class="form-label">Descripción</label>
-      <input type="text" class="form-control" placeholder="Descripción" formControlName="descripcion" />
-      @if (descripcion?.invalid && (descripcion?.touched || descripcion?.dirty)) {
+      <input type="text" class="form-control" placeholder="Descripción" formControlName="descripcion_servicio" />
+      @if (descripcion_servicio?.invalid && (descripcion_servicio?.touched || descripcion_servicio?.dirty)) {
       <div class="text-danger mt-1">
         <small>La descripción es obligatoria.</small>
       </div>
@@ -32,21 +28,28 @@
       <input type="number" id="precio" class="form-control" formControlName="precio" step="0.01" />
       @if (precio?.invalid && (precio?.touched || precio?.dirty)) {
       <div class="text-danger mt-1">
-        @if (precio?.errors?.['required']) {
-        <small>El precio es obligatorio.</small>
-        }
-        @if (precio?.errors?.['min']) {
-        <small>No se aceptan numeros negativos</small>
-        }
-
+        @if (precio?.errors?.['required']) { <small>El precio es obligatorio.</small> }
+        @if (precio?.errors?.['min']) { <small>No se aceptan números negativos.</small> }
       </div>
       }
     </div>
 
     <div class="col-md-6">
+      <label class="form-label">Reseña</label>
+      <select class="form-select" formControlName="id_resena">
+        <option [ngValue]="null" disabled selected>Seleccionar reseña</option>
+        @if (resenas$ | async; as resenas) {
+        @for (re of resenas; track re.id_resena) {
+        <option [value]="re.id_resena">Reseña #{{ re.id_resena }}</option>
+        }
+        }
+      </select>
+    </div>
+
+
+    <div class="col-md-6">
       <label for="imagen" class="form-label">Imagen (Archivo)</label>
       <input id="imagen" type="file" class="form-control" (change)="onFileChange($event)" #fileInput />
-
       @if (servicioForm.value.imagen) {
       <div class="col-md-6 mt-2">
         <label class="form-label">Vista previa de imagen:</label><br />
@@ -54,20 +57,20 @@
       </div>
       }
     </div>
+
     <div class="col-12 mt-4">
       <div class="d-flex flex-nowrap justify-content-start">
         <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
           [disabled]="servicioForm.invalid">
-          {{ modoEdicion ? 'Actualizar Categoría' : 'Agregar Categoría' }}
+          {{ modoEdicion ? 'Actualizar Servicio' : 'Agregar Servicio' }}
         </button>
-
         @if (modoEdicion) {
         <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar Edición</button>
         }
       </div>
     </div>
-
   </form>
+
   <div class="table-responsive mt-4">
     <table class="table table-bordered table-hover">
       <thead class="table-hotel">
@@ -81,18 +84,18 @@
         </tr>
       </thead>
       <tbody>
-        @if (servicio$|async; as servicio) {
-        @for (s of servicio; track s.id_servicio) { <tr>
+        @if (servicio$ | async; as servicio) {
+        @for (s of servicio; track s.id_servicio) {
+        <tr>
           <td>{{ s.id_servicio }}</td>
-          <td>{{ s.nombre }}</td>
-          <td>{{ s.descripcion }}</td>
-          <td>{{ s.precio | number: '1.2-2' }}</td>
-          <td>
-            <img [src]="s.imagen" alt="{{s.nombre}}" width="80" />
-          </td>
+          <td>{{ s.nombre_servicio }}</td>
+          <td>{{ s.descripcion_servicio }}</td>
+          <td>{{ s.precio | number:'1.2-2' }}</td>
+          <td><img [src]="s.imagen" alt="{{ s.nombre_servicio }}" width="80" /></td>
           <td class="d-flex flex-nowrap justify-content-center">
             <button class="btn btn-warning btn-sm me-1" (click)="editarServicio(s)">Editar</button>
-            <button class="btn btn-danger btn-sm" *ngIf="s.id_servicio" (click)="eliminarServicio(s.id_servicio)"> Eliminar</button>
+            <button class="btn btn-danger btn-sm" *ngIf="s.id_servicio"
+              (click)="eliminarServicio(s.id_servicio)">Eliminar</button>
           </td>
         </tr>
         } @empty {
@@ -102,13 +105,10 @@
         }
         } @else {
         <tr>
-          <td colspan="6">Cargando servicios</td>
+          <td colspan="6">Cargando servicios...</td>
         </tr>
         }
       </tbody>
     </table>
   </div>
-  <ng-template #sinServicios>
-    <div class="alert alert-info mt-4">No hay servicios registrados.</div>
-  </ng-template>
 </div>

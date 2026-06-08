@@ -4,6 +4,10 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } 
 import { Observable } from 'rxjs';
 import { Servicio } from '../../auth/models/servicio';
 import { ServicioService } from '../services/servicio.service';
+import { AdminLayout } from "../../auth/layouts/admin-layout/admin-layout";
+import { ReservaServicio } from '../../auth/models/reservaServicio';
+import { Resena } from '../../auth/models/resena';
+import { ResenaService } from '../services/resena.service';
 
 @Component({
   selector: 'app-servicios-admin',
@@ -14,15 +18,20 @@ import { ServicioService } from '../services/servicio.service';
 })
 export class ServiciosAdminComponent implements OnInit {
   protected servicio$!: Observable<Servicio[]>;
+  protected reservas$!: Observable<ReservaServicio[]>;
+  protected resenas$!: Observable<Resena[]>;
   private serv = inject(ServicioService);
+  private resenas = inject(ResenaService);
   private fb = inject(FormBuilder);
 
   public servicioForm: FormGroup = this.fb.group({
     id_servicio: [null],
-    nombre: ['', [Validators.required, Validators.minLength(3)]],
-    descripcion: ['', Validators.required],
+    nombre_servicio: ['', [Validators.required, Validators.minLength(3)]],
+    descripcion_servicio: ['', Validators.required],
     precio: [0, [Validators.required, Validators.min(0)]],
-    imagen: ['', Validators.required]
+    imagen: ['', Validators.required],
+    id_reserva: [[]],
+    id_resena: [null]
   });
 
   public modoEdicion = false;
@@ -31,14 +40,17 @@ export class ServiciosAdminComponent implements OnInit {
   imagenInvalida = false;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  get nombre() { return this.servicioForm.get('nombre'); }
-  get descripcion() { return this.servicioForm.get('descripcion'); }
+  get nombre_servicio() { return this.servicioForm.get('nombre_servicio'); }
+  get descripcion_servicio() { return this.servicioForm.get('descripcion_servicio'); }
   get precio() { return this.servicioForm.get('precio'); }
   get imagen() { return this.servicioForm.get('imagen'); }
+  get id_reserva() { return this.servicioForm.get('id_reserva'); }
+  get id_resena() { return this.servicioForm.get('id_resena'); }
 
 
   ngOnInit(): void {
     this.servicio$ = this.serv.listar();
+    this.resenas$ = this.resenas.listar();   
   }
 
   onFileChange(event: Event): void {
@@ -87,7 +99,7 @@ export class ServiciosAdminComponent implements OnInit {
   eliminarServicio(id: number): void {
     if (confirm('¿Estás seguro de que deseas eliminar este servicio?')) {
       this.serv.eliminar(id).subscribe(() => {
-        this.servicio$ = this.serv.listar(); 
+        this.servicio$ = this.serv.listar();
         if (this.idServicioEditar === id) {
           this.resetFormulario();
         }
