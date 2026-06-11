@@ -26,9 +26,9 @@ export class HeaderAd {
   }
 
   //Se ejecuta cuando angular detecta un cambio
-  ngDoCheck() { 
+  ngDoCheck() {
     this.nombre = this.auth.getNombre();
-    this.apellido = this.auth.getApellido();
+    this.apellido = this.auth.getApellidoPaterno();
     this.rol = this.auth.getRol();
     this.id = this.auth.getId();
   }

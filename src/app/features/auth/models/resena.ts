@@ -3,6 +3,7 @@ import { Servicio } from "./servicio";
 import { UsuarioModel } from "./usuario";
 
 export interface Resena {
+  //id_resena?: number;
   id_resena?: number;
   calificacion: number;
   comentario: string;

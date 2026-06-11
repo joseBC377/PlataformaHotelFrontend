@@ -8,12 +8,12 @@
     <div class="servicio-contenido">
       <div class="servicio-carrusel">
         <div class="imagenes">
-          <img [src]="servicio.imagen" [alt]="servicio.nombre" />
+          <img [src]="servicio.imagen" [alt]="servicio.nombre_servicio" />
         </div>
       </div>
       <div class="servicio-info">
-        <h2 style="color: #2c3e75;">{{ servicio.nombre }}</h2>
-        <p [innerHTML]="servicio.descripcion"></p>
+        <h2 style="color: #2c3e75;">{{ servicio.nombre_servicio }}</h2>
+        <p [innerHTML]="servicio.descripcion_servicio"></p>
       </div>
     </div>
   </div>

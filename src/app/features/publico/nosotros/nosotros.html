@@ -70,7 +70,7 @@
   <h2 class="reviews-title">💬 Lo que dicen nuestros clientes</h2>
 
   @if (rese$ | async; as resenas) {
-    @for (r of resenas; track r.id) {
+    @for (r of resenas; track r.id_resena) {
       <div class="review">
         <div class="review__header">
           <div class="review__stars">

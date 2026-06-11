@@ -32,6 +32,9 @@ export class AuthService {
         case 'CLIENT':
           this.router.navigate(['/habitaciones']);
           break;
+        case 'RECEPCION':
+          this.router.navigate(['/habitaciones']);
+          break;
         default:
           this.router.navigate(['/login']); // ruta por defecto
           break;
@@ -70,7 +73,8 @@ export class AuthService {
       localStorage.setItem('access_token', token.access_token);
       localStorage.setItem('refresh_token', token.refresh_token);
       localStorage.setItem('nombre', token.nombre);
-      localStorage.setItem('apellido', token.apellido);
+      localStorage.setItem('apellidoPaterno', token.apellidoPaterno);
+      localStorage.setItem('apellidoMaterno', token.apellidoMaterno);
       localStorage.setItem('id', token.id.toString());
       localStorage.setItem('rol', token.rol);
     }
@@ -99,8 +103,8 @@ export class AuthService {
     return isPlatformBrowser(this.platformId) ? localStorage.getItem('nombre') : null;
   }
 
-  getApellido(): string | null {
-    return isPlatformBrowser(this.platformId) ? localStorage.getItem('apellido') : null;
+  getApellidoPaterno(): string | null {
+    return isPlatformBrowser(this.platformId) ? localStorage.getItem('apellidoPaterno') : null;
   }
 
   getId(): number | null {
