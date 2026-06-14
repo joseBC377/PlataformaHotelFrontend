@@ -29,10 +29,10 @@ export class AuthService {
         case 'ADMIN':
           this.router.navigate(['/admin/intranet']);
           break;
-        case 'CLIENT':
-          this.router.navigate(['/habitaciones']);
-          break;
         case 'RECEPCION':
+          this.router.navigate(['/recep/dashboard']);
+          break;
+        case 'CLIENT':
           this.router.navigate(['/habitaciones']);
           break;
         default:

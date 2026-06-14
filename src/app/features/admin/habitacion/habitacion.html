@@ -55,9 +55,11 @@
       <select class="form-select" id="categoria" formControlName="categoriaHabitacion">
         <option [ngValue]="null" disabled selected>Seleccionar</option>
         @if (categorias$ | async; as categorias) {
-        @for (cat of categorias; track cat.id_categoria_habitacion) {
-        <option [value]="cat.id_categoria_habitacion">{{ cat.id_categoria_habitacion }}</option>
-        }
+          @for (cat of categorias; track cat.id_categoria_habitacion) {
+            <option [value]="cat.id_categoria_habitacion">
+               {{ cat.nombre_categoria }}
+            </option>
+          }
         }
       </select>
 
@@ -120,7 +122,7 @@
           <td>{{ use.descripcion_habitacion }}</td>
           <td>{{ use.estado }}</td>
           <td>{{ use.tipo }}</td>
-          <td>{{ use.categoriaHabitacion.id_categoria_habitacion }}</td>
+          <td>{{ use.categoriaHabitacion.nombre_categoria }}</td>
           <td>
             <div class="d-flex justify-content-center gap-2">
               <button class="btn btn-warning btn-sm" (click)="editarHabitacion(use)">Editar</button>

@@ -9,6 +9,11 @@
       <input type="date" class="form-control" formControlName="fechaCreacion" />
     </div>
 
+    @if (erroresBackend.fechaCreacion) {
+      <small class="text-danger">
+        {{ erroresBackend.fechaCreacion }}
+      </small>
+    }
     <!-- Rol usuario -->
 
     <div class="col-md-4">
@@ -16,9 +21,9 @@
       <select id="usuario" class="form-select" formControlName="usuario" [compareWith]="compararUsuario">
         <option [ngValue]="null">Seleccione un usuario</option>
         @for (u of usuarios$|async; track u.id_usuario) {
-        <option [ngValue]="u">
-          {{u.id_usuario}} {{u.nombre_usuario}} {{u.apellido_paterno}} {{u.apellido_materno}}
-        </option>
+          <option [value]="u.id_usuario">
+            {{u.nombre_usuario}} {{u.apellido_paterno}} {{u.apellido_materno}}
+          </option>
         }
       </select>
       @if (usuario?.invalid && (usuario?.touched || usuario?.dirty)) {
@@ -30,6 +35,12 @@
       }
     </div>
 
+    @if (erroresBackend.usuario) {
+      <small class="text-danger">
+        {{ erroresBackend.usuario }}
+      </small>
+    }
+
     <!-- Estado -->
     <div class="col-md-4">
       <label class="form-label">Estado</label>
@@ -40,6 +51,13 @@
         <option value="CONFIRMADO">CONFIRMADO</option>
       </select>
     </div>
+
+    @if (erroresBackend.estado) {
+      <small class="text-danger">
+        {{ erroresBackend.estado }}
+      </small>
+    }
+
 
     <!-- Sección Pago - reemplaza el div con formControlName="pago" -->
     <div class="col-12" formGroupName="pago">

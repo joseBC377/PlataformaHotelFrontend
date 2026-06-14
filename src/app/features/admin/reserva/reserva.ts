@@ -34,6 +34,7 @@ export class ReservasAdminComponent implements OnInit {
 
   public modoEdicion: boolean = false;
   public idReservaEditar: number | null = null;
+  public erroresBackend: any = {};
 
   public reservaForm: FormGroup = this.fb.group({
     id_reserva: [null],
@@ -49,12 +50,9 @@ export class ReservasAdminComponent implements OnInit {
 
   });
 
-
-
   get fechaCreacion() {
     return this.reservaForm.get('fechaCreacion');
   }
-
 
   get usuario() {
     return this.reservaForm.get('usuario');
@@ -93,18 +91,26 @@ export class ReservasAdminComponent implements OnInit {
     if (this.modoEdicion && this.idReservaEditar) {
       this.serv.putUpdateReserva(this.idReservaEditar, reserva).subscribe({
         next: () => {
+          this.erroresBackend = {};
           this.resetFormulario();
           this.reservas$ = this.serv.getAllReservas();
         },
-        error: () => alert('Error al editar reserva')
+        error: err => {
+          console.log(err.error);
+          this.erroresBackend = err.error;
+        }
       });
     } else {
       this.serv.postInsertReserva(reserva).subscribe({
         next: () => {
+          this.erroresBackend = {};
           this.resetFormulario();
           this.reservas$ = this.serv.getAllReservas();
         },
-        error: () => alert('Error al registrar reserva')
+        error: err => {
+          console.log(err.error);
+          this.erroresBackend = err.error;
+        }
       });
     }
   }

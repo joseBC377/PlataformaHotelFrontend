@@ -44,11 +44,11 @@ export class AdminServices {
 
 
   insertIdClient(request: RequestUserModel): Observable<UsuarioModel> {
-    return this.http.post<UsuarioModel>(`${this.API_URL}/insertar`, request);
+    return this.http.post<UsuarioModel>(`${this.URL}/registro`, request);
   }
 
   updateIdClient(id: number, usuario: RequestUserModel): Observable<UsuarioModel> {
-    return this.http.put<UsuarioModel>(`${this.API_URL}/actualizar/${id}`, usuario);
+    return this.http.put<UsuarioModel>(`${this.URL}/editar/${id}`, usuario);
   }
 
 }

@@ -7,7 +7,7 @@
       <label for="nombre" class="form-label">Nombre</label>
       <input id="nombre" type="text" class="form-control" formControlName="nombre_categoria"
         placeholder="Nombre de la categoría" />
-        
+
       @if (nombre_categoria?.invalid && (nombre_categoria?.touched || nombre_categoria?.dirty)) {
       <div class="text-danger mt-1">
         @if (nombre_categoria?.errors?.['required']) {
@@ -109,7 +109,7 @@
               Eliminar
             </button>
             </div>
-           
+
 
           </td>
         </tr>
