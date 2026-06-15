@@ -69,8 +69,25 @@ export const routes: Routes = [
         path: 'recepcion', component: RecepLayout, canActivate: [authGuard], children: [
             {
                 path: 'dashboard', component: DashboardRecep, title: 'Dashboard Recepcionista'
+            },
+            {
+                path: 'usuario', component: Usuario, title: 'Usuario'
+            },
+            {
+                path: 'reserva', component: ReservasAdminComponent, title: 'Reserva'
+            },
+            {
+                path: 'contacto', component: Contacto, title: 'Contacto'
+            },
+            {
+                path: 'servicio', component: ServiciosAdminComponent, title: "Servicio"
+            },
+            {
+                path: 'pago', component: PagosComponent, title: 'Pago de Reserva'
+            },
+            {
+                path: 'metodo', component: Metodopago, title: "Método de Pago"
             }
-
         ]
     },
     {
