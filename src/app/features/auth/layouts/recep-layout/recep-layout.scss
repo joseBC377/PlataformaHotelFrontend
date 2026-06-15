@@ -6,18 +6,30 @@
   overflow-x: hidden;
 }
 
-header {
-  position: relative;
-  z-index: 10;
+.layout-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 16rem;
+  z-index: 100;
+  background: transparent;
 }
 
 main {
-  padding: 1.5rem;
+  margin-left: 16rem;
+  min-height: 100vh;
+  background-color: #f4f6f9;
 }
 
-@media (min-width: 768px) {
-  header,
+@media (max-width: 1024px) {
+  .layout-sidebar {
+    position: static;
+    width: 100%;
+  }
+
   main {
-    margin-left: 16rem;
+    margin-left: 0;
+    padding: 1rem;
   }
 }

@@ -1,20 +1,5 @@
 @use 'variables' as var;
 
-.admin-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 16rem;
-  min-height: 100vh;
-  padding: 1.5rem;
-  background-color: #1a2e56;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 2px 0 10px rgba(0,0,0,.08);
-}
 
 .sidebar-content {
   display: flex;
@@ -26,16 +11,6 @@
   flex-direction: column;
   gap: .5rem;
   margin-top: 2rem;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  padding: .75rem 1rem;
-  border-radius: .75rem;
-  text-decoration: none;
-  color: #cbd5e1;
-  transition: .2s;
 }
 
 .nav-link:hover,
