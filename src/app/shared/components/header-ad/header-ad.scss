@@ -1,43 +1,93 @@
 @use 'variables' as var;
 
-.navbar {
-    background-color: var.$backgraound-primario !important;
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 16rem;
+  min-height: 100vh;
+  padding: 1.5rem;
+  background-color: #1a2e56;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 2px 0 10px rgba(0,0,0,.08);
 }
 
-.navbar-toggler {
-    color: var.$backgraound-navbar;
-    background-color: var.$backgraound-navbar;
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
 }
 
-a {
-    color: var.$color-terciario !important;
-    transition: color 0.3s ease;
-    text-decoration: none;
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-top: 2rem;
 }
 
-a:hover {
-    color: var.$color-secundario !important;
-
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: .75rem 1rem;
+  border-radius: .75rem;
+  text-decoration: none;
+  color: #cbd5e1;
+  transition: .2s;
 }
 
-.perfil {
-    .fas {
-        font-size: 30px;
-        color: #ffff;
-        transition: color 0.3s ease;
-    }
-
-    .fas:hover {
-        color: var.$color-secundario !important;
-    }
-}
-
+.nav-link:hover,
 .nav-link.active {
-    color: var.$color-secundario !important;
-    font-weight: bold;
+  background: #243c6d;
+  color: #fff;
 }
-//para que sobrepase el container
-.navbar {
-  z-index: 9999;
-  position: relative; 
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #243c6d;
 }
+
+.avatar-badge {
+  width: 50px;
+  height: 50px;
+  border-radius: .75rem;
+  background: #f59e0b;
+  color: #0f172a;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-text h4 {
+  margin: 0;
+  font-size: .9rem;
+  color: #fff;
+}
+
+.footer-text span {
+  color: #93c5fd;
+  font-size: .75rem;
+}
+
+.logout-btn {
+  border: none;
+  border-radius: .75rem;
+  padding: .75rem;
+  background: rgba(255,255,255,.08);
+  color: white;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.logout-btn:hover {
+  background: rgba(255,255,255,.15);
+}
+
+

@@ -23,10 +23,16 @@ import { Pago } from './features/publico/pago/pago';
 import { CrearReserva } from './features/publico/crear-reserva/crear-reserva';
 import { ResumenReserva } from './features/publico/resumen-reserva/resumen-reserva';
 import { Metodopago } from './features/admin/metodopago/metodopago';
+import { RecepLayout } from './features/auth/layouts/recep-layout/recep-layout';
+import { DashboardAdmin } from './features/admin/dashboard-admin/dashboard-admin';
+import { DashboardRecep } from './features/recep/dashboard-recep/dashboard-recep';
 
 export const routes: Routes = [
     {
         path: 'admin', component: AdminLayout, canActivate: [authGuard], children: [
+            {
+                path: 'dashboard', component: DashboardAdmin, title: 'Dashboard Administrador'
+            },
             {
                 path: 'intranet', component: Intranet, title: 'Intranet'
             },
@@ -57,6 +63,14 @@ export const routes: Routes = [
             {
                 path: 'metodo', component: Metodopago, title: "Método de Pago"
             },
+        ]
+    },
+    {
+        path: 'recepcion', component: RecepLayout, canActivate: [authGuard], children: [
+            {
+                path: 'dashboard', component: DashboardRecep, title: 'Dashboard Recepcionista'
+            }
+
         ]
     },
     {

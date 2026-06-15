@@ -27,10 +27,10 @@ export class AuthService {
 
        switch (resp.rol) {
         case 'ADMIN':
-          this.router.navigate(['/admin/intranet']);
+          this.router.navigate(['/admin/dashboard']);
           break;
         case 'RECEPCION':
-          this.router.navigate(['/recep/dashboard']);
+          this.router.navigate(['/recepcion/dashboard']);
           break;
         case 'CLIENT':
           this.router.navigate(['/habitaciones']);

@@ -1,0 +1,375 @@
+<div class="dashboard-wrapper">
+
+  <!-- BARRA SUPERIOR (BUSCADOR E ICONOS DE ACCIÓN) -->
+  <header class="top-header">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="Buscar reservas, huéspedes o habitaciones..." />
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </button>
+      <button class="icon-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+          </path>
+        </svg>
+      </button>
+      <div class="profile-tag">
+        <span class="profile-label">Perfil</span>
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop"
+          alt="Perfil de Usuario" class="profile-avatar" onerror="this.src='https://via.placeholder.com/150'" />
+      </div>
+    </div>
+  </header>
+
+  <!-- SECCIÓN DE BIENVENIDA / ENCABEZADO -->
+  <section class="dashboard-header-section">
+    <div class="welcome-text">
+      <h2>Panel Administrativo</h2>
+      <p>Bienvenido de nuevo. Aquí tienes el estado actual de tu propiedad.</p>
+    </div>
+    <div class="action-buttons">
+      <button class="btn btn-secondary">Descargar Reporte</button>
+      <button class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Nueva Reserva</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- INDICADORES CLAVE (KPIs) -->
+  <section class="kpi-grid">
+
+    <!-- Card 1: Ingresos Totales -->
+    <div class="kpi-card border-blue">
+      <div class="kpi-top">
+        <div class="kpi-icon-wrapper bg-blue-soft text-blue">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <span class="badge badge-blue">+12.5%</span>
+      </div>
+      <span class="kpi-label">Ingresos Totales (Mes)</span>
+      <h3 class="kpi-value">S/ 9,000.00</h3>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" style="width: 75%;"></div>
+      </div>
+    </div>
+
+    <!-- Card 2: Habitaciones Ocupadas -->
+    <div class="kpi-card border-orange">
+      <div class="kpi-top">
+        <div class="kpi-icon-wrapper bg-orange-soft text-orange">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 4v16M2 8h18M2 12h18M2 16h18M22 4v16"></path>
+          </svg>
+        </div>
+        <span class="badge badge-orange">ÓPTIMO</span>
+      </div>
+      <span class="kpi-label">Habitaciones ocupadas</span>
+      <h3 class="kpi-value">84.2%</h3>
+      <p class="kpi-subtext">100 de 134 habitaciones ocupadas actuales</p>
+    </div>
+
+    <!-- Card 3: Reservas del Mes -->
+    <div class="kpi-card border-green">
+      <div class="kpi-top">
+        <div class="kpi-icon-wrapper bg-green-soft text-green">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <path d="m9 16 2 2 4-4"></path>
+          </svg>
+        </div>
+        <span class="badge badge-yellow">ESTABLE</span>
+      </div>
+      <span class="kpi-label">Reservas del Mes</span>
+      <h3 class="kpi-value">80</h3>
+      <p class="kpi-subtext">Próximo check-in en 2 horas</p>
+    </div>
+
+    <!-- Card 4: Nuevos Usuarios -->
+    <div class="kpi-card border-purple">
+      <div class="kpi-top">
+        <div class="kpi-icon-wrapper bg-purple-soft text-purple">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <line x1="19" y1="8" x2="19" y2="14"></line>
+            <line x1="22" y1="11" x2="16" y2="11"></line>
+          </svg>
+        </div>
+        <span class="badge badge-purple">NUEVO</span>
+      </div>
+      <span class="kpi-label">Nuevos Usuarios</span>
+      <h3 class="kpi-value">30</h3>
+      <p class="kpi-subtext">Registrados en las últimas 72hs</p>
+    </div>
+
+  </section>
+
+  <!-- SECCIÓN CENTRAL SPLIT (Gráficos + Panel de Estado y Alertas) -->
+  <section class="main-split-section">
+
+    <!-- Widget de Gráficos (Izquierda) -->
+    <div class="chart-box-container card">
+      <div class="chart-header">
+        <h3 class="card-title">Ingresos Mensuales</h3>
+        <div class="tab-controls">
+          <button class="tab-btn active">Mensual</button>
+          <button class="tab-btn">Semanal</button>
+        </div>
+      </div>
+
+      <div class="custom-chart-wrapper">
+        <div class="chart-grid-lines">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+
+        <div class="chart-bars-flex">
+          <!-- Ene -->
+          <div class="chart-column">
+            <div class="bar-container">
+              <div class="bar-background-fill" style="height: 40%;"></div>
+              <div class="bar-value-fill" style="height: 25%;"></div>
+            </div>
+            <span class="bar-month">ENE</span>
+          </div>
+          <!-- Feb -->
+          <div class="chart-column">
+            <div class="bar-container">
+              <div class="bar-background-fill" style="height: 60%;"></div>
+              <div class="bar-value-fill" style="height: 45%;"></div>
+            </div>
+            <span class="bar-month">FEB</span>
+          </div>
+          <!-- Mar -->
+          <div class="chart-column">
+            <div class="bar-container">
+              <div class="bar-background-fill" style="height: 35%;"></div>
+              <div class="bar-value-fill" style="height: 18%;"></div>
+            </div>
+            <span class="bar-month">MAR</span>
+          </div>
+          <!-- Abr -->
+          <div class="chart-column">
+            <div class="bar-container">
+              <div class="bar-background-fill" style="height: 80%;"></div>
+              <div class="bar-value-fill" style="height: 70%;"></div>
+            </div>
+            <span class="bar-month">ABR</span>
+          </div>
+          <!-- May -->
+          <div class="chart-column">
+            <div class="bar-container">
+              <div class="bar-background-fill" style="height: 75%;"></div>
+              <div class="bar-value-fill" style="height: 55%;"></div>
+            </div>
+            <span class="bar-month">MAY</span>
+          </div>
+          <!-- Jun (Destacado en Amarillo Mostaza) -->
+          <div class="chart-column">
+            <div class="bar-container">
+              <div class="bar-background-fill" style="height: 95%;"></div>
+              <div class="bar-value-fill bar-yellow" style="height: 85%;"></div>
+            </div>
+            <span class="bar-month">JUN</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-legend">
+        <span class="legend-color-dot"></span>
+        <span class="legend-text">Ingresos 2026</span>
+      </div>
+    </div>
+
+    <!-- Columna de Widgets (Derecha) -->
+    <div class="right-widgets-stack">
+
+      <!-- Estado de Habitaciones -->
+      <div class="rooms-status-widget card">
+        <h3 class="card-title">Estado de Habitaciones</h3>
+        <div class="rooms-grid">
+          <div class="room-stat-card">
+            <h4>120</h4>
+            <p>LIMPIAS</p>
+          </div>
+          <div class="room-stat-card text-orange-bold">
+            <h4>4</h4>
+            <p>EN LIMPIEZA</p>
+          </div>
+          <div class="room-stat-card text-red-bold">
+            <h4>2</h4>
+            <p>MANTENIMIENTO</p>
+          </div>
+          <div class="room-stat-card text-gray-bold">
+            <h4>8</h4>
+            <p>SUCIAS</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alertas Críticas (Azul oscuro original) -->
+      <div class="critical-alerts-widget">
+        <div class="alerts-header">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <h3>Alertas Críticas</h3>
+        </div>
+
+        <div class="alerts-list">
+          <div class="alert-item">
+            <h5>Fuga de agua en Suite 501</h5>
+            <p>Reportado hace 12 min por Limpieza</p>
+          </div>
+          <div class="alert-item">
+            <h5>Stock bajo de Amenidades Premium</h5>
+            <p>Almacén Central - Nivel 15%</p>
+          </div>
+        </div>
+
+        <button class="btn-resolve-alerts">Resolver Alertas</button>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SECCIÓN INFERIOR: TABLA DE PRÓXIMAS LLEGADAS -->
+  <section class="arrivals-section card">
+    <div class="arrivals-header">
+      <h3 class="card-title">Próximas Llegadas</h3>
+      <a href="#" class="view-all-link">
+        <span>Ver todas</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <div class="responsive-table-holder">
+      <table class="arrivals-table">
+        <thead>
+          <tr>
+            <th>Huésped</th>
+            <th>Habitación</th>
+            <th>Horario</th>
+            <th class="align-center">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Mateo Sánchez -->
+          <tr>
+            <td>
+              <div class="guest-profile">
+                <div class="guest-avatar bg-blue-avatar">MS</div>
+                <div class="guest-details">
+                  <span class="guest-name">Mateo Sánchez</span>
+                  <span class="guest-badge text-blue">VVIP Client</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="table-text-highlight">Suite 402</span></td>
+            <td><span class="table-text-highlight">Hoy, 14:00</span></td>
+            <td class="align-center">
+              <button class="action-triple-dot">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="12" cy="5" r="1"></circle>
+                  <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+              </button>
+            </td>
+          </tr>
+
+          <!-- Elena López -->
+          <tr>
+            <td>
+              <div class="guest-profile">
+                <div class="guest-avatar bg-purple-avatar">EL</div>
+                <div class="guest-details">
+                  <span class="guest-name">Elena López</span>
+                  <span class="guest-badge text-purple">Fiel Directo</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="table-text-highlight">Deluxe 105</span></td>
+            <td><span class="table-text-highlight">Hoy, 15:30</span></td>
+            <td class="align-center">
+              <button class="action-triple-dot">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="12" cy="5" r="1"></circle>
+                  <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+              </button>
+            </td>
+          </tr>
+
+          <!-- Ricardo Blanco -->
+          <tr>
+            <td>
+              <div class="guest-profile">
+                <div class="guest-avatar bg-green-avatar">RB</div>
+                <div class="guest-details">
+                  <span class="guest-name">Ricardo Blanco</span>
+                  <span class="guest-badge text-green">Reserva Web</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="table-text-highlight">Estándar 208</span></td>
+            <td><span class="table-text-highlight">Hoy, 20:00</span></td>
+            <td class="align-center">
+              <button class="action-triple-dot">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="12" cy="5" r="1"></circle>
+                  <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
