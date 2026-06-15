@@ -58,7 +58,7 @@ export class Resena {
     this.idUsuarioLogueado = this.auth.getId();
 
     if (this.rolLogueado !== 'CLIENT') {
-      alert('Solo los clientes pueden crear reseñas');
+      alert('Registrarte como Cliente y Realiza Reseñas');
       this.router.navigate(['/']);
       return;
     }
