@@ -10,6 +10,8 @@ import { RequestResenaModel } from '../../auth/models/request-resena-model';
 import { Servicio } from '../../auth/models/servicio';
 import { UsuarioModel } from '../../auth/models/usuario';
 import { AuthService } from '../../../core/services/auth.service';
+import { ServicioService } from '../../admin/services/servicio.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-resena',
@@ -19,8 +21,10 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class Resena {
 
-  private servServicio = inject(ResenaService);
+  private router = inject(Router);
+  private servServicio = inject(ServicioService);
   private servHabitacion = inject(HabitacionServices);
+  private servResena = inject(ResenaService);
   private auth = inject(AuthService);
 
 
@@ -40,22 +44,24 @@ export class Resena {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.cargarServicios();
-    this.rolLogueado = this.auth.getRol() ?? '';
-    this.idUsuarioLogueado = this.auth.getId();
-
-    if (this.rolLogueado !== 'CLIENT') {
-      alert('Solo los clientes pueden crear reseñas');
-      return;
-    }
-
-    this.resenaForm = this.fb.group({
+      this.resenaForm = this.fb.group({
       calificacion: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
       fecha: ['', Validators.required],
       comentario: ['', Validators.required],
       id_habitacion: [null, Validators.required],
       id_servicio: [null, Validators.required]
     });
+
+    this.cargarServicios();
+
+    this.rolLogueado = this.auth.getRol() ?? '';
+    this.idUsuarioLogueado = this.auth.getId();
+
+    if (this.rolLogueado !== 'CLIENT') {
+      alert('Solo los clientes pueden crear reseñas');
+      this.router.navigate(['/']);
+      return;
+    }
 
     this.generarCalificaciones();
     this.cargarHabitacion();
@@ -70,7 +76,7 @@ export class Resena {
 
 
   cargarServicios() {
-    //this.servServicio$ = this.servServicio.listar();
+      this.servicio$ = this.servServicio.listar();
   }
 
   cargarHabitacion() {
@@ -84,43 +90,53 @@ export class Resena {
   }
 
 
+  guardarResena() {
 
-  // guardarResena() {
+    if (this.resenaForm.invalid) {
+      this.resenaForm.markAllAsTouched();
+      return;
+    }
 
-  //   if (this.resenaForm.invalid) {
-  //     this.resenaForm.markAllAsTouched();
-  //     return;
-  //   }
+    if (this.rolLogueado !== 'CLIENT') {
+      alert('Solo los clientes pueden registrar reseñas');
+      return;
+    }
 
-  //   const form = this.resenaForm.value;
+    const form = this.resenaForm.value;
 
-  //   const resena: RequestResenaModel = {
-  //     calificacion: form.calificacion,
-  //     comentario: form.comentario,
-  //     fecha: form.fecha,
+    const resena: RequestResenaModel = {
+      calificacion: form.calificacion,
+      comentario: form.comentario,
+      fecha: form.fecha,
 
-  //     usuario: {
-  //       id_usuario: this.idUsuarioLogueado!
-  //     },
+      usuario: {
+        id_usuario: this.idUsuarioLogueado!
+      },
 
-  //     habitacion: {
-  //       id_habitacion: form.id_habitacion
-  //     },
+      habitacion: {
+        id_habitacion: form.id_habitacion
+      },
 
-  //     servicio: {
-  //       id_servicio: form.id_servicio
-  //     }
-  //   };
+      servicio: {
+        idServicio: form.id_servicio
+      }
+    };
 
-  //   this.servResena.insertar(resena).subscribe({
-  //     next: () => {
-  //       this.resenaForm.reset();
-  //       alert('Reseña registrada correctamente');
-  //     },
-  //     error: () => {
-  //       alert('Error al registrar reseña');
-  //     }
-  //   });
-  // }
+    this.servResena.insertar(resena).subscribe({
+      next: () => {
+        alert('Reseña registrada correctamente');
+
+        this.resenaForm.reset();
+
+        this.resenaForm.patchValue({
+          id_habitacion: null,
+          id_servicio: null
+        });
+      },
+      error: () => {
+        alert('Error al registrar la reseña');
+      }
+    });
+  }
 
 }

@@ -115,7 +115,7 @@ export class ResenaAdminComponent implements OnInit {
       fecha: form.fecha,
       usuario: { id_usuario: form.id_usuario },   // 👈 corregido
       habitacion: { id_habitacion: form.id_habitacion }, // 👈 corregido
-      servicio: { id_servicio: form.id_servicio } // 👈 agregado para incluir el servicio
+      servicio: { idServicio: form.id_servicio } // 👈 agregado para incluir el servicio
     };
 
 

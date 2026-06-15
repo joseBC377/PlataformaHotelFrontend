@@ -1,116 +1,7 @@
 <div class="cuerpo">
   <div class="container">
-    <h2 class="mb-4">Gestión de Reseñas 📝</h2>
+    <h2 class="mb-4">Reseñas Recibidas por Usuarios 📝</h2>
 
-    <form [formGroup]="resenaForm" class="row g-3">
-
-      <div class="col-md-3">
-        <label class="form-label">Calificación</label>
-        <select class="form-select" formControlName="calificacion"
-          [class.is-invalid]="resenaForm.get('calificacion')?.invalid && (resenaForm.get('calificacion')?.touched || resenaForm.get('calificacion')?.dirty)">
-          <option value="">Seleccione una calificación</option>
-          @for (rating of calificacionesDisponibles; track rating) {
-          <option [value]="rating">{{ rating | number: '1.1-1' }}</option>
-          }
-        </select>
-        @if (resenaForm.get('calificacion')?.invalid && (resenaForm.get('calificacion')?.touched ||
-        resenaForm.get('calificacion')?.dirty)) {
-        <div class="text-danger mt-1">
-          @if (resenaForm.get('calificacion')?.errors?.['required']) {
-          <small>La calificación es obligatoria.</small>
-          } @else if (resenaForm.get('calificacion')?.errors?.['min'] ||
-          resenaForm.get('calificacion')?.errors?.['max']) {
-          <small>Debe estar entre 1 y 5.</small>
-          }
-        </div>
-        }
-      </div>
-      <div class="col-md-3">
-        <label for="comentario" class="form-label">Comentario</label>
-        <input id="comentario" type="text" class="form-control" formControlName="comentario"
-          placeholder="Comentario de la reseña" />
-
-        @if (resenaForm.get('comentario')?.invalid && (resenaForm.get('comentario')?.touched ||
-        resenaForm.get('comentario')?.dirty)) {
-        <div class="text-danger mt-1">
-          <small>La comentario es obligatoria.</small>
-        </div>
-        }
-      </div>
-      <div class="col-md-4">
-        <label for="fecha" class="form-label">Fecha</label>
-        <input type="date" class="form-control" formControlName="fecha"
-          [class.is-invalid]="resenaForm.get('fecha')?.invalid && (resenaForm.get('fecha')?.touched || resenaForm.get('fecha')?.dirty)" />
-        @if (resenaForm.get('fecha')?.invalid && (resenaForm.get('fecha')?.touched ||
-        resenaForm.get('fecha')?.dirty)) {
-        <div class="text-danger mt-1">
-          @if (resenaForm.get('fecha')?.errors?.['required']) {
-          <small>La fecha es obligatoria</small>
-          }
-        </div>
-        }
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label">ID Usuario</label>
-        <select class="form-select" formControlName="id_usuario"
-          [class.is-invalid]="id_usuario?.invalid && (id_usuario?.touched || id_usuario?.dirty)">
-          <option [ngValue]="null" disabled>Seleccione un usuario</option>
-          @for (user of user$ | async; track user.id_usuario) {
-          <option [ngValue]="user.id_usuario">
-            {{ user.nombre_usuario }} - {{ user.apellido_paterno }}
-          </option>
-          }
-        </select>
-
-        @if (id_usuario?.invalid && (id_usuario?.touched || id_usuario?.dirty)) {
-        <div class="text-danger mt-1">
-          <small>Debe seleccionar un usuario.</small>
-        </div>
-        }
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label">ID Habitación</label>
-        <select class="form-select" formControlName="id_habitacion"
-          [class.is-invalid]="id_habitacion?.invalid && (id_habitacion?.touched || id_habitacion?.dirty)">
-          <option [ngValue]="null" disabled>Seleccione una habitación</option>
-          @for (habitacion of habit$ | async; track habitacion.id_habitacion) {
-          <option [ngValue]="habitacion.id_habitacion">
-            {{ habitacion.nombre_habitacion }} - {{ habitacion.estado }}
-          </option>
-          }
-        </select>
-
-        @if (id_habitacion?.invalid && (id_habitacion?.touched || id_habitacion?.dirty)) {
-        <div class="text-danger mt-1">
-          <small>Debe seleccionar una habitación.</small>
-        </div>
-        }
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label">Servicio</label>
-        <select class="form-select" formControlName="id_servicio"
-          [class.is-invalid]="resenaForm.get('id_servicio')?.invalid && (resenaForm.get('id_servicio')?.touched || resenaForm.get('id_servicio')?.dirty)">
-          <option [ngValue]="null" disabled>Seleccione un servicio</option>
-          @for (serv of servicio$ | async; track serv.id_servicio) {
-          <option [ngValue]="serv.id_servicio">{{ serv.nombre_servicio }}</option>
-          }
-        </select>
-        @if (resenaForm.get('id_servicio')?.invalid && (resenaForm.get('id_servicio')?.touched ||
-        resenaForm.get('id_servicio')?.dirty)) {
-        <div class="text-danger mt-1">
-          <small>Debe seleccionar un servicio.</small>
-        </div>
-        }
-      </div>
-
-      <div class="col-12 text-start">
-        <button type="submit" class="btn btn-success" (click)="guardarResena()">{{ editando ? 'Actualizar' :
-          'Agregar' }} Reseña </button>
-      </div>
-    </form>
     <div class="table-responsive mt-4">
       <table class="table table-bordered table-hover">
         <thead class="table-hotel">
@@ -122,7 +13,6 @@
             <th>ID Usuario</th>
             <th>Nombre de la habitación</th>
             <th>Nombre del servicio</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -136,12 +26,6 @@
             <td>{{ r.usuario.nombre_usuario }}</td>
             <td>{{ r.habitacion.nombre_habitacion }}</td>
             <td>{{ r.servicio.nombre_servicio }}</td>
-            <td class="d-flex flex-nowrap justify-content-center">
-              <button class="btn btn-warning btn-sm me-1" (click)="editarResena(r)">Editar</button>
-              <button class="btn btn-danger btn-sm" *ngIf="r.id_resena" (click)="eliminarResena(r.id_resena)">
-                Eliminar
-              </button>
-            </td>
           </tr>
           }@empty {
           <tr>

@@ -3,7 +3,7 @@
   <h3 class="subtitulo-seccion">Todo lo que necesitas</h3>
 
   @if (servicios.length > 0) {
-  @for (servicio of servicios; track servicio.id_servicio; let i = $index) {
+  @for (servicio of servicios; track servicio.idServicio; let i = $index) {
  <div class="servicio-card" [ngClass]="{ 'par': i % 2 === 1 }">
     <div class="servicio-contenido">
       <div class="servicio-carrusel">
