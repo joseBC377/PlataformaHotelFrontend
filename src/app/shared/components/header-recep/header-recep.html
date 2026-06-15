@@ -7,7 +7,6 @@
     </a>
 
     <br />
-    <br />
 
     <nav class="sidebar-nav">
 
@@ -50,10 +49,20 @@
   </div>
 
   <div class="sidebar-footer">
-    <div class="avatar-badge">AD</div>
-    <div class="footer-text">
-      <h4>Abel Durand</h4>
-      <span>Gerente General</span>
+
+    <div class="avatar-badge">
+      {{ nombre?.charAt(0) }}
     </div>
+
+    <div class="footer-text">
+      <h4>{{ nombre }} {{ apellido }}</h4>
+      <span>{{ rol }}</span>
+    </div>
+
+    <button class="logout-btn" (click)="logout()">
+      Salir
+    </button>
+
   </div>
+
 </aside>

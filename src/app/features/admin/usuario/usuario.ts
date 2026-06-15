@@ -1,10 +1,11 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AdminServices } from '../services/admin.services';
 import { UsuarioModel } from '../../auth/models/usuario';
 import { RequestUserModel } from '../../auth/models/request-user-model';
+import { AuthService } from '../../../core/services/auth.service';
 
 
 @Component({
@@ -15,10 +16,10 @@ import { RequestUserModel } from '../../auth/models/request-user-model';
 })
 export class Usuario {
 
+  private authService = inject(AuthService);
   protected usuario$!: Observable<UsuarioModel[]>
   private serv = inject(AdminServices);
   private fb = inject(FormBuilder);
-
 
 
   public usuarioForm: FormGroup = this.fb.group({
@@ -30,7 +31,7 @@ export class Usuario {
     fecha_nacimiento: ['', [Validators.required]],
     password: ['', [Validators.required,Validators.minLength(8)]],
     telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
-    rol: ['', [Validators.required]] 
+    rol: ['', [Validators.required]]
   });
 
 
@@ -44,18 +45,51 @@ export class Usuario {
   get telefono() { return this.usuarioForm.get('telefono'); }
   get rol() { return this.usuarioForm.get('rol'); }
 
+  getRolLabel(rol: string): string {
+    switch (rol) {
+      case 'ADMIN':
+        return 'ADMINISTRADOR';
+      case 'RECEPCION':
+        return 'RECEPCIÓN';
+      case 'CLIENT':
+        return 'CLIENTE';
+      default:
+        return rol;
+    }
+  }
 
-
+  rolLogueado: string = '';
   ngOnInit(): void {
     this.listarUsuarios();
     // this.setPasswordValidators();
+    this.rolLogueado = this.authService.getRol() ?? '';
+    if (this.rolLogueado === 'RECEPCION') {
+      this.usuarioForm.patchValue({
+        rol: 'CLIENT'
+      });
+    }
   }
 
   editando: boolean = false;
   idEditando!: number;
 
+
   listarUsuarios() {
-    this.usuario$ = this.serv.getSeletAllUsers();
+      this.usuario$ = this.serv.getSeletAllUsers().pipe(
+      map(users => {
+        const rol = this.rolLogueado;
+
+        if (rol === 'ADMIN') {
+          return users; // ve todo
+        }
+
+        if (rol === 'RECEPCION') {
+          return users.filter(u => u.rol === 'CLIENT');
+        }
+
+        return users;
+      })
+    );
   }
 
 
@@ -71,7 +105,7 @@ export class Usuario {
       correo: usuario.correo,
       fecha_nacimiento: usuario.fecha_nacimiento,
       telefono: usuario.telefono,
-      rol: usuario.rol    
+      rol: usuario.rol
 
     });
     // this.setPasswordValidators();
@@ -110,7 +144,8 @@ export class Usuario {
       correo: form.correo,
       telefono: form.telefono,
       password: form.password?.trim() || undefined,
-      rol: form.rol
+      rol: this.rolLogueado === 'RECEPCION'  ? 'CLIENT'
+      : form.rol
     };
 
     if (this.editando) {

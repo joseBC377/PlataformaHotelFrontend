@@ -36,19 +36,6 @@
       </div>
 
       <div class="col-md-6">
-        <label class="form-label">Reseña</label>
-        <select class="form-select" formControlName="id_resena">
-          <option [ngValue]="null" disabled selected>Seleccionar reseña</option>
-          @if (resenas$ | async; as resenas) {
-          @for (re of resenas; track re.id_resena) {
-          <option [value]="re.id_resena">Reseña #{{ re.id_resena }}</option>
-          }
-          }
-        </select>
-      </div>
-
-
-      <div class="col-md-6">
         <label for="imagen" class="form-label">Imagen (Archivo)</label>
         <input id="imagen" type="file" class="form-control" (change)="onFileChange($event)" #fileInput />
         @if (servicioForm.value.imagen) {
@@ -86,17 +73,16 @@
         </thead>
         <tbody>
           @if (servicio$ | async; as servicio) {
-          @for (s of servicio; track s.id_servicio) {
+          @for (s of servicio; track s.idServicio) {
           <tr>
-            <td>{{ s.id_servicio }}</td>
+            <td>{{ s.idServicio }}</td>
             <td>{{ s.nombre_servicio }}</td>
             <td>{{ s.descripcion_servicio }}</td>
             <td>{{ s.precio | number:'1.2-2' }}</td>
             <td><img [src]="s.imagen" alt="{{ s.nombre_servicio }}" width="80" /></td>
-            <td class="d-flex flex-nowrap justify-content-center">
+            <td >
               <button class="btn btn-warning btn-sm me-1" (click)="editarServicio(s)">Editar</button>
-              <button class="btn btn-danger btn-sm" *ngIf="s.id_servicio"
-                (click)="eliminarServicio(s.id_servicio)">Eliminar</button>
+              <button class="btn btn-danger btn-sm" *ngIf="s.idServicio" (click)="eliminarServicio(s.idServicio)">Eliminar</button>
             </td>
           </tr>
           } @empty {

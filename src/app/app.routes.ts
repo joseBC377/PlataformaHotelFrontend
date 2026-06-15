@@ -26,6 +26,7 @@ import { Metodopago } from './features/admin/metodopago/metodopago';
 import { RecepLayout } from './features/auth/layouts/recep-layout/recep-layout';
 import { DashboardAdmin } from './features/admin/dashboard-admin/dashboard-admin';
 import { DashboardRecep } from './features/recep/dashboard-recep/dashboard-recep';
+import { Resena } from './features/publico/resena/resena';
 
 export const routes: Routes = [
     {
@@ -120,9 +121,11 @@ export const routes: Routes = [
                 path: 'contactos', component: Contactos, title: "Contactos"
             },
             {
+                path: 'resena', component: Resena, title: "Resena"
+            },
+            {
                 path: '', component: Inicio, title: "Inicio"
             },
-
             {
                 path: '**', component: Error, title: "Pagina de error"
             }

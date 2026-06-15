@@ -19,53 +19,6 @@
   color: #fff;
 }
 
-.sidebar-footer {
-  display: flex;
-  flex-direction: column;
-  gap: .75rem;
-  padding: 1rem;
-  border-radius: 1rem;
-  background: #243c6d;
-}
-
-.avatar-badge {
-  width: 50px;
-  height: 50px;
-  border-radius: .75rem;
-  background: #f59e0b;
-  color: #0f172a;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.footer-text h4 {
-  margin: 0;
-  font-size: .9rem;
-  color: #fff;
-}
-
-.footer-text span {
-  color: #93c5fd;
-  font-size: .75rem;
-}
-
-.logout-btn {
-  border: none;
-  border-radius: .75rem;
-  padding: .75rem;
-  background: rgba(255,255,255,.08);
-  color: white;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.logout-btn:hover {
-  background: rgba(255,255,255,.15);
-}
-
-
 
 .admin-sidebar {
   position: fixed;
@@ -117,4 +70,94 @@
   text-align: center;
   margin-right: .75rem;
   font-size: 1rem;
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  gap: 1rem;
+  padding: 1.25rem;
+
+  border-radius: 1rem;
+
+  background: linear-gradient(
+    180deg,
+    #243c6d,
+    #1e3360
+  );
+
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.avatar-badge {
+  width: 60px;
+  height: 60px;
+
+  border-radius: 1rem;
+
+  background: linear-gradient(
+    135deg,
+    #f59e0b,
+    #fbbf24
+  );
+
+  color: #0f172a;
+  font-size: 1.3rem;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 6px 16px rgba(245, 158, 11, .35);
+}
+
+.footer-text {
+  width: 100%;
+}
+
+.footer-text h4 {
+  margin: 0;
+  font-size: .95rem;
+  font-weight: 600;
+  color: #fff;
+
+  word-break: break-word;
+}
+
+.footer-text span {
+  display: block;
+  margin-top: .35rem;
+
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .05rem;
+
+  color: #93c5fd;
+  text-transform: uppercase;
+}
+
+.logout-btn {
+  width: 100%;
+
+  border: none;
+  border-radius: .85rem;
+
+  padding: .85rem;
+
+  background: rgba(255,255,255,.08);
+  color: white;
+
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all .25s ease;
+}
+
+.logout-btn:hover {
+  background: #dc3545;
+  transform: translateY(-2px);
 }
