@@ -27,7 +27,10 @@ export class AuthService {
 
        switch (resp.rol) {
         case 'ADMIN':
-          this.router.navigate(['/admin/intranet']);
+          this.router.navigate(['/admin/dashboard']);
+          break;
+        case 'RECEPCION':
+          this.router.navigate(['/recepcion/dashboard']);
           break;
         case 'CLIENT':
           this.router.navigate(['/habitaciones']);
@@ -70,7 +73,8 @@ export class AuthService {
       localStorage.setItem('access_token', token.access_token);
       localStorage.setItem('refresh_token', token.refresh_token);
       localStorage.setItem('nombre', token.nombre);
-      localStorage.setItem('apellido', token.apellido);
+      localStorage.setItem('apellidoPaterno', token.apellidoPaterno);
+      localStorage.setItem('apellidoMaterno', token.apellidoMaterno);
       localStorage.setItem('id', token.id.toString());
       localStorage.setItem('rol', token.rol);
     }
@@ -99,8 +103,8 @@ export class AuthService {
     return isPlatformBrowser(this.platformId) ? localStorage.getItem('nombre') : null;
   }
 
-  getApellido(): string | null {
-    return isPlatformBrowser(this.platformId) ? localStorage.getItem('apellido') : null;
+  getApellidoPaterno(): string | null {
+    return isPlatformBrowser(this.platformId) ? localStorage.getItem('apellidoPaterno') : null;
   }
 
   getId(): number | null {

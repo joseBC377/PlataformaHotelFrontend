@@ -34,17 +34,24 @@ export class ReservasAdminComponent implements OnInit {
 
   public modoEdicion: boolean = false;
   public idReservaEditar: number | null = null;
+  public erroresBackend: any = {};
 
   public reservaForm: FormGroup = this.fb.group({
-    id: [null],
-    fecha_reserva: ['', Validators.required],
+    id_reserva: [null],
+    fechaCreacion: ['', Validators.required], // unificado con backend
     usuario: [null, Validators.required],
-    estado: ['', Validators.required]
+    estado: ['', Validators.required],
+    pago: this.fb.group({
+      total: [0, Validators.required],
+      igv: [0, Validators.required],
+      estado_pago: ['', Validators.required],
+      fecha_pago: ['', Validators.required]
+    })
+
   });
 
-
-  get fecha_reserva() {
-    return this.reservaForm.get('fecha_reserva');
+  get fechaCreacion() {
+    return this.reservaForm.get('fechaCreacion');
   }
 
   get usuario() {
@@ -59,53 +66,68 @@ export class ReservasAdminComponent implements OnInit {
   ngOnInit(): void {
     this.reservas$ = this.serv.getAllReservas();
     this.usuarios$ = this.adminServ.getAllUsers();
+
+    this.reservas$.subscribe(data => console.log('Reservas:', data));
   }
 
- registroReserva(): void {
-  if (this.reservaForm.invalid) {
-    this.reservaForm.markAllAsTouched();
-    return;
+
+  registroReserva(): void {
+    if (this.reservaForm.invalid) {
+      this.reservaForm.markAllAsTouched();
+      return;
+    }
+
+    const form = this.reservaForm.value;
+
+    const reserva: ReservaModel = {
+      id_reserva: form.id_reserva,
+      fechaCreacion: form.fechaCreacion,
+      usuario: form.usuario,
+      estado: form.estado,
+      pago: form.pago
+    };
+
+
+    if (this.modoEdicion && this.idReservaEditar) {
+      this.serv.putUpdateReserva(this.idReservaEditar, reserva).subscribe({
+        next: () => {
+          this.erroresBackend = {};
+          this.resetFormulario();
+          this.reservas$ = this.serv.getAllReservas();
+        },
+        error: err => {
+          console.log(err.error);
+          this.erroresBackend = err.error;
+        }
+      });
+    } else {
+      this.serv.postInsertReserva(reserva).subscribe({
+        next: () => {
+          this.erroresBackend = {};
+          this.resetFormulario();
+          this.reservas$ = this.serv.getAllReservas();
+        },
+        error: err => {
+          console.log(err.error);
+          this.erroresBackend = err.error;
+        }
+      });
+    }
   }
 
-  const form = this.reservaForm.value;
 
-  const reserva: ReservaModel = {
-    fecha_reserva: form.fecha_reserva,
-    usuario: form.usuario,
-    estado: form.estado  
-  };
-
-  if (this.modoEdicion && this.idReservaEditar) {
-    this.serv.putUpdateReserva(this.idReservaEditar, reserva).subscribe({
-      next: () => {
-        this.resetFormulario();
-        this.reservas$ = this.serv.getAllReservas();
-      },
-      error: () => alert('Error al editar reserva')
+  editarReserva(res: ReservaModel): void {
+    this.reservaForm.patchValue({
+      id_reserva: res.id_reserva,
+      fechaCreacion: res.fechaCreacion,
+      usuario: res.usuario,
+      estado: res.estado,
+      pago: res.pago
     });
-  } else {
-    this.serv.postInsertReserva(reserva).subscribe({
-      next: () => {
-        this.resetFormulario();
-        this.reservas$ = this.serv.getAllReservas();
-      },
-      error: () => alert('Error al registrar reserva')
-    });
+    this.idReservaEditar = res.id_reserva ?? null;
+    this.modoEdicion = true;
   }
-}
 
-
-editarReserva(res: ReservaModel): void {
-  this.reservaForm.patchValue({
-    id: res.id,
-    fecha_reserva: res.fecha_reserva,
-    usuario: res.usuario
-  });
-
-  this.estado?.setValue(res.estado);
-  this.idReservaEditar = res.id ?? null;
-  this.modoEdicion = true;
-}
 
   eliminarReserva(id: number): void {
     if (!confirm('¿Desea eliminar esta reserva?')) return;
@@ -129,6 +151,6 @@ editarReserva(res: ReservaModel): void {
 
 
   compararUsuario = (u1: UsuarioModel, u2: UsuarioModel): boolean => {
-    return u1 && u2 ? u1.id === u2.id : u1 === u2;
+    return u1 && u2 ? u1.id_usuario === u2.id_usuario : u1 === u2;
   }
 }

@@ -12,7 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class Header {
 
   private auth = inject(AuthService);
-  
+
   nombre: string | null = '';
   apellido: string | null = '';
   rol: string | null = '';
@@ -28,7 +28,7 @@ export class Header {
   //Se ejecuta cuando angular detecta un cambio
   ngDoCheck() {
     this.nombre = this.auth.getNombre();
-    this.apellido = this.auth.getApellido();
+    this.apellido = this.auth.getApellidoPaterno();
     this.rol = this.auth.getRol();
     this.id = this.auth.getId();
   }

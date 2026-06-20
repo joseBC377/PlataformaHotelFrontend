@@ -5,6 +5,8 @@ export interface Token {
     refresh_token: string
     id:number,
     nombre:string,
-    apellido:string,
+    //apellido:string,
+    apellidoPaterno: string;
+    apellidoMaterno: string;
     rol:Rol
 }

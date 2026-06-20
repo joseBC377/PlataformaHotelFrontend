@@ -1,40 +1,34 @@
 @use 'variables' as var;
 
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+.contenedor {
+  min-height: 100vh;
+  background-color: #f4f6f9;
 }
 
-.contenedor {
-    min-height: 100dvh;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas:
-        "header"
-        "main"
-        "footer";
+.layout-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 16rem;
+  z-index: 100;
+  background: transparent;
+}
 
-    header {
-        height: 3.5rem;
-        grid-area: header;
-    }
+main {
+  margin-left: 16rem;
+  min-height: 100vh;
+  background-color: #f4f6f9;
+}
 
-    main {
-        grid-area: main;
-        overflow-x: auto;
-        // padding: 1rem;
-    }
+@media (max-width: 1024px) {
+  .layout-sidebar {
+    position: static;
+    width: 100%;
+  }
 
-    footer {
-        grid-area: footer;
-        padding: 1rem;
-        background-color: var.$backgraound-primario;
-        color: var.$color-terciario;
-        //para el login
-        z-index: 2;
-        position: relative;
-        margin-top: auto;
-    }
+  main {
+    margin-left: 0;
+    padding: 1rem;
+  }
 }

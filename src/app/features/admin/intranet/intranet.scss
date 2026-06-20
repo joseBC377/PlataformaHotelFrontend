@@ -3,8 +3,14 @@
   width: 100% !important;
 }
 body {
-  background-color: #fcf5ef;
+  background-color: #e6eeff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cuerpo {
+  min-height: 100vh;
+  background-color: #e6eeff;
+  padding: 2rem 0;
 }
 
 .container {

@@ -1,47 +1,47 @@
-<div class="container mt-4">
-  <h2 class="mb-4">Mensajes Recibidos - Contáctanos 📬</h2>
+<div class="cuerpo">
+  <div class="container">
+    <h2 class="mb-4">Mensajes Recibidos - Contáctanos 📬</h2>
 
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="table-hotel">
-        <tr>
-          <th>ID</th>
-          <th>ID-Usuario</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Correo</th>
-          <th>Mensaje</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (contacto$|async; as cont) {
-        @for (c of cont; track c.id) {
-        <tr>
-          <td>{{ c.id }}</td>
-          <td>{{ c.usuario ? c.usuario.id : 'Publico' }}</td>
-          <td>{{ c.nombre }}</td>
-          <td>{{ c.apellido }}</td>
-          <td>{{ c.correo }}</td>
-          <td>{{c.mensaje}}</td>
-          <td>
-            <button class="btn btn-danger btn-sm" (click)="eliminarMensaje(c.id)">
-              Eliminar
-            </button>
-          </td>
-        </tr>
-        }@empty {
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="table-hotel">
+          <tr>
+            <th>ID_Contacto</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Correo</th>
+            <th>Mensaje</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (contacto$|async; as cont) {
+          @for (c of cont; track c.id_contacto) {
+          <tr>
+            <td>{{ c.id_contacto }}</td>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.apellido }}</td>
+            <td>{{ c.correo }}</td>
+            <td>{{c.mensaje}}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="eliminarMensaje(c.id_contacto)">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+          }@empty {
           <tr>
             <td colspan="7">No hay mensajes 😁</td>
           </tr>
-        }
-        }@else {
+          }
+          }@else {
           <tr>
             <td colspan="7">Cargando Mensajes</td>
           </tr>
-        }
+          }
 
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

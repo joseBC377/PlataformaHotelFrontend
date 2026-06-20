@@ -31,7 +31,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
-                        <th>Apellido</th>
+                        <th>Apellido Paterno</th>
+                        <th>Apellido Materno</th>
                         <th>Correo</th>
                         <th>Teléfono</th>
                         <th>Rol</th>
@@ -39,11 +40,12 @@
                 </thead>
                 <tbody>
                     @if (usuario$|async; as client) {
-                    @for (c of client; track c.id) {
+                    @for (c of client; track c.id_usuario) {
                     <tr>
-                        <td>{{c.id}}</td>
-                        <td>{{c.nombre}}</td>
-                        <td>{{c.apellido}}</td>
+                        <td>{{c.id_usuario}}</td>
+                        <td>{{c.nombre_usuario}}</td>
+                        <td>{{c.apellido_paterno}}</td>
+                        <td>{{c.apellido_materno}}</td>
                         <td>{{c.correo}}</td>
                         <td>{{c.telefono}}</td>
                         <td>{{c.rol}}</td>
@@ -79,20 +81,21 @@
                 </thead>
                 <tbody>
                     @if (usuarioReserva$|async; as userRes) {
-                    @for (c of userRes; track c.id) {
+                    @for (c of userRes; track c.id_usuario) {
                     <tr>
-                        <td>{{c.id}}</td>
-                        <td>{{c.nombre}}</td>
-                        <td>{{c.apellido}}</td>
+                        <td>{{c.id_usuario}}</td>
+                        <td>{{c.nombre_usuario}}</td>
+                        <td>{{c.apellido_paterno}}</td>
+                        <td>{{c.apellido_materno}}</td>
                         <td>{{c.correo}}</td>
                         <td>{{c.telefono}}</td>
                         <td>{{c.rol}}</td>
                         <td>
                             @if (c.reserva && c.reserva.length > 0) {
                             <ul class="mb-0">
-                                @for (r of c.reserva; track r.id) {
+                                @for (r of c.reserva; track r.id_reserva) {
                                 <a>
-                                    {{ r.fecha_reserva | date:'yyyy-MM-dd' }}
+                                    {{ r.fechaCreacion | date:'yyyy-MM-dd' }}
                                 </a>
                                 }
                             </ul>

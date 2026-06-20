@@ -29,18 +29,18 @@
         }
         @if (!cargando) {
         @if (habitacionesFiltradas.length > 0) {
-        @for (hab of habitacionesFiltradas; track hab.id; let i = $index) {
+        @for (hab of habitacionesFiltradas; track hab.id_habitacion; let i = $index) {
           <div class="habitacion-card" [ngClass]="{ 'par': i % 2 === 1 }">
             <div class="habitacion-contenido">
                 <div class="habitacion-carrusel">
                     <div class="imagenes">
-                        <img [src]="hab.categoriaHabitacion.imagen" alt="{{ hab.nombre }}" />
+                        <img [src]="hab.categoriaHabitacion.imagen" alt="{{ hab.nombre_habitacion }}" />
                     </div>
                 </div>
                 <div class="habitacion-info">
-                    <h4>{{ hab.nombre }}</h4>
-                    <h2 style="color: #f4a300;">{{ hab.categoriaHabitacion.nombre }}</h2>
-                    <p>{{ hab.descripcion }}</p>
+                    <h4>{{ hab.nombre_habitacion }}</h4>
+                    <h2 style="color: #f4a300;">{{ hab.categoriaHabitacion.nombre_categoria }}</h2>
+                    <p>{{ hab.descripcion_habitacion }}</p>
                     <p><strong>Capacidad:</strong> {{ hab.categoriaHabitacion.capacidad }} personas</p>
                     <p><strong>Precio:</strong> S/. {{ hab.categoriaHabitacion.precio }}</p>
                     <div class="iconos">

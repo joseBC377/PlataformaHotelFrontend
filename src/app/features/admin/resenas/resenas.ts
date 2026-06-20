@@ -9,6 +9,7 @@ import { HabitacionServices } from '../services/habitacion.services';
 import { RequestResenaModel } from '../../auth/models/request-resena-model';
 import { AdminServices } from '../services/admin.services';
 import { UsuarioModel } from '../../auth/models/usuario';
+import { Servicio } from '../../auth/models/servicio';
 
 @Component({
   selector: 'app-resena-admin',
@@ -25,6 +26,7 @@ export class ResenaAdminComponent implements OnInit {
   protected user$!: Observable<UsuarioModel[]>;
   protected habit$!: Observable<Habitacion[]>;
   public rese$!: Observable<Resena[]>;
+  public servicio$!: Observable<Servicio[]>; // Asegúrate de importar el modelo Servicio
 
   resenaForm!: FormGroup;
   resenas: Resena[] = [];
@@ -43,7 +45,8 @@ export class ResenaAdminComponent implements OnInit {
       fecha: ['', Validators.required],
       comentario: ['', Validators.required],
       id_usuario: [null, Validators.required],
-      id_habitacion: [null, Validators.required]
+      id_habitacion: [null, Validators.required],
+      id_servicio: [null, Validators.required]
     });
 
     // Llama a la función para generar las calificaciones al inicializar el componente
@@ -86,14 +89,15 @@ export class ResenaAdminComponent implements OnInit {
 
   editarResena(resena: Resena) {
     this.editando = true;
-    this.idEditando = resena.id!;
+    this.idEditando = resena.id_resena!;
 
     this.resenaForm.patchValue({
-      calificacion: resena.calificacion, 
+      calificacion: resena.calificacion,
       fecha: resena.fecha,
       comentario: resena.comentario,
-      id_usuario: resena.usuario.id,
-      id_habitacion: resena.habitacion.id,
+      id_usuario: resena.usuario.id_usuario,
+      id_habitacion: resena.habitacion.id_habitacion,
+      id_servicio: resena.servicio.id_servicio
     });
   }
 
@@ -109,9 +113,11 @@ export class ResenaAdminComponent implements OnInit {
       calificacion: form.calificacion,
       comentario: form.comentario,
       fecha: form.fecha,
-      usuario: { id: form.id_usuario },
-      habitacion: { id: form.id_habitacion }
+      usuario: { id_usuario: form.id_usuario },   // 👈 corregido
+      habitacion: { id_habitacion: form.id_habitacion }, // 👈 corregido
+      servicio: { idServicio: form.id_servicio } // 👈 agregado para incluir el servicio
     };
+
 
     if (this.editando) {
       this.servResena.editar(this.idEditando, resena).subscribe({

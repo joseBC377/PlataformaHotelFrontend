@@ -16,18 +16,24 @@ import { ServiciosAdminComponent } from './features/admin/servicio/servicio';
 import { ResenaAdminComponent } from './features/admin/resenas/resenas';
 import { Usuario } from './features/admin/usuario/usuario';
 import { Contacto } from './features/admin/contacto/contacto';
-import { CategoriaHabitacionServices } from './features/admin/services/categoria-habitacion';
 import { CategoriaHabitacionComponent } from './features/admin/categoria-habitacion/categoria-habitacion';
 import { PagosComponent } from './features/admin/pago/pago';
-import { ReservaService } from './features/admin/services/reserva.services';
 import { ReservasAdminComponent } from './features/admin/reserva/reserva';
 import { Pago } from './features/publico/pago/pago';
 import { CrearReserva } from './features/publico/crear-reserva/crear-reserva';
 import { ResumenReserva } from './features/publico/resumen-reserva/resumen-reserva';
+import { Metodopago } from './features/admin/metodopago/metodopago';
+import { RecepLayout } from './features/auth/layouts/recep-layout/recep-layout';
+import { DashboardAdmin } from './features/admin/dashboard-admin/dashboard-admin';
+import { DashboardRecep } from './features/recep/dashboard-recep/dashboard-recep';
+import { Resena } from './features/publico/resena/resena';
 
 export const routes: Routes = [
     {
         path: 'admin', component: AdminLayout, canActivate: [authGuard], children: [
+            {
+                path: 'dashboard', component: DashboardAdmin, title: 'Dashboard Administrador'
+            },
             {
                 path: 'intranet', component: Intranet, title: 'Intranet'
             },
@@ -55,6 +61,34 @@ export const routes: Routes = [
             {
                 path: 'resena', component: ResenaAdminComponent, title: "Resena"
             },
+            {
+                path: 'metodo', component: Metodopago, title: "Método de Pago"
+            },
+        ]
+    },
+    {
+        path: 'recepcion', component: RecepLayout, canActivate: [authGuard], children: [
+            {
+                path: 'dashboard', component: DashboardRecep, title: 'Dashboard Recepcionista'
+            },
+            {
+                path: 'usuario', component: Usuario, title: 'Usuario'
+            },
+            {
+                path: 'reserva', component: ReservasAdminComponent, title: 'Reserva'
+            },
+            {
+                path: 'contacto', component: Contacto, title: 'Contacto'
+            },
+            {
+                path: 'servicio', component: ServiciosAdminComponent, title: "Servicio"
+            },
+            {
+                path: 'pago', component: PagosComponent, title: 'Pago de Reserva'
+            },
+            {
+                path: 'metodo', component: Metodopago, title: "Método de Pago"
+            }
         ]
     },
     {
@@ -87,9 +121,11 @@ export const routes: Routes = [
                 path: 'contactos', component: Contactos, title: "Contactos"
             },
             {
+                path: 'resena', component: Resena, title: "Resena"
+            },
+            {
                 path: '', component: Inicio, title: "Inicio"
             },
-
             {
                 path: '**', component: Error, title: "Pagina de error"
             }
