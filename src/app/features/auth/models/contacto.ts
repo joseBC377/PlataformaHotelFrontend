@@ -1,10 +1,9 @@
 import { UsuarioModel } from "./usuario";
 
 export interface ContactoModel {
-    id:number;
+    id_contacto:number;
     nombre:string;
     apellido:string;
     correo:string;
     mensaje:string;
-    usuario?: UsuarioModel;
 }

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 export const CUSTOM_DATE_FORMATS = {
   parse: {
@@ -23,13 +24,8 @@ export const CUSTOM_DATE_FORMATS = {
 @Component({
   selector: 'app-inicio',
   imports: [CommonModule,
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,RouterLink],
+    ReactiveFormsModule
+    , RouterLink],
   templateUrl: './inicio.html',
   styleUrl: './inicio.scss',
   providers: [
@@ -52,9 +48,9 @@ export class Inicio {
       }
     });
   }
-  adultos = 0;
+  adultos = 1;
   ninos = 0;
-  habitaciones = 0;
+  habitaciones = 1;
 
   getValor(index: number): number {
     switch (index) {
@@ -79,5 +75,33 @@ export class Inicio {
       case 1: if (this.ninos > 0) this.ninos--; break;
       case 2: if (this.habitaciones > 1) this.habitaciones--; break;
     }
+  }
+
+  constructor(private router: Router) { }
+
+  irACrearReserva() {
+
+    if (!this.entradaControl.value || !this.salidaControl.value) {
+      alert('Selecciona fechas');
+      return;
+    }
+
+    if (this.habitaciones < 1) {
+      alert('Debe haber al menos 1 habitación');
+      return;
+    }
+
+    const data = {
+      fechaEntrada: this.entradaControl.value,
+      fechaSalida: this.salidaControl.value,
+      adultos: this.adultos,
+      ninos: this.ninos,
+      habitaciones: this.habitaciones
+    };
+
+    this.router.navigate(['/crear-reserva'], {
+      state: data
+    });
+
   }
 }

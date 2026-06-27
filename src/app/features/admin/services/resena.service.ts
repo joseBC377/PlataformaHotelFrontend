@@ -21,7 +21,6 @@ export class ResenaService {
     return this.http.post<void>(`${this.URL}`, resena);
   }
 
- 
   editar(id: number, resena:RequestResenaModel): Observable<void>{
     return this.http.put<void>(`${this.URL}/${id}`, resena);
   }

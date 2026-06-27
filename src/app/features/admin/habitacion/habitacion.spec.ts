@@ -1,8 +1,9 @@
 import { HttpTestingController, HttpClientTestingModule } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { CategoriaHabitacion } from "../../auth/models/categoria_habitacion";
+import { CategoriaHabitacion } from "../../auth/models/categoria-habitacion";
 import { Habitacion } from "../../auth/models/habitacion";
 import { HabitacionServices } from "../services/habitacion.services";
+import { EstadoReserva } from "../../auth/models/habitacionEstado";
 
 describe('HabitacionServices', () => {
   let service: HabitacionServices;
@@ -26,7 +27,7 @@ describe('HabitacionServices', () => {
       id: 1,
       nombre: 'Hab101',
       descripcion: 'Habitación con vista al mar',
-      estado: 'DISPONIBLE',
+      estado: EstadoReserva.DISPONIBLE,
       categoriaHabitacion: mockCategoria
     }
   ];
@@ -34,7 +35,7 @@ describe('HabitacionServices', () => {
   const nuevaHabitacion: Habitacion = {
     nombre: 'Hab202',
     descripcion: 'Habitación Deluxe',
-    estado: 'OCUPADO',
+    estado: EstadoReserva.OCUPADA,
     categoriaHabitacion: mockCategoria
   };
 
@@ -85,10 +86,10 @@ describe('HabitacionServices', () => {
   });
 
   it('debe editar una habitación (PUT)', () => {
-    const habitacionEditada = { ...nuevaHabitacion, estado: 'DISPONIBLE' };
+    const habitacionEditada = { ...nuevaHabitacion, estado: EstadoReserva.DISPONIBLE };
 
     service.putEditarHabitacion(2, habitacionEditada).subscribe(habitacion => {
-      expect(habitacion.estado).toBe('DISPONIBLE');
+      expect(habitacion.estado).toBe(EstadoReserva.DISPONIBLE);
     });
 
     const req = httpMock.expectOne(`${API_URL}/2`);

@@ -1,0 +1,68 @@
+<aside class="reception-sidebar">
+
+  <div class="sidebar-content">
+    <a class="d-flex align-items-center gap-2 text-decoration-none" routerLink="intranet" routerLinkActive="active">
+      <img src="assets/images/inicio/logo.png" alt="logo" width="45" height="45" style="object-fit: contain;" />
+      <span class="navbar-brand mb-0 h1 text-white">Royal Suites Hotel</span>
+    </a>
+
+    <br />
+
+    <nav class="sidebar-nav">
+
+      <a class="nav-link" routerLink="dashboard" routerLinkActive="active">
+        <i class="fas fa-chart-line nav-icon"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-link" routerLink="usuario" routerLinkActive="active">
+        <i class="fas fa-users nav-icon"></i>
+        <span>Usuario</span>
+      </a>
+
+      <a class="nav-link" routerLink="reserva" routerLinkActive="active">
+        <i class="fas fa-calendar-check nav-icon"></i>
+        <span>Reserva</span>
+      </a>
+
+      <a class="nav-link" routerLink="contacto" routerLinkActive="active">
+        <i class="fas fa-address-book nav-icon"></i>
+        <span>Contacto</span>
+      </a>
+
+      <a class="nav-link" routerLink="servicio" routerLinkActive="active">
+        <i class="fas fa-concierge-bell nav-icon"></i>
+        Servicio
+      </a>
+
+      <a class="nav-link" routerLink="pago" routerLinkActive="active">
+        <i class="fas fa-credit-card nav-icon"></i>
+        Pago
+      </a>
+
+      <a class="nav-link" routerLink="metodo" routerLinkActive="active">
+        <i class="fas fa-money-check-dollar nav-icon"></i>
+        Método
+      </a>
+
+    </nav>
+  </div>
+
+  <div class="sidebar-footer">
+
+    <div class="avatar-badge">
+      {{ nombre?.charAt(0) }}
+    </div>
+
+    <div class="footer-text">
+      <h4>{{ nombre }} {{ apellido }}</h4>
+      <span>{{ rol }}</span>
+    </div>
+
+    <button class="logout-btn" (click)="logout()">
+      Salir
+    </button>
+
+  </div>
+
+</aside>

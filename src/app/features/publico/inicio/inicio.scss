@@ -26,20 +26,6 @@
 
   }
 
-  .booking-item {
-
-    mat-form-field {
-      width: 100%;
-    }
-
-    .calendar-icon {
-      color: var.$color-secundario;
-      font-size: 1.5rem;
-      cursor: pointer;
-      margin-left: 0.5rem;
-    }
-  }
-
   .btn-reservar {
     background-color: var.$color-secundario;
     color: var.$color-terciario;

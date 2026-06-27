@@ -4,6 +4,10 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } 
 import { Observable } from 'rxjs';
 import { Servicio } from '../../auth/models/servicio';
 import { ServicioService } from '../services/servicio.service';
+import { AdminLayout } from "../../auth/layouts/admin-layout/admin-layout";
+import { ReservaServicio } from '../../auth/models/reservaServicio';
+import { Resena } from '../../auth/models/resena';
+import { ResenaService } from '../services/resena.service';
 
 @Component({
   selector: 'app-servicios-admin',
@@ -13,51 +17,64 @@ import { ServicioService } from '../services/servicio.service';
   styleUrls: ['./servicio.scss']
 })
 export class ServiciosAdminComponent implements OnInit {
-  protected servicio$!: Observable<Servicio[]>;
+
   private serv = inject(ServicioService);
   private fb = inject(FormBuilder);
 
-  public servicioForm: FormGroup = this.fb.group({
-    id_servicio: [null],
-    nombre: ['', [Validators.required, Validators.minLength(3)]],
-    descripcion: ['', Validators.required],
-    precio: [0, [Validators.required, Validators.min(0)]],
-    imagen: ['', Validators.required]
-  });
+  protected servicio$!: Observable<Servicio[]>;
+
+  public servicioForm: FormGroup;
 
   public modoEdicion = false;
   public idServicioEditar: number | null = null;
+
   selectedFile: File | null = null;
   imagenInvalida = false;
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  get nombre() { return this.servicioForm.get('nombre'); }
-  get descripcion() { return this.servicioForm.get('descripcion'); }
-  get precio() { return this.servicioForm.get('precio'); }
-  get imagen() { return this.servicioForm.get('imagen'); }
-
+  constructor() {
+    this.servicioForm = this.fb.group({
+      idServicio: [null],
+      nombre_servicio: ['', [Validators.required, Validators.minLength(3)]],
+      descripcion_servicio: ['', Validators.required],
+      precio: [0, [Validators.required, Validators.min(0)]],
+      imagen: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.servicio$ = this.serv.listar();
   }
 
+  get nombre_servicio() { return this.servicioForm.get('nombre_servicio'); }
+  get descripcion_servicio() { return this.servicioForm.get('descripcion_servicio'); }
+  get precio() { return this.servicioForm.get('precio'); }
+
+
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result as string;
-        this.servicioForm.patchValue({ imagen: base64 });
-        this.imagenInvalida = false;
-      };
-      reader.readAsDataURL(file);
-    } else {
+
+    if (!input.files || input.files.length === 0) {
       this.imagenInvalida = true;
+      return;
     }
+
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.servicioForm.patchValue({
+        imagen: reader.result as string
+      });
+    };
+
+    reader.readAsDataURL(file);
   }
 
+
   guardarServicio(): void {
+
     if (this.servicioForm.invalid) {
       this.servicioForm.markAllAsTouched();
       return;
@@ -65,45 +82,56 @@ export class ServiciosAdminComponent implements OnInit {
 
     const data = this.servicioForm.value;
 
-    if (this.modoEdicion) {
-      this.serv.editar(this.idServicioEditar!, data).subscribe(() => {
-        this.servicio$ = this.serv.listar();
+    if (this.modoEdicion && this.idServicioEditar) {
+      this.serv.editar(this.idServicioEditar, data).subscribe(() => {
+        this.refrescar();
         this.resetFormulario();
       });
     } else {
-      this.serv.insertar(data).subscribe(() => {
-        this.servicio$ = this.serv.listar();
-        this.resetFormulario();
+      this.serv.insertar(data).subscribe({
+          next: () => {
+            this.refrescar();
+            this.resetFormulario();
+          }
       });
     }
   }
+
 
   editarServicio(servicio: Servicio): void {
     this.servicioForm.patchValue(servicio);
-    this.idServicioEditar = servicio.id_servicio ?? null;
+    this.idServicioEditar = servicio.idServicio ?? null;
     this.modoEdicion = true;
   }
 
+
   eliminarServicio(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este servicio?')) {
-      this.serv.eliminar(id).subscribe(() => {
-        this.servicio$ = this.serv.listar(); 
-        if (this.idServicioEditar === id) {
-          this.resetFormulario();
-        }
-      });
-    }
+    if (!confirm('¿Eliminar este servicio?')) return;
+
+    this.serv.eliminar(id).subscribe(() => {
+      this.refrescar();
+
+      if (this.idServicioEditar === id) {
+        this.resetFormulario();
+      }
+    });
   }
 
-  resetFormulario() {
+  refrescar(): void {
+    this.servicio$ = this.serv.listar();
+  }
+
+  resetFormulario(): void {
     this.servicioForm.reset();
     this.modoEdicion = false;
     this.idServicioEditar = null;
     this.selectedFile = null;
     this.imagenInvalida = false;
 
-    if (this.fileInput?.nativeElement) {
+    if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
   }
+
+
 }

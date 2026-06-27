@@ -1,0 +1,138 @@
+<div class="review-page-container">
+  <div class="review-card-wrapper">
+
+    <!-- Encabezado de la Tarjeta -->
+    <div class="review-card-header">
+      <div class="header-icon-box">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+        </svg>
+      </div>
+      <div class="header-texts">
+        <h2>Gestión de Reseñas</h2>
+        <p>Registra las valoraciones y comentarios de los huéspedes sobre habitaciones y servicios.</p>
+      </div>
+    </div>
+
+    <!-- Formulario Reactivo de Angular -->
+    <form [formGroup]="resenaForm" class="review-form">
+      <div class="form-grid">
+
+
+        <div class="form-group col-span-3">
+          <label class="form-label-custom">Calificación</label>
+          <div class="select-wrapper">
+            <select class="form-select-custom" formControlName="calificacion"
+              [class.is-invalid-custom]="resenaForm.get('calificacion')?.invalid && (resenaForm.get('calificacion')?.touched || resenaForm.get('calificacion')?.dirty)">
+              <option value="">Seleccione una calificación</option>
+              @for (rating of calificacionesDisponibles; track rating) {
+                <option [value]="rating">{{ rating | number: '1.1-1' }} ⭐</option>
+              }
+            </select>
+            <div class="select-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+
+          @if (resenaForm.get('calificacion')?.invalid && (resenaForm.get('calificacion')?.touched || resenaForm.get('calificacion')?.dirty)) {
+            <div class="error-message-custom">
+              @if (resenaForm.get('calificacion')?.errors?.['required']) {
+                <small>La calificación es obligatoria.</small>
+              } @else if (resenaForm.get('calificacion')?.errors?.['min'] || resenaForm.get('calificacion')?.errors?.['max']) {
+                <small>Debe estar entre 1 y 5.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group col-span-4">
+          <label class="form-label-custom">Fecha de Registro</label>
+          <div class="input-icon-wrapper">
+            <input type="date" class="form-input-custom" formControlName="fecha"
+              [class.is-invalid-custom]="resenaForm.get('fecha')?.invalid && (resenaForm.get('fecha')?.touched || resenaForm.get('fecha')?.dirty)" />
+          </div>
+
+          @if (resenaForm.get('fecha')?.invalid && (resenaForm.get('fecha')?.touched || resenaForm.get('fecha')?.dirty)) {
+            <div class="error-message-custom">
+              @if (resenaForm.get('fecha')?.errors?.['required']) {
+                <small>La fecha es obligatoria.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Campo: Habitación -->
+        <div class="form-group col-span-3">
+          <label class="form-label-custom">Habitación asociada</label>
+          <div class="select-wrapper">
+            <select class="form-select-custom" formControlName="id_habitacion"
+              [class.is-invalid-custom]="id_habitacion?.invalid && (id_habitacion?.touched || id_habitacion?.dirty)">
+              <option [ngValue]="null" disabled>Seleccione una habitación</option>
+              @for (habitacion of habit$ | async; track habitacion.id_habitacion) {
+                <option [ngValue]="habitacion.id_habitacion">
+                  {{ habitacion.nombre_habitacion }}
+                </option>
+              }
+            </select>
+            <div class="select-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+
+          @if (id_habitacion?.invalid && (id_habitacion?.touched || id_habitacion?.dirty)) {
+            <div class="error-message-custom">
+              <small>Debe seleccionar una habitación.</small>
+            </div>
+          }
+        </div>
+
+
+        <div class="form-group col-span-3">
+          <label class="form-label-custom">Servicio Evaluado</label>
+          <div class="select-wrapper">
+            <select class="form-select-custom" formControlName="id_servicio"
+              [class.is-invalid-custom]="resenaForm.get('id_servicio')?.invalid && (resenaForm.get('id_servicio')?.touched || resenaForm.get('id_servicio')?.dirty)">
+              <option [ngValue]="null" disabled>Seleccione un servicio</option>
+              @for (serv of servicio$ | async; track serv.idServicio) {
+                <option [ngValue]="serv.idServicio">{{ serv.nombre_servicio }}</option>
+              }
+            </select>
+            <div class="select-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+
+          @if (resenaForm.get('id_servicio')?.invalid && (resenaForm.get('id_servicio')?.touched || resenaForm.get('id_servicio')?.dirty)) {
+            <div class="error-message-custom">
+              <small>Debe seleccionar un servicio.</small>
+            </div>
+          }
+        </div>
+
+        <div class="form-group col-span-12">
+          <label class="form-label-custom">Comentario o Reseña</label>
+          <textarea rows="4" class="form-textarea-custom" formControlName="comentario"
+            placeholder="Escribe detalladamente la experiencia comentada por el cliente..."></textarea>
+
+          @if (resenaForm.get('comentario')?.invalid && (resenaForm.get('comentario')?.touched || resenaForm.get('comentario')?.dirty)) {
+            <div class="error-message-custom">
+              <small>El comentario es obligatorio.</small>
+            </div>
+          }
+        </div>
+
+      </div>
+
+      <div class="form-actions-wrapper">
+        <button type="button" class="btn-submit-review" (click)="guardarResena()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="submit-icon">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Registrar Reseña</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,129 +1,134 @@
-<div class="container mt-4">
-  <h2 class="mb-4">Gestión de Categorías de Habitación 🏨</h2>
+<div class="cuerpo">
+  <div class="container">
+    <h2 class="mb-4">Gestión de Categorías de Habitación 🏨</h2>
 
-  <form [formGroup]="categoriaForm" class="row g-3 mb-4 p-3 border rounded shadow-sm" (ngSubmit)="registroCategoria()">
+    <form [formGroup]="categoriaForm" class="row g-3 mb-4 p-3 border rounded shadow-sm"
+      (ngSubmit)="registroCategoria()">
 
-    <div class="col-md-4">
-      <label for="nombre" class="form-label">Nombre</label>
-      <input id="nombre" type="text" class="form-control" formControlName="nombre"
-        placeholder="Nombre de la categoría" />
+      <div class="col-md-4">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input id="nombre" type="text" class="form-control" formControlName="nombre_categoria"
+          placeholder="Nombre de la categoría" />
 
-      @if (nombre?.invalid && (nombre?.touched || nombre?.dirty)) {
-      <div class="text-danger mt-1">
-        @if (nombre?.errors?.['required']) {
-        <small>El nombre es obligatorio.</small>
+        @if (nombre_categoria?.invalid && (nombre_categoria?.touched || nombre_categoria?.dirty)) {
+        <div class="text-danger mt-1">
+          @if (nombre_categoria?.errors?.['required']) {
+          <small>El nombre es obligatorio.</small>
+          }
+          @if (nombre_categoria?.errors?.['minlength']) {
+          <small>Mínimo 3 caracteres.</small>
+          }
+        </div>
         }
-        @if (nombre?.errors?.['minlength']) {
-        <small>Mínimo 3 caracteres.</small>
+      </div>
+
+      <div class="col-md-4">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <input id="descripcion" type="text" class="form-control" formControlName="descripcion_categoria"
+          placeholder="Descripción de la categoría" />
+
+        @if (descripcion_categoria?.invalid && (descripcion_categoria?.touched || descripcion_categoria?.dirty)) {
+        <div class="text-danger mt-1">
+          <small>La descripción es obligatoria.</small>
+        </div>
         }
       </div>
-      }
-    </div>
 
-    <div class="col-md-4">
-      <label for="descripcion" class="form-label">Descripción</label>
-      <input id="descripcion" type="text" class="form-control" formControlName="descripcion"
-        placeholder="Descripción de la categoría" />
+      <div class="col-md-2">
+        <label for="capacidad" class="form-label">Capacidad</label>
+        <input id="capacidad" type="number" class="form-control" formControlName="capacidad" />
 
-      @if (descripcion?.invalid && (descripcion?.touched || descripcion?.dirty)) {
-      <div class="text-danger mt-1">
-        <small>La descripción es obligatoria.</small>
-      </div>
-      }
-    </div>
-
-    <div class="col-md-2">
-      <label for="capacidad" class="form-label">Capacidad</label>
-      <input id="capacidad" type="number" class="form-control" formControlName="capacidad" />
-
-      @if (capacidad?.invalid && (capacidad?.touched || capacidad?.dirty)) {
-      <div class="text-danger mt-1">
-        <small>La capacidad es obligatoria y debe ser un número.</small>
-      </div>
-      }
-    </div>
-
-    <div class="col-md-2">
-      <label for="precio" class="form-label">Precio</label>
-      <input id="precio" type="number" class="form-control" formControlName="precio" />
-
-      @if (precio?.invalid && (precio?.touched || precio?.dirty)) {
-      <div class="text-danger mt-1">
-        <small>El precio es obligatorio.</small>
-      </div>
-      }
-    </div>
-
-    <div class="col-md-6">
-      <label for="imagen" class="form-label">Imagen (Archivo)</label>
-      <input id="imagen" type="file" class="form-control" (change)="onFileChange($event)" #fileInput />
-
-      @if (categoriaForm.value.imagen) {
-      <div class="col-md-6 mt-2">
-        <label class="form-label">Vista previa de imagen:</label><br />
-        <img [src]="categoriaForm.value.imagen" alt="Vista previa" width="120" class="border rounded" />
-      </div>
-      }
-    </div>
-
-    <div class="d-flex flex-nowrap justify-content-start">
-      <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
-        [disabled]="categoriaForm.invalid">
-        {{ modoEdicion ? 'Actualizar Categoría' : 'Agregar Categoría' }}
-      </button>
-
-      @if (modoEdicion) {
-      <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar Edición</button>
-      }
-    </div>
-  </form>
-
-  <!-- TABLA -->
-  <div class="table-responsive mt-4">
-    <table class="table table-bordered table-hover">
-      <thead class="table-hotel">
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Capacidad</th>
-          <th>Precio</th>
-          <th>Imagen</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (categorias$ | async; as catList) {
-        @for (cat of catList; track cat.id) {
-        <tr>
-          <td>{{ cat.id }}</td>
-          <td>{{ cat.nombre }}</td>
-          <td>{{ cat.descripcion }}</td>
-          <td>{{ cat.capacidad }}</td>
-          <td>S/ {{ cat.precio }}</td>
-          <td><img [src]="cat.imagen" alt="Imagen" width="80" /></td>
-          <td>
-            <div class="d-flex flex-nowrap justify-content-center">
-               <button class="btn btn-warning btn-sm me-1" (click)="editarCategoria(cat)">Editar</button>
-            <button class="btn btn-danger btn-sm" *ngIf="cat.id" (click)="eliminarCategoria(cat.id)">
-              Eliminar
-            </button>
-            </div>
-           
-
-          </td>
-        </tr>
-        } @empty {
-        <tr>
-          <td colspan="7">No hay categorías registradas.</td>
-        </tr>
+        @if (capacidad?.invalid && (capacidad?.touched || capacidad?.dirty)) {
+        <div class="text-danger mt-1">
+          <small>La capacidad es obligatoria y debe ser un número.</small>
+        </div>
         }
-        } @else {
-        <tr>
-          <td colspan="7">Cargando categorías...</td>
-        </tr>
+      </div>
+
+      <div class="col-md-2">
+        <label for="precio" class="form-label">Precio</label>
+        <input id="precio" type="number" class="form-control" formControlName="precio" />
+
+        @if (precio?.invalid && (precio?.touched || precio?.dirty)) {
+        <div class="text-danger mt-1">
+          <small>El precio es obligatorio.</small>
+        </div>
         }
-      </tbody>
-    </table>
+      </div>
+
+      <div class="col-md-6">
+        <label for="imagen" class="form-label">Imagen (Archivo)</label>
+        <input id="imagen" type="file" class="form-control" (change)="onFileChange($event)" #fileInput />
+
+        @if (categoriaForm.value.imagen) {
+        <div class="col-md-6 mt-2">
+          <label class="form-label">Vista previa de imagen:</label><br />
+          <img [src]="categoriaForm.value.imagen" alt="Vista previa" width="120" class="border rounded" />
+        </div>
+        }
+      </div>
+
+      <div class="d-flex flex-nowrap justify-content-start">
+        <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
+          [disabled]="categoriaForm.invalid">
+          {{ modoEdicion ? 'Actualizar Categoría' : 'Agregar Categoría' }}
+        </button>
+
+        @if (modoEdicion) {
+        <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar Edición</button>
+        }
+      </div>
+    </form>
+
+    <!-- TABLA -->
+    <div class="table-responsive mt-4">
+      <table class="table table-bordered table-hover">
+        <thead class="table-hotel">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Capacidad</th>
+            <th>Precio</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (categorias$ | async; as catList) {
+          @for (cat of catList; track cat.id_categoria_habitacion) {
+          <tr>
+            <td>{{ cat.id_categoria_habitacion }}</td>
+            <td>{{ cat.nombre_categoria }}</td>
+            <td>{{ cat.descripcion_categoria }}</td>
+            <td>{{ cat.capacidad }}</td>
+            <td>S/ {{ cat.precio }}</td>
+            <td><img [src]="cat.imagen" alt="Imagen" width="80" /></td>
+            <td>
+              <div class="d-flex flex-nowrap justify-content-center">
+                <button class="btn btn-warning btn-sm me-1" (click)="editarCategoria(cat)">Editar</button>
+                <button class="btn btn-danger btn-sm" *ngIf="cat.id_categoria_habitacion"
+                  (click)="eliminarCategoria(cat.id_categoria_habitacion)">
+                  Eliminar
+                </button>
+              </div>
+
+
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="7">No hay categorías registradas.</td>
+          </tr>
+          }
+          } @else {
+          <tr>
+            <td colspan="7">Cargando categorías...</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
+
 </div>
