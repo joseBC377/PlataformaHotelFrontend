@@ -1,6 +1,6 @@
 export interface PagoReservaInfo {
     total:number,
-    metodo_Pago:string,
+    metodo_pago:string,
     estado_pago:string,
     fecha_inicio:string,
     fecha_fin:string,

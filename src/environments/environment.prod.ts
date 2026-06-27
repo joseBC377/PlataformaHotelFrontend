@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
+  production: false,
   API_BASE_URL: 'https://plataformahotel-production.up.railway.app/api' //en linea
 };
