@@ -14,6 +14,10 @@ import { AdminServices } from '../services/admin.services';
 import { ReservaModel } from '../../auth/models/reserva';
 import { UsuarioModel } from '../../auth/models/usuario';
 import { EstadoReserva } from '../../auth/models/EstadoReserva';
+import { Habitacion } from '../../auth/models/habitacion';
+import { HabitacionServices } from '../services/habitacion.services';
+import { ServicioService } from '../services/servicio.service';
+import { Servicio } from '../../auth/models/servicio';
 
 @Component({
   selector: 'app-reservas-admin',
@@ -26,21 +30,37 @@ export class ReservasAdminComponent implements OnInit {
 
   protected reservas$!: Observable<ReservaModel[]>;
   protected usuarios$!: Observable<UsuarioModel[]>;
+  protected habit$!: Observable<Habitacion[]>;
+  protected servicio$!: Observable<Servicio[]>;
 
   private fb = inject(FormBuilder);
   private serv = inject(ReservaService);
   private adminServ = inject(AdminServices);
+  private servHabitacion = inject(HabitacionServices);
+  private servServicios = inject(ServicioService);
   private http = inject(HttpClient);
 
   public modoEdicion: boolean = false;
   public idReservaEditar: number | null = null;
   public erroresBackend: any = {};
 
+  serviciosSeleccionados: Servicio[] = [];
+
+
+
   public reservaForm: FormGroup = this.fb.group({
     id_reserva: [null],
+
+    // Habitación
+    id_habitacion: [null, Validators.required],
+    fechaInicio: ['', Validators.required],
+    fechaFin: ['', Validators.required],
+
+    // Reserva
     fechaCreacion: ['', Validators.required], // unificado con backend
     usuario: [null, Validators.required],
     estado: ['', Validators.required],
+
     pago: this.fb.group({
       total: [0, Validators.required],
       igv: [0, Validators.required],
@@ -62,13 +82,59 @@ export class ReservasAdminComponent implements OnInit {
     return this.reservaForm.get('estado');
   }
 
+  get id_habitacion() {
+    return this.reservaForm.get('id_habitacion');
+  }
+
+  get fechaInicio() {
+    return this.reservaForm.get('fechaInicio');
+  }
+
+  get fechaFin() {
+    return this.reservaForm.get('fechaFin');
+  }
+
 
   ngOnInit(): void {
     this.reservas$ = this.serv.getAllReservas();
     this.usuarios$ = this.adminServ.getAllUsers();
-
+    this.cargarHabitacion();
+    this.cargarServicios();
     this.reservas$.subscribe(data => console.log('Reservas:', data));
   }
+
+  cargarHabitacion() {
+      this.habit$ = this.servHabitacion.getAllHabitaciones();
+  }
+
+  cargarServicios() {
+      this.servicio$ = this.servServicios.listar();
+  }
+
+  abrirModalServicios() {
+    const modal = document.getElementById('modalServicios');
+    if (modal) {
+      // Bootstrap 5
+      // @ts-ignore
+      const bsModal = new bootstrap.Modal(modal);
+      bsModal.show();
+    }
+  }
+
+  agregarServicio(servicio: Servicio) {
+    const existe = this.serviciosSeleccionados.some(
+      s => s.idServicio === servicio.idServicio
+    );
+    if (!existe) {
+      this.serviciosSeleccionados.push(servicio);
+    }
+  }
+
+  quitarServicio(id: number) {
+    this.serviciosSeleccionados =
+    this.serviciosSeleccionados.filter(s => s.idServicio !== id);
+  }
+
 
 
   registroReserva(): void {

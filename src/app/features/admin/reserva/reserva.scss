@@ -81,3 +81,21 @@ select.form-select {
 .btn-primary:hover {
   background-color: var.$backgraound-secundario;
 }
+
+.tabla-servicios,
+.tabla-servicios thead,
+.tabla-servicios tbody,
+.tabla-servicios tr,
+.tabla-servicios td {
+  background-color: transparent;
+}
+
+.thead-servicios {
+  background-color: #1a2b49 !important;
+  color: #ffffff !important;
+  font-weight: bold;
+}
+
+.servicio-row:hover td {
+  background-color: #f5f8ff;
+}

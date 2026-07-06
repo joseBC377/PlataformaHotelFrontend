@@ -1,87 +1,223 @@
 <div class="cuerpo">
   <div class="container">
-    <h2 class="mb-4">Gestión de Reservas 📅</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Gestión de Reservas 📅</h2>
+      <button type="button" class="btn btn-primary" (click)="abrirModalServicios()">
+        <i class="bi bi-plus-circle me-1"></i> Agregar Servicio </button>
+    </div>
 
-    <form [formGroup]="reservaForm" class="row g-3 mb border rounded shadow-sm" (ngSubmit)="registroReserva()">
+    <form [formGroup]="reservaForm" (ngSubmit)="registroReserva()">
 
-      <!-- Fecha Reserva -->
-      <div class="col-md-4">
-        <label class="form-label">Fecha Reserva</label>
-        <input type="date" class="form-control" formControlName="fechaCreacion" />
-      </div>
-
-      @if (erroresBackend.fechaCreacion) {
-      <small class="text-danger">
-        {{ erroresBackend.fechaCreacion }}
-      </small>
-      }
-      <!-- Rol usuario -->
-
-      <div class="col-md-4">
-        <label for="usuario" class="form-label">Usuario</label>
-        <select id="usuario" class="form-select" formControlName="usuario" [compareWith]="compararUsuario">
-          <option [ngValue]="null">Seleccione un usuario</option>
-          @for (u of usuarios$|async; track u.id_usuario) {
-          <option [value]="u.id_usuario">
-            {{u.nombre_usuario}} {{u.apellido_paterno}} {{u.apellido_materno}}
-          </option>
-          }
-        </select>
-        @if (usuario?.invalid && (usuario?.touched || usuario?.dirty)) {
-        <div class="text-danger mt-1">
-          @if (usuario?.errors?.['required']) {
-          <small>Debe seleccionar un usuario</small>
-          }
-        </div>
-        }
-      </div>
-
-      @if (erroresBackend.usuario) {
-      <small class="text-danger">
-        {{ erroresBackend.usuario }}
-      </small>
-      }
-
-      <!-- Estado -->
-      <div class="col-md-4">
-        <label class="form-label">Estado</label>
-        <select class="form-select" formControlName="estado">
-          <option value="" disabled>Seleccione un estado</option>
-          <option value="PENDIENTE">PENDIENTE</option>
-          <option value="CANCELADO">CANCELADO</option>
-          <option value="CONFIRMADO">CONFIRMADO</option>
-        </select>
-      </div>
-
-      @if (erroresBackend.estado) {
-      <small class="text-danger">
-        {{ erroresBackend.estado }}
-      </small>
-      }
-
-
-      <!-- Sección Pago - reemplaza el div con formControlName="pago" -->
-      <div class="col-12" formGroupName="pago">
+      <!-- RESERVA DE HABITACIÓN -->
+      <div class="col-12 border rounded p-3 mb-3">
+        <h5 class="mb-3">Reserva de Habitación</h5>
         <div class="row g-3">
-          <div class="col-md-3">
-            <label class="form-label">Total</label>
-            <input type="number" class="form-control" formControlName="total" />
+          <!-- Habitación -->
+          <div class="col-md-4">
+            <label class="form-label">Habitación</label>
+
+            <select class="form-select" formControlName="id_habitacion">
+              <option [ngValue]="null" disabled>Seleccione una habitación</option>
+
+              @for (habitacion of habit$ | async; track habitacion.id_habitacion) {
+              <option [ngValue]="habitacion.id_habitacion">
+                {{ habitacion.nombre_habitacion + ' - S/' + habitacion.categoriaHabitacion.precio }}
+              </option>
+              }
+
+            </select>
+
+            @if (id_habitacion?.invalid && (id_habitacion?.touched || id_habitacion?.dirty)) {
+            <div class="text-danger mt-1">
+              <small>Debe seleccionar una habitación.</small>
+            </div>
+            }
+
           </div>
-          <div class="col-md-3">
-            <label class="form-label">IGV</label>
-            <input type="number" class="form-control" formControlName="igv" />
+
+          <!-- Fecha Inicio -->
+          <div class="col-md-4">
+            <label class="form-label">Fecha Inicio</label>
+            <input type="date" class="form-control" formControlName="fechaInicio">
           </div>
-          <div class="col-md-3">
-            <label class="form-label">Estado Pago</label>
-            <select class="form-select" formControlName="estado_pago">
-              <option value="">Seleccione</option>
-              <option value="PENDIENTE">PENDIENTE</option>
-              <option value="PAGADO">PAGADO</option>
+
+          <!-- Fecha Fin -->
+          <div class="col-md-4">
+            <label class="form-label">Fecha Fin</label>
+            <input type="date" class="form-control" formControlName="fechaFin">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SERVICIOS AGREGADOS -->
+      @if (serviciosSeleccionados.length > 0) {
+      <div class="col-12 border rounded p-3 mb-3"
+        style="border-color: #dbe2fc !important; background-color: transparent;">
+
+        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+          <h5 class="mb-3">Servicios Agregados</h5>
+          <span class="badge badge-pill text-white px-3 py-2 font-weight-bold"
+            style="background-color: #0066FF; font-size: 0.8rem;">
+            {{ serviciosSeleccionados.length }} servicio(s)
+          </span>
+        </div>
+
+        <div class="table-responsive">
+
+          <table class="table table-sm mb-0 w-100 tabla-servicios">
+            <colgroup>
+              <col style="width: 40%;">
+              <col style="width: 30%;">
+              <col style="width: 30%;">
+            </colgroup>
+
+            <thead>
+              <tr>
+                <th class="text-left border-0 pl-3 py-2 thead-servicios"
+                  style="vertical-align: middle; font-size: 0.9rem;">
+                  Servicio
+                </th>
+                <th class="text-center border-0 py-2 thead-servicios"
+                  style="vertical-align: middle; font-size: 0.9rem;">
+                  Precio
+                </th>
+                <th class="text-center border-0 pr-3 py-2 thead-servicios"
+                  style="vertical-align: middle; font-size: 0.9rem;">
+                  Acción
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              @for (s of serviciosSeleccionados; track s.idServicio) {
+              <tr class="servicio-row" style="border-bottom: 1px solid #dbe2fc;">
+
+                <td class="text-left text-dark pl-3 py-3"
+                  style="vertical-align: middle; font-size: 0.9rem;">
+                  {{ s.nombre_servicio }}
+                </td>
+
+                <td class="text-center font-weight-normal text-dark py-3"
+                  style="vertical-align: middle; font-size: 0.9rem;">
+                  S/ {{ s.precio | number:'1.2-2' }}
+                </td>
+
+                <td class="text-center pr-3 py-3" style="vertical-align: middle;">
+                  <button class="btn btn-sm btn-outline-danger rounded-pill px-3"
+                    style="font-size: 0.8rem; border-color: #f8afb9; color: #dc3545; background-color: transparent;"
+                    (click)="quitarServicio(s.idServicio)">
+                    Quitar
+                  </button>
+                </td>
+
+              </tr>
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+      }
+
+
+
+      <!-- DATOS DE RESERVAS -->
+      <div class="col-12 border rounded p-3 mb-3">
+        <h5 class="mb-3">Datos de la Reserva</h5>
+        <div class="row g-3">
+
+          <!-- Fecha Reserva -->
+          <div class="col-md-4">
+            <label class="form-label">Fecha de Creación</label>
+            <input type="date" class="form-control" formControlName="fechaCreacion" />
+          </div>
+
+          @if (erroresBackend.fechaCreacion) {
+          <small class="text-danger">
+            {{ erroresBackend.fechaCreacion }}
+          </small>
+          }
+
+          <!-- Usuario -->
+          <div class="col-md-4">
+            <label for="usuario" class="form-label">Usuario</label>
+            <select id="usuario" class="form-select" formControlName="usuario" [compareWith]="compararUsuario">
+              <option [ngValue]="null">Seleccione un usuario</option>
+              @for (u of usuarios$|async; track u.id_usuario) {
+              <option [value]="u.id_usuario">
+                {{u.nombre_usuario}} {{u.apellido_paterno}} {{u.apellido_materno}}
+              </option>
+              }
+            </select>
+
+            @if (usuario?.invalid && (usuario?.touched || usuario?.dirty)) {
+            <div class="text-danger mt-1">
+              @if (usuario?.errors?.['required']) {
+              <small>Debe seleccionar un usuario</small>
+              }
+            </div>
+            }
+          </div>
+
+          @if (erroresBackend.usuario) {
+          <small class="text-danger">
+            {{ erroresBackend.usuario }}
+          </small>
+          }
+
+          <!-- Estado -->
+          <div class="col-md-4">
+            <label class="form-label">Estado</label>
+            <select class="form-select" formControlName="estado">
+              <option value="" disabled>Seleccione un estado</option>
+              <!--<option value="PENDIENTE">PENDIENTE</option>-->
+              <option value="CANCELADO">CANCELADO</option>
+              <option value="CONFIRMADO">CONFIRMADO</option>
             </select>
           </div>
-          <div class="col-md-3">
-            <label class="form-label">Fecha Pago</label>
-            <input type="date" class="form-control" formControlName="fecha_pago" />
+
+          @if (erroresBackend.estado) {
+          <small class="text-danger">
+            {{ erroresBackend.estado }}
+          </small>
+          }
+        </div>
+
+        <!-- Pago -->
+        <div class="col-12 mt-3" formGroupName="pago">
+          <div class="row g-3">
+
+            <!--
+            <div class="col-md-3">
+              <label class="form-label">Total</label>
+              <input type="number" class="form-control" formControlName="total" />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">IGV</label>
+              <input type="number" class="form-control" formControlName="igv" />
+            </div>
+            -->
+            <div class="col-md-3">
+              <label class="form-label">Estado Pago</label>
+              <select class="form-select" formControlName="estado_pago">
+                <option value="">Seleccione</option>
+                <option value="PENDIENTE">PENDIENTE</option>
+                <option value="PAGADO">PAGADO</option>
+              </select>
+            </div>
+            <!--
+            <div class="col-md-3">
+              <label class="form-label">Fecha Pago</label>
+              <input type="date" class="form-control" formControlName="fecha_pago" />
+            </div>
+            -->
           </div>
         </div>
       </div>
@@ -95,6 +231,7 @@
         <button *ngIf="modoEdicion" type="button" class="btn btn-secondary ms-2"
           (click)="resetFormulario()">Cancelar</button>
       </div>
+
     </form>
 
     <!-- Tabla -->
@@ -141,5 +278,65 @@
         </tbody>
       </table>
     </div>
+
+
+    <!--Modal para seleccionar Servicios-->
+    <div class="modal fade" id="modalServicios" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title">Seleccionar Servicios</h5>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body">
+
+            <table class="table table-bordered table-hover">
+              <thead class="table-hotel">
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Precio</th>
+                  <th>Imagen</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                @if (servicio$ | async; as servicios) {
+                @for (s of servicios; track s.idServicio) {
+                <tr>
+                  <td>{{ s.idServicio }}</td>
+                  <td>{{ s.nombre_servicio }}</td>
+                  <td>{{ s.descripcion_servicio }}</td>
+                  <td>{{ s.precio | number:'1.2-2' }}</td>
+                  <td>
+                    <img [src]="s.imagen" width="70">
+                  </td>
+
+                  <td>
+                    <button class="btn btn-success btn-sm" (click)="agregarServicio(s)">
+                      Agregar
+                    </button>
+                  </td>
+                </tr>
+                }
+                }
+
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+
   </div>
 </div>
