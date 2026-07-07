@@ -40,14 +40,7 @@ export class ReservasAdminComponent implements OnInit {
     id_reserva: [null],
     fechaCreacion: ['', Validators.required], // unificado con backend
     usuario: [null, Validators.required],
-    estado: ['', Validators.required],
-    pago: this.fb.group({
-      total: [0, Validators.required],
-      igv: [0, Validators.required],
-      estado_pago: ['', Validators.required],
-      fecha_pago: ['', Validators.required]
-    })
-
+    estado: ['', Validators.required]
   });
 
   get fechaCreacion() {
@@ -83,8 +76,7 @@ export class ReservasAdminComponent implements OnInit {
       id_reserva: form.id_reserva,
       fechaCreacion: form.fechaCreacion,
       usuario: form.usuario,
-      estado: form.estado,
-      pago: form.pago
+      estado: form.estado
     };
 
 
@@ -121,8 +113,7 @@ export class ReservasAdminComponent implements OnInit {
       id_reserva: res.id_reserva,
       fechaCreacion: res.fechaCreacion,
       usuario: res.usuario,
-      estado: res.estado,
-      pago: res.pago
+      estado: res.estado
     });
     this.idReservaEditar = res.id_reserva ?? null;
     this.modoEdicion = true;

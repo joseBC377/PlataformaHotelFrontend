@@ -22,7 +22,7 @@
         <select id="usuario" class="form-select" formControlName="usuario" [compareWith]="compararUsuario">
           <option [ngValue]="null">Seleccione un usuario</option>
           @for (u of usuarios$|async; track u.id_usuario) {
-          <option [value]="u.id_usuario">
+          <option [ngValue]="u">
             {{u.nombre_usuario}} {{u.apellido_paterno}} {{u.apellido_materno}}
           </option>
           }
@@ -61,32 +61,6 @@
 
 
       <!-- Sección Pago - reemplaza el div con formControlName="pago" -->
-      <div class="col-12" formGroupName="pago">
-        <div class="row g-3">
-          <div class="col-md-3">
-            <label class="form-label">Total</label>
-            <input type="number" class="form-control" formControlName="total" />
-          </div>
-          <div class="col-md-3">
-            <label class="form-label">IGV</label>
-            <input type="number" class="form-control" formControlName="igv" />
-          </div>
-          <div class="col-md-3">
-            <label class="form-label">Estado Pago</label>
-            <select class="form-select" formControlName="estado_pago">
-              <option value="">Seleccione</option>
-              <option value="PENDIENTE">PENDIENTE</option>
-              <option value="PAGADO">PAGADO</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label">Fecha Pago</label>
-            <input type="date" class="form-control" formControlName="fecha_pago" />
-          </div>
-        </div>
-      </div>
-
-
       <div class="col-12 mt-3 d-flex flex-nowrap justify-content-start">
         <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
           [disabled]="reservaForm.invalid">
@@ -117,7 +91,7 @@
             <td>{{ r.id_reserva }}</td>
             <td>{{ r.fechaCreacion | date:'yyyy-MM-dd' }}</td>
             <td>{{ r.usuario.nombre_usuario }} {{ r.usuario.apellido_paterno }}</td>
-            <td>{{ r.pago?.total }}</td>
+            <td>{{ r.estado }}</td>
 
 
             <!-- ACCIONES -->
