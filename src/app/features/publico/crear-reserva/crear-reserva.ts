@@ -16,12 +16,12 @@ export class CrearReserva implements OnInit {
   habitacionesList: any[] = [];
   serviciosList: any[] = [];
 
-  // Selección múltiple
-  habitacionesSeleccionadas: any[] = []; 
+  habitacionesSeleccionadas: any[] = [];
   serviciosSeleccionados: any[] = [];
 
   fechaInicio: string = '';
   fechaFin: string = '';
+  hoy: string = new Date().toISOString().split('T')[0];
 
   constructor(
     private habitacionService: HabitacionServices,
@@ -35,10 +35,19 @@ export class CrearReserva implements OnInit {
       const guardado = localStorage.getItem('temp_reserva');
       if (guardado) {
         const data = JSON.parse(guardado);
-        this.fechaInicio = data.fechaInicio || '';
-        this.fechaFin = data.fechaFin || '';
-        this.habitacionesSeleccionadas = data.habitaciones || [];
-        this.serviciosSeleccionados = data.servicios || [];
+        const fechaInicioGuardada = new Date(data.fechaInicio);
+        const hoy = new Date(this.hoy);
+
+        // Solo restaura si la fecha de entrada guardada sigue siendo válida (hoy o futura)
+        if (data.fechaInicio && fechaInicioGuardada >= hoy) {
+          this.fechaInicio = data.fechaInicio || '';
+          this.fechaFin = data.fechaFin || '';
+          this.habitacionesSeleccionadas = data.habitaciones || [];
+          this.serviciosSeleccionados = data.servicios || [];
+        } else {
+          // Datos viejos/inválidos: limpiar caché
+          localStorage.removeItem('temp_reserva');
+        }
       }
     }
     this.cargarDatos();
@@ -51,7 +60,7 @@ export class CrearReserva implements OnInit {
 
   seleccionarHabitacion(h: any) {
     if (h.estado !== 'DISPONIBLE') return;
-    const index = this.habitacionesSeleccionadas.findIndex(item => item.id === h.id);
+    const index = this.habitacionesSeleccionadas.findIndex(item => item.id_habitacion === h.id_habitacion);
     if (index > -1) {
       this.habitacionesSeleccionadas.splice(index, 1);
     } else {
@@ -60,11 +69,11 @@ export class CrearReserva implements OnInit {
   }
 
   estaHabitacionSeleccionada(id: number): boolean {
-    return this.habitacionesSeleccionadas.some(h => h.id === id);
+    return this.habitacionesSeleccionadas.some(h => h.id_habitacion === id);
   }
 
   toggleServicio(servicio: any) {
-    const index = this.serviciosSeleccionados.findIndex(s => s.id === servicio.id);
+    const index = this.serviciosSeleccionados.findIndex(s => s.idServicio === servicio.idServicio);
     if (index > -1) {
       this.serviciosSeleccionados.splice(index, 1);
     } else {
@@ -73,7 +82,7 @@ export class CrearReserva implements OnInit {
   }
 
   estaSeleccionado(servicio: any): boolean {
-    return this.serviciosSeleccionados.some(s => s.id === servicio.id);
+    return this.serviciosSeleccionados.some(s => s.idServicio === servicio.idServicio);
   }
 
   calcularNoches(): number {
@@ -85,15 +94,13 @@ export class CrearReserva implements OnInit {
     return noches > 0 ? noches : 0;
   }
 
-  public calcularTotalConNoches(noches: number): number {
+  calcularTotalConNoches(noches: number): number {
     let totalHabitaciones = 0;
     this.habitacionesSeleccionadas.forEach(h => {
       totalHabitaciones += (h.categoriaHabitacion?.precio || 0) * noches;
     });
-
     let totalServicios = 0;
     this.serviciosSeleccionados.forEach(s => totalServicios += s.precio);
-
     return totalHabitaciones + totalServicios;
   }
 

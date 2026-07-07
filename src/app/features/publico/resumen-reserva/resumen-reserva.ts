@@ -1,77 +1,107 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
-import { ReservaService } from '../../admin/services/reserva.services';
-import { EstadoReserva } from '../../auth/models/EstadoReserva';
 import { Location } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-resumen-reserva',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './resumen-reserva.html',
   styleUrl: './resumen-reserva.scss'
 })
-export class ResumenReserva {
+export class ResumenReserva implements OnInit {
   reservaData: any = null;
-  usuarioLogueado: any = null;
+  usuarioLogueado: number | null = null;
+  guardando = false;
+  errorMensaje = '';
+
+  metodoPago = {
+    tipo: '',
+    ultimoscuatrodigitos: '',
+    fechaVencimiento: ''
+  };
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private reservaService: ReservaService,
+    private http: HttpClient,
     private location: Location
   ) {
-    // Recuperamos el objeto enviado por el router
     const navigation = this.router.getCurrentNavigation();
     this.reservaData = navigation?.extras.state?.['data'];
   }
 
   ngOnInit(): void {
-    // Seguridad: Si no hay datos, regresar a la selección
     if (!this.reservaData) {
       this.router.navigate(['/publico/crear-reserva']);
       return;
     }
-    // Jalamos el ID del cliente logueado
     this.usuarioLogueado = this.authService.getId();
   }
 
   confirmarYGuardar() {
+    this.errorMensaje = '';
+
     if (!this.usuarioLogueado) {
-      alert('Debes iniciar sesión para finalizar la reserva.');
+      this.errorMensaje = 'Debes iniciar sesión para finalizar la reserva.';
       this.router.navigate(['/login']);
       return;
     }
 
+    if (!this.metodoPago.tipo) {
+      this.errorMensaje = 'Selecciona un método de pago.';
+      return;
+    }
+
+    if (this.metodoPago.tipo === 'TARJETA' &&
+        (!this.metodoPago.ultimoscuatrodigitos || !this.metodoPago.fechaVencimiento)) {
+      this.errorMensaje = 'Completa los datos de la tarjeta.';
+      return;
+    }
+
+    const igv = +(this.reservaData.total * 0.18).toFixed(2);
+
     const bodyFinal = {
-      fechaCreacion: new Date().toISOString().split('T')[0],
-      usuario: this.usuarioLogueado,
-      estado: EstadoReserva.PENDIENTE,
-      pago: null,
-      detallesHabitaciones: [{
-        fecha_inicio: this.reservaData.fechaInicio,
-        fecha_fin: this.reservaData.fechaFin,
-        precio_uni: this.reservaData.habitacion.categoriaHabitacion.precio,
-        habitacion: { id: this.reservaData.habitacion.id }
-      }],
-      detallesServicios: this.reservaData.servicios.map((s: any) => ({
-        id: { id_reserva: 0, id_servicio: s.id },
-        servicio: { id: s.id },
-        precioUnitario: s.precio
-      }))
+      idUsuario: this.usuarioLogueado,
+      habitaciones: this.reservaData.habitaciones.map((h: any) => ({
+        idHabitacion: h.id_habitacion,
+        fechaInicio: this.reservaData.fechaInicio,
+        fechaFin: this.reservaData.fechaFin,
+        precioUnitario: h.categoriaHabitacion.precio
+      })),
+      servicios: this.reservaData.servicios.map((s: any) => ({
+        idServicio: s.idServicio,
+        subtotal: s.precio
+      })),
+      pago: {
+        total: this.reservaData.total,
+        igv: igv,
+        estadoPago: 'PENDIENTE',
+        fechaPago: new Date().toISOString().split('T')[0],
+        metodoPago: {
+          tipo: this.metodoPago.tipo,
+          ultimoscuatrodigitos: this.metodoPago.tipo === 'TARJETA' ? this.metodoPago.ultimoscuatrodigitos : null,
+          fechaVencimiento: this.metodoPago.tipo === 'TARJETA' ? this.metodoPago.fechaVencimiento : null
+        }
+      }
     };
 
-    // Cast to any to satisfy ReservaModel requirement for pago when it's not provided here
-    this.reservaService.postInsertReserva(bodyFinal as any).subscribe({
-      next: (res) => {
+    this.guardando = true;
+    this.http.post(`${environment.API_BASE_URL}/reservas/completa`, bodyFinal).subscribe({
+      next: () => {
+        this.guardando = false;
+        localStorage.removeItem('temp_reserva');
         alert('¡Reserva registrada con éxito!');
-        this.router.navigate(['/crear-reserva']);
+        this.router.navigate(['/mis-reservas']);
       },
       error: (err) => {
-        console.error(err);
-        alert('Error al conectar con el servidor.');
+        this.guardando = false;
+        this.errorMensaje = err.error?.message || err.error || 'Error al registrar la reserva. Intenta de nuevo.';
       }
     });
   }
@@ -79,5 +109,4 @@ export class ResumenReserva {
   cancelar() {
     this.location.back();
   }
-
 }
