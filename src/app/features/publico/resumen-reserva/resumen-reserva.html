@@ -1,80 +1,188 @@
-<div class="container mt-5 mb-5" *ngIf="reservaData">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow border-0">
-        <div class="card-header bg-dark text-white text-center py-3">
-          <h4 class="mb-0">Verifica los datos de tu reserva</h4>
+<div class="container mt-4 mb-5" style="max-width: 900px;" *ngIf="reservaData">
+
+  <a class="text-decoration-none text-muted mb-3 d-inline-block" style="cursor:pointer" (click)="cancelar()">
+    &larr; Volver a las habitaciones
+  </a>
+
+  <h2 class="fw-bold mb-4">{{ pasoActual === 1 ? 'Completar Reserva' : pasoActual === 2 ? 'Servicios Adicionales' : 'Pago Seguro' }}</h2>
+
+  <div class="row g-4">
+    <!-- Columna izquierda: formulario según el paso -->
+    <div class="col-md-7">
+
+      <!-- PASO 1: Info personal + estancia -->
+      @if (pasoActual === 1) {
+        <div class="card shadow-sm border-0 p-4 mb-3">
+          <h6 class="fw-bold mb-3">Información Personal</h6>
+          <div class="mb-3">
+            <label class="form-label small">Nombre Completo *</label>
+            <input type="text" class="form-control" [(ngModel)]="infoPersonal.nombreCompleto" name="nombreCompleto">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small">Email *</label>
+            <input type="email" class="form-control" [(ngModel)]="infoPersonal.email" name="email">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small">Teléfono *</label>
+            <input type="tel" class="form-control" [(ngModel)]="infoPersonal.telefono" name="telefono">
+          </div>
         </div>
 
-        <div class="card-body p-4">
-          <div class="row mb-4 text-center">
-            <div class="col-6 border-end">
-              <p class="text-muted small mb-0">Entrada (Check-in)</p>
-              <h5 class="fw-bold">{{ reservaData.fechaInicio }}</h5>
+        <div class="card shadow-sm border-0 p-4">
+          <h6 class="fw-bold mb-3">Detalles de la Estancia</h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small">Check-in *</label>
+              <input type="date" class="form-control" [(ngModel)]="reservaData.fechaInicio" name="checkin" disabled>
             </div>
-            <div class="col-6">
-              <p class="text-muted small mb-0">Salida (Check-out)</p>
-              <h5 class="fw-bold">{{ reservaData.fechaFin }}</h5>
+            <div class="col-md-6">
+              <label class="form-label small">Check-out *</label>
+              <input type="date" class="form-control" [(ngModel)]="reservaData.fechaFin" name="checkout" disabled>
             </div>
-            <div class="col-12 mt-2">
-              <span class="badge bg-secondary">{{ reservaData.noches }} noches de estancia</span>
+            <div class="col-md-6">
+              <label class="form-label small">Número de huéspedes</label>
+              <input type="number" class="form-control" [(ngModel)]="numeroHuespedes" name="huespedes" min="1" [max]="capacidadMaxima">
+              <small class="text-muted">Capacidad máxima: {{ capacidadMaxima }} personas</small>
             </div>
           </div>
+        </div>
 
-          <h6 class="text-primary text-uppercase small fw-bold">Habitaciones Seleccionadas</h6>
-          <div class="mb-4">
-            @for (h of reservaData.habitaciones; track h.id_habitacion) {
-            <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded mb-2">
+        @if (errorMensaje) {
+          <div class="alert alert-danger mt-3">{{ errorMensaje }}</div>
+        }
+
+        <button class="btn btn-dark w-100 mt-3" (click)="irAPaso(2)">Continuar a Servicios</button>
+      }
+
+      <!-- PASO 2: Servicios adicionales -->
+      @if (pasoActual === 2) {
+        <div class="list-group shadow-sm mb-3">
+          @for (s of serviciosList; track s.idServicio) {
+            <button type="button"
+                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3"
+                    [class.active]="estaSeleccionado(s)" (click)="toggleServicio(s)">
               <div>
-                <p class="mb-0 fw-bold">Habitación {{ h.nombre_habitacion }}</p>
-                <small class="text-muted">{{ h.categoriaHabitacion.nombre }}</small>
+                <span class="fw-bold d-block">{{ s.nombre_servicio }}</span>
+                <small [class.text-white-50]="estaSeleccionado(s)" [class.text-muted]="!estaSeleccionado(s)">
+                  {{ s.descripcion_servicio }}
+                </small>
               </div>
-              <span class="fw-bold text-success">S/ {{ h.categoriaHabitacion.precio }} / noche</span>
-            </div>
-            }
-          </div>
-
-          @if (reservaData.servicios.length > 0) {
-          <div class="mb-4">
-            <h6 class="text-primary text-uppercase small fw-bold">Servicios Adicionales</h6>
-            <ul class="list-group list-group-flush">
-              @for (s of reservaData.servicios; track s.idServicio) {
-              <li class="list-group-item d-flex justify-content-between px-0">
-                <span>{{ s.nombre_servicio }}</span>
-                <span class="text-muted">+ S/ {{ s.precio }}</span>
-              </li>
-              }
-            </ul>
-          </div>
-          }
-
-          <div class="border-top pt-3 text-end">
-            <p class="mb-1 text-muted">Monto total a pagar:</p>
-            <h2 class="text-success fw-bold">S/ {{ reservaData.total }}</h2>
-          </div>
-
-          <!-- Formulario de pago -->
-          <div class="border-top pt-4 mt-4">
-            <h6 class="text-primary text-uppercase small fw-bold mb-3">Datos de Pago</h6>
-            <app-metodo-pago [monto]="reservaData.total" (pagoRealizado)="onPagoRealizado($event)"></app-metodo-pago>
-          </div>
-          @if (errorMensaje) {
-          <div class="alert alert-danger mt-3 mb-0">{{ errorMensaje }}</div>
+              <span class="badge rounded-pill" [ngClass]="estaSeleccionado(s) ? 'bg-white text-primary' : 'bg-success'">
+                + S/ {{ s.precio }}
+              </span>
+            </button>
+          } @empty {
+            <p class="text-muted">Cargando servicios...</p>
           }
         </div>
 
-        <div class="card-footer bg-white border-0 p-4">
-          <div class="d-grid gap-2">
-            <button class="btn btn-success btn-lg shadow-sm" [disabled]="guardando || !resultadoPago"
-              (click)="confirmarYGuardar()">
-              {{ guardando ? 'Procesando...' : 'Confirmar y Registrar Reserva' }}
-            </button>
-            <button class="btn btn-outline-secondary" [disabled]="guardando" (click)="cancelar()">
-              Modificar Selección
-            </button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary w-50" (click)="irAPaso(1)">Volver</button>
+          <button class="btn btn-dark w-50" (click)="irAPaso(3)">Continuar al Pago</button>
+        </div>
+      }
+
+      <!-- PASO 3: Pago -->
+      @if (pasoActual === 3) {
+        <div class="card shadow-sm border-0 p-4">
+          <h6 class="fw-bold mb-3">Información de Pago</h6>
+
+          <div class="mb-3">
+            <label class="form-label small">Método de pago *</label>
+            <select class="form-select" [(ngModel)]="metodoPago.tipo" name="tipoPago">
+              <option value="" disabled>Selecciona</option>
+              <option value="TARJETA">Tarjeta</option>
+              <option value="YAPE">Yape</option>
+              <option value="PLIN">Plin</option>
+            </select>
           </div>
+
+          @if (metodoPago.tipo === 'TARJETA') {
+            <div class="mb-3">
+              <label class="form-label small">Número de Tarjeta *</label>
+              <input type="text" class="form-control" [(ngModel)]="metodoPago.numeroTarjeta" name="numeroTarjeta" placeholder="4557 8808 0000 1541" maxlength="19">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small">Nombre en la Tarjeta *</label>
+              <input type="text" class="form-control" [(ngModel)]="metodoPago.nombreTarjeta" name="nombreTarjeta">
+            </div>
+            <div class="row g-3">
+              <div class="col-6">
+                <label class="form-label small">Fecha de Expiración *</label>
+                <input type="text" class="form-control" [(ngModel)]="metodoPago.fechaVencimiento" name="vencimiento" placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="col-6">
+                <label class="form-label small">CVV *</label>
+                <input type="text" class="form-control" [(ngModel)]="metodoPago.cvv" name="cvv" placeholder="123" maxlength="4">
+              </div>
+            </div>
+            <div class="alert alert-light border small mt-3 mb-0">
+              🔒 Tu información está segura. No almacenamos tu número de tarjeta completo.
+            </div>
+          }
+        </div>
+
+        @if (errorMensaje) {
+          <div class="alert alert-danger mt-3">{{ errorMensaje }}</div>
+        }
+
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-outline-secondary w-50" [disabled]="guardando" (click)="irAPaso(2)">Volver</button>
+          <button class="btn btn-dark w-50" [disabled]="guardando" (click)="confirmarYGuardar()">
+            {{ guardando ? 'Procesando...' : 'Pagar S/ ' + totalFinal }}
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Columna derecha: resumen fijo -->
+    <div class="col-md-5">
+      <div class="card shadow-sm border-0 p-3">
+        <img [src]="reservaData.habitaciones[0].categoriaHabitacion?.imagen" class="rounded mb-3 w-100" style="height:160px; object-fit:cover;">
+        <h6 class="fw-bold mb-1">{{ reservaData.habitaciones[0].categoriaHabitacion?.nombre_categoria }}</h6>
+        <p class="text-muted small mb-3">Capacidad: {{ reservaData.habitaciones[0].categoriaHabitacion?.capacidad }} personas</p>
+
+        <div class="d-flex justify-content-between small mb-1">
+          <span>Precio por noche</span>
+          <span>S/ {{ reservaData.habitaciones[0].categoriaHabitacion?.precio }}</span>
+        </div>
+        <div class="d-flex justify-content-between small mb-2">
+          <span>Noches</span>
+          <span>{{ reservaData.noches }}</span>
+        </div>
+
+        @if (serviciosSeleccionados.length > 0) {
+          <hr>
+          @for (s of serviciosSeleccionados; track s.idServicio) {
+            <div class="d-flex justify-content-between small mb-1">
+              <span>{{ s.nombre_servicio }}</span>
+              <span>+ S/ {{ s.precio }}</span>
+            </div>
+          }
+        }
+
+        <hr>
+        <div class="d-flex justify-content-between fw-bold">
+          <span>Total</span>
+          <span>S/ {{ totalFinal }}</span>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Modal de confirmación -->
+@if (mostrarConfirmacion) {
+  <div class="modal-backdrop-custom">
+    <div class="modal-content-custom text-center p-4">
+      <div class="check-circle mb-3">✓</div>
+      <h4 class="fw-bold">¡Reserva Confirmada!</h4>
+      <p class="text-muted">Tu reserva en {{ reservaData.habitaciones[0].categoriaHabitacion?.nombre_categoria }} ha sido confirmada exitosamente.</p>
+      <div class="bg-light rounded p-2 mb-3 small">
+        Confirmación enviada a:<br>
+        <strong>{{ infoPersonal.email }}</strong>
+      </div>
+      <button class="btn btn-dark w-100" (click)="volverAlInicio()">Volver al Inicio</button>
+    </div>
+  </div>
+}

@@ -68,35 +68,6 @@
     </div>
   </section>
 
-  <section class="mb-5">
-    <h3 class="h5 text-primary">3. Servicios Adicionales (Puedes elegir varios)</h3>
-    <hr>
-    <div class="list-group shadow-sm">
-      @for (s of serviciosList; track s.idServicio) {
-        <button type="button"
-                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3"
-                [class.active]="estaSeleccionado(s)" (click)="toggleServicio(s)">
-          <div class="d-flex align-items-center">
-            <i class="bi me-3 fs-4" [ngClass]="estaSeleccionado(s) ? 'bi-check-square-fill text-white' : 'bi-square text-primary'"></i>
-            <div>
-              <span class="fw-bold d-block">{{ s.nombre_servicio }}</span>
-              <small [class.text-white-50]="estaSeleccionado(s)" [class.text-muted]="!estaSeleccionado(s)">
-                {{ s.descripcion_servicio }}
-              </small>
-            </div>
-          </div>
-          <div class="text-end">
-            <span class="badge rounded-pill" [ngClass]="estaSeleccionado(s) ? 'bg-white text-primary' : 'bg-success'">
-              + S/ {{ s.precio }}
-            </span>
-          </div>
-        </button>
-      } @empty {
-        <p class="text-muted">Cargando servicios...</p>
-      }
-    </div>
-  </section>
-
   <div class="card bg-dark text-white p-3 fixed-bottom shadow-lg border-0 rounded-0">
     <div class="container">
       <div class="d-flex justify-content-between align-items-center">

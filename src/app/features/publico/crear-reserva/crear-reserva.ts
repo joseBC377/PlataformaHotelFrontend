@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { HabitacionServices } from '../../admin/services/habitacion.services';
 import { ServicioService } from '../../admin/services/servicio.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -14,21 +14,33 @@ import { FormsModule } from '@angular/forms';
 })
 export class CrearReserva implements OnInit {
   habitacionesList: any[] = [];
-  serviciosList: any[] = [];
-
   habitacionesSeleccionadas: any[] = [];
-  serviciosSeleccionados: any[] = [];
 
   fechaInicio: string = '';
   fechaFin: string = '';
   hoy: string = new Date().toISOString().split('T')[0];
 
+  // en el constructor:
   constructor(
     private habitacionService: HabitacionServices,
-    private servicioService: ServicioService,
     private router: Router,
+    private route: ActivatedRoute, // nuevo
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
+
+  cargarDatos() {
+    this.habitacionService.getAllHabitaciones().subscribe(data => {
+      this.habitacionesList = data;
+
+      const idPreseleccion = Number(this.route.snapshot.queryParamMap.get('habitacionId'));
+      if (idPreseleccion) {
+        const habitacion = data.find((h: any) => h.id_habitacion === idPreseleccion);
+        if (habitacion && habitacion.estado === 'DISPONIBLE' && !this.estaHabitacionSeleccionada(habitacion.id_habitacion)) {
+          this.habitacionesSeleccionadas.push(habitacion);
+        }
+      }
+    });
+  }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -43,7 +55,6 @@ export class CrearReserva implements OnInit {
           this.fechaInicio = data.fechaInicio || '';
           this.fechaFin = data.fechaFin || '';
           this.habitacionesSeleccionadas = data.habitaciones || [];
-          this.serviciosSeleccionados = data.servicios || [];
         } else {
           // Datos viejos/inválidos: limpiar caché
           localStorage.removeItem('temp_reserva');
@@ -51,11 +62,6 @@ export class CrearReserva implements OnInit {
       }
     }
     this.cargarDatos();
-  }
-
-  cargarDatos() {
-    this.habitacionService.getAllHabitaciones().subscribe(data => this.habitacionesList = data);
-    this.servicioService.listar().subscribe(data => this.serviciosList = data);
   }
 
   seleccionarHabitacion(h: any) {
@@ -68,22 +74,11 @@ export class CrearReserva implements OnInit {
     }
   }
 
-  estaHabitacionSeleccionada(id: number): boolean {
+  estaHabitacionSeleccionada(id?: number): boolean {
+    if (id === undefined || id === null) return false;
     return this.habitacionesSeleccionadas.some(h => h.id_habitacion === id);
   }
 
-  toggleServicio(servicio: any) {
-    const index = this.serviciosSeleccionados.findIndex(s => s.idServicio === servicio.idServicio);
-    if (index > -1) {
-      this.serviciosSeleccionados.splice(index, 1);
-    } else {
-      this.serviciosSeleccionados.push(servicio);
-    }
-  }
-
-  estaSeleccionado(servicio: any): boolean {
-    return this.serviciosSeleccionados.some(s => s.idServicio === servicio.idServicio);
-  }
 
   calcularNoches(): number {
     if (!this.fechaInicio || !this.fechaFin) return 0;
@@ -94,14 +89,13 @@ export class CrearReserva implements OnInit {
     return noches > 0 ? noches : 0;
   }
 
+  // crear-reserva.ts simplificado (sin servicios)
   calcularTotalConNoches(noches: number): number {
-    let totalHabitaciones = 0;
+    let total = 0;
     this.habitacionesSeleccionadas.forEach(h => {
-      totalHabitaciones += (h.categoriaHabitacion?.precio || 0) * noches;
+      total += (h.categoriaHabitacion?.precio || 0) * noches;
     });
-    let totalServicios = 0;
-    this.serviciosSeleccionados.forEach(s => totalServicios += s.precio);
-    return totalHabitaciones + totalServicios;
+    return total;
   }
 
   irAResumen() {
@@ -113,17 +107,15 @@ export class CrearReserva implements OnInit {
 
     const reservaData = {
       habitaciones: this.habitacionesSeleccionadas,
-      servicios: this.serviciosSeleccionados,
       fechaInicio: this.fechaInicio,
       fechaFin: this.fechaFin,
       noches: noches,
-      total: this.calcularTotalConNoches(noches)
+      totalHabitaciones: this.calcularTotalConNoches(noches)
     };
 
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('temp_reserva', JSON.stringify(reservaData));
     }
-
     this.router.navigate(['/resumen'], { state: { data: reservaData } });
   }
 }
