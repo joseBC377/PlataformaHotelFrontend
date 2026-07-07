@@ -30,7 +30,7 @@
         @if (!cargando) {
         @if (habitacionesFiltradas.length > 0) {
         @for (hab of habitacionesFiltradas; track hab.id_habitacion; let i = $index) {
-          <div class="habitacion-card" [ngClass]="{ 'par': i % 2 === 1 }">
+        <div class="habitacion-card" [ngClass]="{ 'par': i % 2 === 1 }">
             <div class="habitacion-contenido">
                 <div class="habitacion-carrusel">
                     <div class="imagenes">
@@ -50,6 +50,9 @@
                         <i class="fas fa-shower" style="color: #CC9F53;"></i>
                         <i class="fas fa-mug-hot" style="color: #CC9F53;"></i>
                     </div>
+                    <button class="btn-detalle mt-3" [routerLink]="['/detalle', hab.id_habitacion]">
+                        Ver Detalle
+                    </button>
                 </div>
             </div>
         </div>

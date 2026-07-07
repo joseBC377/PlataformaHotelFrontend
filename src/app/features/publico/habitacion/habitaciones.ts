@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { Habitacion } from '../../auth/models/habitacion';
 import { HabitacionServices } from '../../admin/services/habitacion.services';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-habitaciones',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './habitaciones.html',
   styleUrl: './habitaciones.scss'
 })

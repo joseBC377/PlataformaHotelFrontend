@@ -27,6 +27,7 @@ import { RecepLayout } from './features/auth/layouts/recep-layout/recep-layout';
 import { DashboardAdmin } from './features/admin/dashboard-admin/dashboard-admin';
 import { DashboardRecep } from './features/recep/dashboard-recep/dashboard-recep';
 import { Resena } from './features/publico/resena/resena';
+import { DetalleHabitacion } from './features/publico/detalle-habitacion/detalle-habitacion';
 
 export const routes: Routes = [
     {
@@ -122,6 +123,9 @@ export const routes: Routes = [
             },
             {
                 path: 'resena', component: Resena, title: "Resena"
+            },
+            {
+                path: 'detalle/:id', component: DetalleHabitacion, title: "Detalle de Habitacion"
             },
             {
                 path: '', component: Inicio, title: "Inicio"
