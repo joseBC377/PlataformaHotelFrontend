@@ -6,11 +6,12 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
 import { Location } from '@angular/common';
 import { environment } from '../../../../environments/environment';
+import { MetodoPago, ResultadoPago } from '../metodo-pago/metodo-pago';
 
 @Component({
   selector: 'app-resumen-reserva',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MetodoPago],
   templateUrl: './resumen-reserva.html',
   styleUrl: './resumen-reserva.scss'
 })
@@ -19,7 +20,7 @@ export class ResumenReserva implements OnInit {
   usuarioLogueado: number | null = null;
   guardando = false;
   errorMensaje = '';
-
+  resultadoPago: ResultadoPago | null = null;
   metodoPago = {
     tipo: '',
     ultimoscuatrodigitos: '',
@@ -43,7 +44,9 @@ export class ResumenReserva implements OnInit {
     }
     this.usuarioLogueado = this.authService.getId();
   }
-
+  onPagoRealizado(resultado: ResultadoPago) {
+    this.resultadoPago = resultado;
+  }
   confirmarYGuardar() {
     this.errorMensaje = '';
 
@@ -53,14 +56,8 @@ export class ResumenReserva implements OnInit {
       return;
     }
 
-    if (!this.metodoPago.tipo) {
-      this.errorMensaje = 'Selecciona un método de pago.';
-      return;
-    }
-
-    if (this.metodoPago.tipo === 'TARJETA' &&
-        (!this.metodoPago.ultimoscuatrodigitos || !this.metodoPago.fechaVencimiento)) {
-      this.errorMensaje = 'Completa los datos de la tarjeta.';
+    if (!this.resultadoPago) {
+      this.errorMensaje = 'Completa el pago antes de confirmar.';
       return;
     }
 
@@ -81,12 +78,12 @@ export class ResumenReserva implements OnInit {
       pago: {
         total: this.reservaData.total,
         igv: igv,
-        estadoPago: 'PENDIENTE',
+        estadoPago: this.resultadoPago.estado, // ahora será 'APROBADO'
+        referencia: this.resultadoPago.referencia,
         fechaPago: new Date().toISOString().split('T')[0],
         metodoPago: {
-          tipo: this.metodoPago.tipo,
-          ultimoscuatrodigitos: this.metodoPago.tipo === 'TARJETA' ? this.metodoPago.ultimoscuatrodigitos : null,
-          fechaVencimiento: this.metodoPago.tipo === 'TARJETA' ? this.metodoPago.fechaVencimiento : null
+          tipo: this.resultadoPago.tipo,
+          detalle: this.resultadoPago.detalle
         }
       }
     };

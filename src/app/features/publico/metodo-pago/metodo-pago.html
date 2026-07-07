@@ -1,0 +1,106 @@
+<div class="pago-container">
+
+  <!-- Paso 1: elegir método -->
+  @if (!tipoSeleccionado) {
+    <div class="row g-3">
+      <div class="col-4">
+        <button class="btn btn-outline-secondary w-100 py-3" (click)="seleccionarMetodo('YAPE')">
+          <div class="fw-bold">Yape</div>
+        </button>
+      </div>
+      <div class="col-4">
+        <button class="btn btn-outline-secondary w-100 py-3" (click)="seleccionarMetodo('PLIN')">
+          <div class="fw-bold">Plin</div>
+        </button>
+      </div>
+      <div class="col-4">
+        <button class="btn btn-outline-secondary w-100 py-3" (click)="seleccionarMetodo('TARJETA')">
+          <i class="bi bi-credit-card"></i>
+          <div class="fw-bold">Tarjeta</div>
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Paso 2a: Yape / Plin -->
+  @if ((tipoSeleccionado === 'YAPE' || tipoSeleccionado === 'PLIN') && !pagoCompletado) {
+    <div class="text-center">
+      <button class="btn btn-link btn-sm mb-2" (click)="tipoSeleccionado = ''">&larr; Cambiar método</button>
+      <p class="mb-2">Escanea el QR con tu app de <b>{{ tipoSeleccionado }}</b> y paga:</p>
+      <img [src]="qrUrl" alt="QR de pago" class="border rounded p-2 mb-3">
+      <h5 class="text-success mb-3">S/ {{ monto }}</h5>
+
+      <div class="mb-3 mx-auto" style="max-width: 300px;">
+        <label class="form-label small">Código de operación (simulado)</label>
+        <input type="text" class="form-control text-center" [(ngModel)]="codigoOperacion"
+               placeholder="Ej: 000123456" name="codigoOperacion">
+      </div>
+
+      <button class="btn btn-success px-4" [disabled]="!codigoOperacion.trim() || procesando"
+              (click)="confirmarPagoQr()">
+        {{ procesando ? 'Verificando...' : 'Ya pagué, verificar' }}
+      </button>
+    </div>
+  }
+
+  <!-- Paso 2b: Tarjeta -->
+  @if (tipoSeleccionado === 'TARJETA' && !pagoCompletado) {
+    <div>
+      <button class="btn btn-link btn-sm mb-3" (click)="tipoSeleccionado = ''">&larr; Cambiar método</button>
+
+      <!-- Visual de la tarjeta -->
+      <div class="tarjeta-visual mb-4" [class.visa]="marcaTarjeta === 'visa'" [class.mastercard]="marcaTarjeta === 'mastercard'">
+        <div class="d-flex justify-content-between align-items-start">
+          <i class="bi bi-wifi fs-4"></i>
+          <span class="fw-bold text-uppercase small">{{ marcaTarjeta || 'Tarjeta' }}</span>
+        </div>
+        <div class="numero-tarjeta my-3">{{ numeroTarjeta || '•••• •••• •••• ••••' }}</div>
+        <div class="d-flex justify-content-between small">
+          <span>{{ nombreTitular || 'NOMBRE APELLIDO' }}</span>
+          <span>{{ vencimiento || 'MM/YY' }}</span>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label small">Número de tarjeta</label>
+          <input type="text" class="form-control" [ngModel]="numeroTarjeta"
+                 (input)="formatearNumeroTarjeta($event)" name="numeroTarjeta"
+                 maxlength="19" placeholder="4111 1111 1111 1111">
+        </div>
+        <div class="col-12">
+          <label class="form-label small">Nombre del titular</label>
+          <input type="text" class="form-control text-uppercase" [(ngModel)]="nombreTitular"
+                 name="nombreTitular" placeholder="COMO APARECE EN LA TARJETA">
+        </div>
+        <div class="col-6">
+          <label class="form-label small">Vencimiento</label>
+          <input type="text" class="form-control" [ngModel]="vencimiento"
+                 (input)="formatearVencimiento($event)" name="vencimiento" maxlength="5" placeholder="MM/YY">
+        </div>
+        <div class="col-6">
+          <label class="form-label small">CVV</label>
+          <input type="password" class="form-control" [(ngModel)]="cvv"
+                 name="cvv" maxlength="4" placeholder="123">
+        </div>
+      </div>
+
+      <button class="btn btn-success w-100 mt-4" [disabled]="!tarjetaValida || procesando"
+              (click)="pagarConTarjeta()">
+        {{ procesando ? 'Procesando pago...' : 'Pagar S/ ' + monto }}
+      </button>
+      <p class="text-muted small text-center mt-2 mb-0">
+        <i class="bi bi-shield-lock"></i> Simulación de pago — no se procesa una transacción real
+      </p>
+    </div>
+  }
+
+  <!-- Paso 3: éxito -->
+  @if (pagoCompletado) {
+    <div class="text-center py-3">
+      <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+      <h5 class="mt-2 mb-0">¡Pago verificado!</h5>
+      <p class="text-muted small">Ya puedes confirmar tu reserva</p>
+    </div>
+  }
+</div>

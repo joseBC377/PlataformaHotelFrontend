@@ -1,0 +1,15 @@
+.tarjeta-visual {
+  background: linear-gradient(135deg, #4b5563, #1f2937);
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  font-family: monospace;
+
+  &.visa { background: linear-gradient(135deg, #1a4fb4, #0d2c6b); }
+  &.mastercard { background: linear-gradient(135deg, #b91c1c, #6b1010); }
+
+  .numero-tarjeta {
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+  }
+}
