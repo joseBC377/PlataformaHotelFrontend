@@ -25,8 +25,11 @@
         <label for="estado_pago" class="form-label">Estado del Pago</label>
         <select class="form-select" id="estado_pago" formControlName="estado_pago">
           <option value="" disabled selected>Selecciona</option>
-          <option value="Pendiente">Pendiente</option>
-          <option value="Pagado">Pagado</option>
+          <option value="PENDIENTE"> PENDIENTE</option>
+          <option value="APROBADO">APROBADO</option>
+          <option value="RECHAZADO">RECHAZADO</option>
+          <option value="ACTIVO">ACTIVO</option>
+          <option value="FINALIZADO">FINALIZADO</option>
         </select>
       </div>
 
@@ -89,7 +92,7 @@
             <td>{{ pago.igv }}</td>
             <td>{{ pago.estado_pago }}</td>
             <td>{{ pago.fecha_pago | date:'yyyy-MM-dd' }}</td>
-            <td>{{ pago.metodoPago?.nombre }}</td>
+            <td>{{ pago.metodoPago }}</td>
             <td>
               <button class="btn btn-sm btn-warning" (click)="editarPago(pago)">Editar</button>
               <button class="btn btn-sm btn-danger ms-2" (click)="eliminarPago(pago.id_pago!)">Eliminar</button>
