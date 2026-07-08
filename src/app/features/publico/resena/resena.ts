@@ -43,8 +43,10 @@ export class Resena {
 
   constructor(private fb: FormBuilder) { }
 
+  mostrarModalRestriccion = false;
+
   ngOnInit() {
-      this.resenaForm = this.fb.group({
+    this.resenaForm = this.fb.group({
       calificacion: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
       fecha: ['', Validators.required],
       comentario: ['', Validators.required],
@@ -58,13 +60,17 @@ export class Resena {
     this.idUsuarioLogueado = this.auth.getId();
 
     if (this.rolLogueado !== 'CLIENT') {
-      alert('Registrarte como Cliente y Realiza Reseñas');
-      this.router.navigate(['/']);
+      this.mostrarModalRestriccion = true;
       return;
     }
 
     this.generarCalificaciones();
     this.cargarHabitacion();
+  }
+
+  cerrarModalRestriccion() {
+    this.mostrarModalRestriccion = false;
+    this.router.navigate(['/']);
   }
 
 
@@ -76,11 +82,11 @@ export class Resena {
 
 
   cargarServicios() {
-      this.servicio$ = this.servServicio.listar();
+    this.servicio$ = this.servServicio.listar();
   }
 
   cargarHabitacion() {
-      this.habit$ = this.servHabitacion.getAllHabitaciones();
+    this.habit$ = this.servHabitacion.getAllHabitaciones();
   }
 
   generarCalificaciones(): void {
