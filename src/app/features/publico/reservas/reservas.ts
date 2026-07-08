@@ -1,54 +1,51 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { ReservaService } from '../../admin/services/reserva.services';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-reservas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule],
   templateUrl: './reservas.html',
   styleUrl: './reservas.scss'
 })
-export class Reservas {
-  toggled = false;
+export class Reservas implements OnInit {
+  reservas: any[] = [];
+  cargando = true;
 
-  showSignIn() {
-    this.toggled = false;
-  }
+  private reservaService = inject(ReservaService);
+  private authService = inject(AuthService);
 
-  showSignUp() {
-    this.toggled = true;
-  }
-
-  private fb = inject(FormBuilder);
-  public errorMsg = signal<string | null>(null);
-
-  public reservaForm: FormGroup = this.fb.group({
-    codigo: ['', Validators.required],
-    nombre: ['', Validators.required],
-  });
-
-  get codigo() {
-    return this.reservaForm.get('codigo');
-  }
-
-  get nombre() {
-    return this.reservaForm.get('nombre');
-  }
-
-  buscarReserva() {
-    if (this.reservaForm.invalid) {
-      this.reservaForm.markAllAsTouched();
+  ngOnInit(): void {
+    const idUsuario = this.authService.getId();
+    if (!idUsuario) {
+      this.cargando = false;
       return;
     }
-
-    this.errorMsg.set(null);
-    const { codigo, nombre } = this.reservaForm.value;
-
-    console.log('Buscando reserva con código:', codigo, 'y nombre:', nombre);
-
-    if (codigo !== 'ABC123') {
-      this.errorMsg.set('No se encontró ninguna reserva con ese código.');
-    }
+    this.reservaService.getHistorialPorUsuario(idUsuario).subscribe({
+      next: (data) => {
+        this.reservas = data;
+        this.cargando = false;
+      },
+      error: () => {
+        this.cargando = false;
+      }
+    });
   }
+
+  badgeClass(estado: string): string {
+  switch (estado) {
+    case 'CONFIRMADO':
+    case 'APROBADO':
+      return 'bg-success';
+    case 'PENDIENTE':
+      return 'bg-warning';
+    case 'CANCELADO':
+    case 'RECHAZADO':
+      return 'bg-danger';
+    default:
+      return 'bg-secondary';
+  }
+}
 }

@@ -1,236 +1,167 @@
-@use "sass:map";
-@use 'variables' as var;
-
-$colors: (
-  primary: #245ab2,
-  accent: #f4a300,
-  light-gray: #f9f9f9,
-  purple-light: #e6e0f6,
-  text: #333,
-  dark-text: #222,
-  subtext: #555,
-  tab-bg: #e0e0e0,
-  scrollbar-thumb: #ccc
-);
-
-@mixin center-text {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.error-message {
-  color: red;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.cuerpo {
-  width: 100%;
+.reservas-container {
+  background-color: #f8f7f4;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
+  padding: 2.5rem 0;
+}
 
-  .container {
-    width: 100%;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: transparent;
-
-    .container-form {
-      width: 100%;
-
-      .titulo-seccion {
-        color: map.get($colors, primary);
-        font-size: 2.5rem;
-        font-weight: bold;
-        @include center-text;
-        margin-bottom: 0.2rem;
-      }
-
-      .subtitulo-seccion {
-        color: map.get($colors, accent);
-        font-size: 2rem;
-        font-weight: bold;
-        @include center-text;
-        margin-bottom: 2rem;
-      }
-
-      span,
-      .info-contacto,
-      .correo {
-        text-align: center;
-        font-size: 1rem;
-        color: map.get($colors, subtext);
-        display: block;
-
-      }
-
-      .correo {
-        margin-bottom: 2rem;
-      }
-
-      form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      .container-input {
-        width: 100%;
-        max-width: 400px;
-        height: 2.7rem;
-        display: flex;
-        align-items: center;
-        background-color: white;
-        border: 1px solid #2d3e50;
-        border-radius: 6px;
-        padding: 0 0.8rem;
-
-        input {
-          width: 100%;
-          height: 100%;
-          border: none;
-          outline: none;
-          background-color: inherit;
-          font-size: 1rem;
-        }
-      }
-
-      .button {
-        width: 100%;
-        max-width: 300px;
-        height: 2.7rem;
-        font-size: 1rem;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        background-color: map.get($colors, accent);
-        color: white;
-        transition: background-color 0.3s ease;
-        margin-top: 20px;
-
-        &:hover {
-          background-color: #cc8400; 
-        }
-
-        &:disabled {
-          background-color: map.get($colors, tab-bg);
-          color: map.get($colors, subtext);
-          cursor: not-allowed;
-          opacity: 0.6;
-        }
-      }
-    }
+.encabezado {
+  h2 {
+    font-weight: 700;
+    color: #1a1a2e;
   }
 }
 
-.form-group {
-  width: 100%;
-  max-width: 300px; 
-  margin-top: 10px;
+// --- Estado vacío / cargando ---
+.estado-vacio {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px dashed #ddd;
 }
 
-label {
-  font-size: 15px;
-  font-weight: 500;
-  margin-bottom: 2px;
-  color: #130275;
-}
-
-input {
-  width: 100%;
-  padding: 10px 15px;
-  font-size: 14px;
-  border: 1px solid #4a648c;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s;
-  background-color: #fff;
-}
-
-input:focus {
-  border-color: #2f5ca4;
-}
-
-input::placeholder {
-  color: #bcbcbc;
-  font-style: italic;
-}
-
-.button {
-  width: 100%;
-  max-width: 300px;
-  height: 2.7rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: map.get($colors, accent);
-  color: white;
-  transition: background-color 0.3s ease;
+// --- Card de reserva ---
+.reserva-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
 
   &:hover {
-    background-color: #cc8400;
-  }
-
-  &:disabled {
-    background-color: #a5b4c8;
-    cursor: not-allowed;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
   }
 }
 
-.alerta {
-  .contenido {
-    position: absolute;
-    top: 80px;
-    left: 20%;
-    right: 20%;
-    padding: 0.9rem;
-    text-align: center;
-    background-color: #f58888;
-    border: 2px solid #ff4b4b;
-    font-size: 1.2rem;
-    border-radius: 10px;
-    z-index: 9999;
+.reserva-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.1rem 1.5rem;
+  background: #1a1a2e;
+  color: #fff;
+
+  h5 {
+    font-weight: 700;
+  }
+
+  .text-muted {
+    color: rgba(255, 255, 255, 0.6) !important;
   }
 }
 
-@media screen and (max-width: 600px) {
-  .cuerpo {
-    padding: 1rem;
+.reserva-body {
+  padding: 1.25rem 1.5rem;
+}
+
+.habitacion-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-of-type {
+    border-bottom: none;
   }
 
-  .container {
-    .container-form {
-      .titulo-seccion {
-        font-size: 1.8rem;
-      }
+  img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
 
-      .subtitulo-seccion {
-        font-size: 1.4rem;
-      }
+  .habitacion-info {
+    flex: 1;
 
-      .button {
-        width: 100%;
-      }
+    h6 {
+      color: #f4a300;
+      font-weight: 700;
     }
   }
 
-  .alerta .contenido {
-    left: 10%;
-    right: 10%;
+  .habitacion-precio {
+    font-weight: 700;
+    color: #1a1a2e;
+    white-space: nowrap;
   }
+}
+
+.servicios-lista {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #eee;
+}
+
+.servicio-chip {
+  background: #fdf1dc;
+  color: #b5791f;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.reserva-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  background: #faf9f7;
+  border-top: 1px solid #eee;
+
+  .pago-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #555;
+
+    i {
+      color: #CC9F53;
+    }
+  }
+
+  .pago-total {
+    font-size: 0.9rem;
+    color: #555;
+
+    strong {
+      color: #1a1a2e;
+      font-size: 1.1rem;
+      margin-left: 0.25rem;
+    }
+  }
+}
+
+// --- Badges de estado (reserva y pago) ---
+.badge-estado,
+.badge-pago {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.bg-success {
+  background-color: #d1f5df !important;
+  color: #157347 !important;
+}
+
+.bg-warning {
+  background-color: #fff3cd !important;
+  color: #997404 !important;
+}
+
+.bg-danger {
+  background-color: #f8d7da !important;
+  color: #b02a37 !important;
+}
+
+.bg-secondary {
+  background-color: #e2e3e5 !important;
+  color: #41464b !important;
 }
