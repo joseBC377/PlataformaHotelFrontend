@@ -15,13 +15,13 @@
       </div>
     </div>
     @if (calcularNoches() > 0) {
-      <div class="text-end">
-        <span class="badge bg-info text-dark font-monospace">Estancia de {{ calcularNoches() }} noches</span>
-      </div>
+    <div class="text-end">
+      <span class="badge bg-info text-dark font-monospace">Estancia de {{ calcularNoches() }} noches</span>
+    </div>
     } @else if (fechaInicio && fechaFin) {
-      <div class="text-end">
-        <span class="badge bg-danger">La fecha de salida debe ser posterior a la de entrada</span>
-      </div>
+    <div class="text-end">
+      <span class="badge bg-danger">La fecha de salida debe ser posterior a la de entrada</span>
+    </div>
     }
   </section>
 
@@ -30,40 +30,41 @@
     <hr>
     <div class="row">
       @for (h of habitacionesList; track h.id_habitacion) {
-        <div class="col-md-4 mb-3">
-          <div class="card h-100 shadow-sm position-relative"
-               [class.border-primary]="estaHabitacionSeleccionada(h.id_habitacion)"
-               [class.opacity-50]="h.estado === 'OCUPADA'">
+      <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm position-relative"
+          [class.border-primary]="estaHabitacionSeleccionada(h.id_habitacion)"
+          [class.opacity-50]="h.estado === 'OCUPADA'">
 
-            <div class="position-absolute top-0 end-0 m-2">
-              <span class="badge" [ngClass]="h.estado === 'DISPONIBLE' ? 'bg-success' : 'bg-danger'">
-                {{ h.estado }}
-              </span>
-            </div>
+          <div class="position-absolute top-0 end-0 m-2">
+            <span class="badge" [ngClass]="h.estado === 'DISPONIBLE' ? 'bg-success' : 'bg-danger'">
+              {{ h.estado }}
+            </span>
+          </div>
 
-            <div class="card-body">
-              <h5 class="card-title pe-5">Habitación {{ h.nombre_habitacion }}</h5>
-              <p class="badge bg-info text-dark">{{ h.categoriaHabitacion?.nombre }}</p>
-              <p class="card-text text-muted small">{{ h.categoriaHabitacion?.descripcion }}</p>
-              <p class="fw-bold text-success">S/ {{ h.categoriaHabitacion?.precio }} / noche</p>
+          <div class="card-body">
+            <h5 class="card-title pe-5">Habitación {{ h.nombre_habitacion }}</h5>
+            <p class="badge bg-info text-dark">{{ h.categoriaHabitacion?.nombre_categoria }}</p>
+            <p class="card-text text-muted small">{{ h.categoriaHabitacion?.descripcion_categoria }}</p>
+            <p class="fw-bold text-success">S/ {{ h.categoriaHabitacion?.precio }} / noche</p>
 
-              @if (h.estado === 'DISPONIBLE') {
-                <button class="btn w-100"
-                        [ngClass]="estaHabitacionSeleccionada(h.id_habitacion) ? 'btn-primary' : 'btn-outline-primary'"
-                        (click)="seleccionarHabitacion(h)">
-                  <i class="bi" [ngClass]="estaHabitacionSeleccionada(h.id_habitacion) ? 'bi-check-circle-fill' : 'bi-plus-circle'"></i>
-                  {{ estaHabitacionSeleccionada(h.id_habitacion) ? ' Seleccionada' : ' Seleccionar' }}
-                </button>
-              } @else {
-                <button class="btn btn-secondary w-100" disabled>
-                  <i class="bi bi-slash-circle"></i> No Disponible
-                </button>
-              }
-            </div>
+            @if (h.estado === 'DISPONIBLE') {
+            <button class="btn w-100"
+              [ngClass]="estaHabitacionSeleccionada(h.id_habitacion) ? 'btn-primary' : 'btn-outline-primary'"
+              (click)="seleccionarHabitacion(h)">
+              <i class="bi"
+                [ngClass]="estaHabitacionSeleccionada(h.id_habitacion) ? 'bi-check-circle-fill' : 'bi-plus-circle'"></i>
+              {{ estaHabitacionSeleccionada(h.id_habitacion) ? ' Seleccionada' : ' Seleccionar' }}
+            </button>
+            } @else {
+            <button class="btn btn-secondary w-100" disabled>
+              <i class="bi bi-slash-circle"></i> No Disponible
+            </button>
+            }
           </div>
         </div>
+      </div>
       } @empty {
-        <p class="text-muted">Cargando habitaciones...</p>
+      <p class="text-muted">Cargando habitaciones...</p>
       }
     </div>
   </section>
@@ -75,15 +76,14 @@
           <p class="mb-0 small text-secondary">Resumen de selección:</p>
           <span class="fw-bold">{{ habitacionesSeleccionadas.length }} hab. seleccionadas</span>
           @if (calcularNoches() > 0) {
-            <span class="ms-2 badge bg-secondary">{{ calcularNoches() }} noches</span>
+          <span class="ms-2 badge bg-secondary">{{ calcularNoches() }} noches</span>
           }
         </div>
         <div class="text-end">
           <h4 class="mb-0 text-success">Total: S/ {{ calcularTotalConNoches(calcularNoches()) }}</h4>
           <button class="btn btn-success px-4"
-                  [disabled]="habitacionesSeleccionadas.length === 0 || calcularNoches() <= 0"
-                  (click)="irAResumen()">
-            Confirmar Reserva
+            [disabled]="habitacionesSeleccionadas.length === 0 || calcularNoches() <= 0" (click)="irAResumen()">
+            Continuar a Servicios y Pago
           </button>
         </div>
       </div>

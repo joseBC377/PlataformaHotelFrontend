@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
 import { ServicioService } from '../../admin/services/servicio.service';
@@ -23,6 +23,7 @@ export class ResumenReserva implements OnInit {
   guardando = false;
   errorMensaje = '';
   mostrarConfirmacion = false;
+
 
   // Paso 1
   infoPersonal = {
@@ -46,8 +47,15 @@ export class ResumenReserva implements OnInit {
     cvv: ''
   };
 
+  // Pago QR simulado (Yape/Plin)
+  qrUrl = '';
+  codigoOperacion = '';
+  verificandoPago = false;
+  pagoQrVerificado = false;
+
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private authService: AuthService,
     private servicioService: ServicioService,
     private http: HttpClient,
@@ -58,16 +66,27 @@ export class ResumenReserva implements OnInit {
   }
 
   ngOnInit(): void {
+    // Si no viene por navegación (ej: volvió del login), intenta recuperar del localStorage
+    if (!this.reservaData) {
+      const guardado = localStorage.getItem('temp_reserva');
+      if (guardado) {
+        this.reservaData = JSON.parse(guardado);
+      }
+    }
+
     if (!this.reservaData) {
       this.router.navigate(['/crear-reserva']);
       return;
     }
+
     this.usuarioLogueado = this.authService.getId();
 
-    // Autocompletar nombre desde el usuario logueado
-    const nombre = this.authService.getNombre() || '';
-    const apellido = this.authService.getApellidoPaterno() || '';
-    this.infoPersonal.nombreCompleto = `${nombre} ${apellido}`.trim();
+    // Autocompletar nombre desde el usuario logueado (si ya inició sesión)
+    if (this.usuarioLogueado) {
+      const nombre = this.authService.getNombre() || '';
+      const apellido = this.authService.getApellidoPaterno() || '';
+      this.infoPersonal.nombreCompleto = `${nombre} ${apellido}`.trim();
+    }
 
     // Capacidad máxima según la(s) habitación(es) elegidas
     this.capacidadMaxima = this.reservaData.habitaciones.reduce(
@@ -89,7 +108,26 @@ export class ResumenReserva implements OnInit {
   estaSeleccionado(servicio: any): boolean {
     return this.serviciosSeleccionados.some(s => s.idServicio === servicio.idServicio);
   }
+  onTipoPagoChange() {
+    this.errorMensaje = '';
+    this.pagoQrVerificado = false;
+    this.codigoOperacion = '';
 
+    if (this.metodoPago.tipo === 'YAPE' || this.metodoPago.tipo === 'PLIN') {
+      const data = `${this.metodoPago.tipo}-RESERVA-${this.totalFinal}-${Date.now()}`;
+      this.qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data)}`;
+    }
+  }
+
+  verificarPagoQr() {
+    if (!this.codigoOperacion.trim()) return;
+    this.verificandoPago = true;
+
+    setTimeout(() => {
+      this.verificandoPago = false;
+      this.pagoQrVerificado = true;
+    }, 1200);
+  }
   get totalServicios(): number {
     return this.serviciosSeleccionados.reduce((sum, s) => sum + s.precio, 0);
   }
@@ -117,12 +155,22 @@ export class ResumenReserva implements OnInit {
     this.pasoActual = paso;
   }
 
+  // Guarda el estado actual antes de mandar al usuario a loguearse/registrarse
+  irALogin() {
+    localStorage.setItem('temp_reserva', JSON.stringify(this.reservaData));
+    this.router.navigate(['/login'], { queryParams: { returnUrl: '/resumen' } });
+  }
+
+  irARegistro() {
+    localStorage.setItem('temp_reserva', JSON.stringify(this.reservaData));
+    this.router.navigate(['/registro'], { queryParams: { returnUrl: '/resumen' } });
+  }
+
   confirmarYGuardar() {
     this.errorMensaje = '';
 
     if (!this.usuarioLogueado) {
       this.errorMensaje = 'Debes iniciar sesión para finalizar la reserva.';
-      this.router.navigate(['/login']);
       return;
     }
 
@@ -132,12 +180,15 @@ export class ResumenReserva implements OnInit {
     }
 
     if (this.metodoPago.tipo === 'TARJETA' &&
-        (!this.metodoPago.numeroTarjeta || this.metodoPago.numeroTarjeta.length < 4 ||
-         !this.metodoPago.nombreTarjeta || !this.metodoPago.fechaVencimiento || !this.metodoPago.cvv)) {
+      (!this.metodoPago.numeroTarjeta || this.metodoPago.numeroTarjeta.length < 4 ||
+        !this.metodoPago.nombreTarjeta || !this.metodoPago.fechaVencimiento || !this.metodoPago.cvv)) {
       this.errorMensaje = 'Completa todos los datos de la tarjeta.';
       return;
     }
-
+    if ((this.metodoPago.tipo === 'YAPE' || this.metodoPago.tipo === 'PLIN') && !this.pagoQrVerificado) {
+      this.errorMensaje = 'Verifica tu pago antes de continuar.';
+      return;
+    }
     const igv = +(this.totalFinal * 0.18).toFixed(2);
 
     // Solo se envían los últimos 4 dígitos; el número completo nunca se transmite
@@ -160,12 +211,13 @@ export class ResumenReserva implements OnInit {
       pago: {
         total: this.totalFinal,
         igv: igv,
-        estadoPago: 'PENDIENTE',
+        estadoPago: 'APROBADO',
         fechaPago: new Date().toISOString().split('T')[0],
         metodoPago: {
           tipo: this.metodoPago.tipo,
           ultimoscuatrodigitos: ultimosCuatro,
-          fechaVencimiento: this.metodoPago.tipo === 'TARJETA' ? this.metodoPago.fechaVencimiento : null
+          fechaVencimiento: this.metodoPago.tipo === 'TARJETA' ? this.metodoPago.fechaVencimiento : null,
+          codigoOperacion: (this.metodoPago.tipo === 'YAPE' || this.metodoPago.tipo === 'PLIN') ? this.codigoOperacion : null
         }
       }
     };

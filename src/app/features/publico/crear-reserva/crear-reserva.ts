@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { HabitacionServices } from '../../admin/services/habitacion.services';
-import { ServicioService } from '../../admin/services/servicio.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
