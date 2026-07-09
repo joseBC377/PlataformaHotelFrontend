@@ -198,6 +198,7 @@ export class ResumenReserva implements OnInit {
 
     const bodyFinal = {
       idUsuario: this.usuarioLogueado,
+      emailContacto: this.infoPersonal.email,
       habitaciones: this.reservaData.habitaciones.map((h: any) => ({
         idHabitacion: h.id_habitacion,
         fechaInicio: this.reservaData.fechaInicio,
