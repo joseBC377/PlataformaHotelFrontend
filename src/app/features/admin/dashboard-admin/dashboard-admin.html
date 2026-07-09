@@ -1,11 +1,10 @@
 <div class="dashboard-wrapper">
 
-  <!-- BARRA SUPERIOR (BUSCADOR E ICONOS DE ACCIÓN) -->
+  <!-- BARRA SUPERIOR -->
   <header class="top-header">
     <div class="search-box">
       <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
       <input type="text" placeholder="Buscar reservas, huéspedes o habitaciones..." />
@@ -31,7 +30,7 @@
     </div>
   </header>
 
-  <!-- SECCIÓN DE BIENVENIDA / ENCABEZADO -->
+  <!-- BIENVENIDA -->
   <section class="dashboard-header-section">
     <div class="welcome-text">
       <h2>Panel Administrativo</h2>
@@ -50,10 +49,13 @@
     </div>
   </section>
 
-  <!-- INDICADORES CLAVE (KPIs) -->
+  @if (cargando) {
+  <p class="text-center py-5">Cargando estadísticas...</p>
+  } @else {
+
+  <!-- KPIs -->
   <section class="kpi-grid">
 
-    <!-- Card 1: Ingresos Totales -->
     <div class="kpi-card border-blue">
       <div class="kpi-top">
         <div class="kpi-icon-wrapper bg-blue-soft text-blue">
@@ -63,16 +65,16 @@
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
           </svg>
         </div>
-        <span class="badge badge-blue">+12.5%</span>
+        <span class="badge badge-blue">{{ stats.porcentajeVariacionIngresos >= 0 ? '+' : '' }}{{
+          stats.porcentajeVariacionIngresos | number:'1.1-1' }}%</span>
       </div>
       <span class="kpi-label">Ingresos Totales (Mes)</span>
-      <h3 class="kpi-value">S/ 9,000.00</h3>
+      <h3 class="kpi-value">S/ {{ stats.ingresosMes | number:'1.2-2' }}</h3>
       <div class="progress-bar-container">
-        <div class="progress-bar-fill" style="width: 75%;"></div>
+        <div class="progress-bar-fill" [style.width.%]="stats.porcentajeOcupacion"></div>
       </div>
     </div>
 
-    <!-- Card 2: Habitaciones Ocupadas -->
     <div class="kpi-card border-orange">
       <div class="kpi-top">
         <div class="kpi-icon-wrapper bg-orange-soft text-orange">
@@ -81,14 +83,14 @@
             <path d="M2 4v16M2 8h18M2 12h18M2 16h18M22 4v16"></path>
           </svg>
         </div>
-        <span class="badge badge-orange">ÓPTIMO</span>
+        <span class="badge badge-orange">{{ stats.porcentajeOcupacion >= 70 ? 'ÓPTIMO' : 'BAJO' }}</span>
       </div>
       <span class="kpi-label">Habitaciones ocupadas</span>
-      <h3 class="kpi-value">84.2%</h3>
-      <p class="kpi-subtext">100 de 134 habitaciones ocupadas actuales</p>
+      <h3 class="kpi-value">{{ stats.porcentajeOcupacion | number:'1.1-1' }}%</h3>
+      <p class="kpi-subtext">{{ stats.habitacionesOcupadas }} de {{ stats.habitacionesTotal }} habitaciones ocupadas
+        actuales</p>
     </div>
 
-    <!-- Card 3: Reservas del Mes -->
     <div class="kpi-card border-green">
       <div class="kpi-top">
         <div class="kpi-icon-wrapper bg-green-soft text-green">
@@ -104,11 +106,9 @@
         <span class="badge badge-yellow">ESTABLE</span>
       </div>
       <span class="kpi-label">Reservas del Mes</span>
-      <h3 class="kpi-value">80</h3>
-      <p class="kpi-subtext">Próximo check-in en 2 horas</p>
+      <h3 class="kpi-value">{{ stats.reservasMes }}</h3>
     </div>
 
-    <!-- Card 4: Nuevos Usuarios -->
     <div class="kpi-card border-purple">
       <div class="kpi-top">
         <div class="kpi-icon-wrapper bg-purple-soft text-purple">
@@ -120,25 +120,22 @@
             <line x1="22" y1="11" x2="16" y2="11"></line>
           </svg>
         </div>
-        <span class="badge badge-purple">NUEVO</span>
+        <span class="badge badge-purple">TOTAL</span>
       </div>
-      <span class="kpi-label">Nuevos Usuarios</span>
-      <h3 class="kpi-value">30</h3>
-      <p class="kpi-subtext">Registrados en las últimas 72hs</p>
+      <span class="kpi-label">Clientes Registrados</span>
+      <h3 class="kpi-value">{{ stats.totalClientes ?? '—' }}</h3>
     </div>
 
   </section>
 
-  <!-- SECCIÓN CENTRAL SPLIT (Gráficos + Panel de Estado y Alertas) -->
+  <!-- GRÁFICO + WIDGETS -->
   <section class="main-split-section">
 
-    <!-- Widget de Gráficos (Izquierda) -->
     <div class="chart-box-container card">
       <div class="chart-header">
         <h3 class="card-title">Ingresos Mensuales</h3>
         <div class="tab-controls">
           <button class="tab-btn active">Mensual</button>
-          <button class="tab-btn">Semanal</button>
         </div>
       </div>
 
@@ -151,64 +148,25 @@
         </div>
 
         <div class="chart-bars-flex">
-          <!-- Ene -->
+          @for (m of stats.ingresosPorMes; track m.mes; let last = $last) {
           <div class="chart-column">
-            <div class="bar-container">
-              <div class="bar-background-fill" style="height: 40%;"></div>
-              <div class="bar-value-fill" style="height: 25%;"></div>
+            <div class="bar-container" [attr.title]="'S/ ' + (m.total | number:'1.2-2')">
+              <div class="bar-background-fill" style="height: 100%;"></div>
+              <div class="bar-value-fill" [class.bar-yellow]="last" [style.height.%]="alturaBarra(m.total)"></div>
+              <span class="bar-tooltip" [style.bottom.%]="alturaBarra(m.total)">S/ {{ m.total | number:'1.0-0' }}</span>
             </div>
-            <span class="bar-month">ENE</span>
+            <span class="bar-month">{{ m.mes }}</span>
           </div>
-          <!-- Feb -->
-          <div class="chart-column">
-            <div class="bar-container">
-              <div class="bar-background-fill" style="height: 60%;"></div>
-              <div class="bar-value-fill" style="height: 45%;"></div>
-            </div>
-            <span class="bar-month">FEB</span>
-          </div>
-          <!-- Mar -->
-          <div class="chart-column">
-            <div class="bar-container">
-              <div class="bar-background-fill" style="height: 35%;"></div>
-              <div class="bar-value-fill" style="height: 18%;"></div>
-            </div>
-            <span class="bar-month">MAR</span>
-          </div>
-          <!-- Abr -->
-          <div class="chart-column">
-            <div class="bar-container">
-              <div class="bar-background-fill" style="height: 80%;"></div>
-              <div class="bar-value-fill" style="height: 70%;"></div>
-            </div>
-            <span class="bar-month">ABR</span>
-          </div>
-          <!-- May -->
-          <div class="chart-column">
-            <div class="bar-container">
-              <div class="bar-background-fill" style="height: 75%;"></div>
-              <div class="bar-value-fill" style="height: 55%;"></div>
-            </div>
-            <span class="bar-month">MAY</span>
-          </div>
-          <!-- Jun (Destacado en Amarillo Mostaza) -->
-          <div class="chart-column">
-            <div class="bar-container">
-              <div class="bar-background-fill" style="height: 95%;"></div>
-              <div class="bar-value-fill bar-yellow" style="height: 85%;"></div>
-            </div>
-            <span class="bar-month">JUN</span>
-          </div>
+          }
         </div>
       </div>
 
       <div class="chart-legend">
         <span class="legend-color-dot"></span>
-        <span class="legend-text">Ingresos 2026</span>
+        <span class="legend-text">Ingresos últimos 6 meses</span>
       </div>
     </div>
 
-    <!-- Columna de Widgets (Derecha) -->
     <div class="right-widgets-stack">
 
       <!-- Estado de Habitaciones -->
@@ -216,25 +174,25 @@
         <h3 class="card-title">Estado de Habitaciones</h3>
         <div class="rooms-grid">
           <div class="room-stat-card">
-            <h4>120</h4>
+            <h4>{{ stats.estadoHabitaciones.limpias }}</h4>
             <p>LIMPIAS</p>
           </div>
           <div class="room-stat-card text-orange-bold">
-            <h4>4</h4>
+            <h4>{{ stats.estadoHabitaciones.enLimpieza }}</h4>
             <p>EN LIMPIEZA</p>
           </div>
           <div class="room-stat-card text-red-bold">
-            <h4>2</h4>
+            <h4>{{ stats.estadoHabitaciones.mantenimiento }}</h4>
             <p>MANTENIMIENTO</p>
           </div>
           <div class="room-stat-card text-gray-bold">
-            <h4>8</h4>
+            <h4>{{ stats.estadoHabitaciones.sucias }}</h4>
             <p>SUCIAS</p>
           </div>
         </div>
       </div>
 
-      <!-- Alertas Críticas (Azul oscuro original) -->
+      <!-- Alertas Críticas (estática por ahora) -->
       <div class="critical-alerts-widget">
         <div class="alerts-header">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -264,11 +222,11 @@
 
   </section>
 
-  <!-- SECCIÓN INFERIOR: TABLA DE PRÓXIMAS LLEGADAS -->
+  <!-- PRÓXIMAS LLEGADAS -->
   <section class="arrivals-section card">
     <div class="arrivals-header">
-      <h3 class="card-title">Próximas Llegadas</h3>
-      <a href="#" class="view-all-link">
+      <h3 class="card-title">Próximas Llegadas (Hoy)</h3>
+      <a routerLink="/admin/reserva" class="view-all-link">
         <span>Ver todas</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
@@ -283,24 +241,24 @@
           <tr>
             <th>Huésped</th>
             <th>Habitación</th>
-            <th>Horario</th>
+            <th>Check-in</th>
             <th class="align-center">Acción</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Mateo Sánchez -->
+          @for (llegada of stats.proximasLlegadas; track llegada.nombreHuesped) {
           <tr>
             <td>
               <div class="guest-profile">
-                <div class="guest-avatar bg-blue-avatar">MS</div>
+                <div class="guest-avatar bg-blue-avatar">{{ llegada.iniciales }}</div>
                 <div class="guest-details">
-                  <span class="guest-name">Mateo Sánchez</span>
-                  <span class="guest-badge text-blue">VVIP Client</span>
+                  <span class="guest-name">{{ llegada.nombreHuesped }}</span>
+                  <span class="guest-badge text-blue">{{ llegada.categoria }}</span>
                 </div>
               </div>
             </td>
-            <td><span class="table-text-highlight">Suite 402</span></td>
-            <td><span class="table-text-highlight">Hoy, 14:00</span></td>
+            <td><span class="table-text-highlight">{{ llegada.habitacion }}</span></td>
+            <td><span class="table-text-highlight">{{ llegada.fechaInicio }}</span></td>
             <td class="align-center">
               <button class="action-triple-dot">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -312,59 +270,15 @@
               </button>
             </td>
           </tr>
-
-          <!-- Elena López -->
+          } @empty {
           <tr>
-            <td>
-              <div class="guest-profile">
-                <div class="guest-avatar bg-purple-avatar">EL</div>
-                <div class="guest-details">
-                  <span class="guest-name">Elena López</span>
-                  <span class="guest-badge text-purple">Fiel Directo</span>
-                </div>
-              </div>
-            </td>
-            <td><span class="table-text-highlight">Deluxe 105</span></td>
-            <td><span class="table-text-highlight">Hoy, 15:30</span></td>
-            <td class="align-center">
-              <button class="action-triple-dot">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="1"></circle>
-                  <circle cx="12" cy="5" r="1"></circle>
-                  <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-              </button>
-            </td>
+            <td colspan="4" class="text-center text-muted py-3">No hay llegadas programadas para hoy.</td>
           </tr>
-
-          <!-- Ricardo Blanco -->
-          <tr>
-            <td>
-              <div class="guest-profile">
-                <div class="guest-avatar bg-green-avatar">RB</div>
-                <div class="guest-details">
-                  <span class="guest-name">Ricardo Blanco</span>
-                  <span class="guest-badge text-green">Reserva Web</span>
-                </div>
-              </div>
-            </td>
-            <td><span class="table-text-highlight">Estándar 208</span></td>
-            <td><span class="table-text-highlight">Hoy, 20:00</span></td>
-            <td class="align-center">
-              <button class="action-triple-dot">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="1"></circle>
-                  <circle cx="12" cy="5" r="1"></circle>
-                  <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-              </button>
-            </td>
-          </tr>
+          }
         </tbody>
       </table>
     </div>
   </section>
 
+  }
 </div>
