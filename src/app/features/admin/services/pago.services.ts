@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { PagoModel } from '../../auth/models/pago';
+import { PagoModel, PagoRequestModel } from '../../auth/models/pago';
 import { Observable } from 'rxjs';
 import { PagoReservaInfo } from '../../auth/models/pago-reserva-info';
 import { environment } from '../../../../environments/environment';
@@ -9,7 +9,7 @@ import { environment } from '../../../../environments/environment';
 export class PagoService {
   private API_URL = `${environment.API_BASE_URL}/pago`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<PagoModel[]> {
     return this.http.get<PagoModel[]>(`${this.API_URL}/lista`);
@@ -19,15 +19,15 @@ export class PagoService {
     return this.http.get<PagoModel>(`${this.API_URL}/lista/${id}`);
   }
 
-  post(pago: PagoModel): Observable<PagoModel> {
-    return this.http.post<PagoModel>(`${this.API_URL}/insertar`, pago);
-  }
-
-  put(id: number, pago: PagoModel): Observable<PagoModel> {
-    return this.http.put<PagoModel>(`${this.API_URL}/actualizar/${id}`, pago);
-  }
-
   delete(id: number): Observable<string> {
     return this.http.delete(`${this.API_URL}/eliminar/${id}`, { responseType: 'text' });
+  }
+
+  post(data: PagoRequestModel): Observable<PagoModel> {
+    return this.http.post<PagoModel>(`${this.API_URL}/insertar`, data);
+  }
+
+  put(id: number, data: PagoRequestModel): Observable<PagoModel> {
+    return this.http.put<PagoModel>(`${this.API_URL}/actualizar/${id}`, data);
   }
 }

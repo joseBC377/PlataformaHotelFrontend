@@ -4,17 +4,6 @@
 
     <form [formGroup]="pagoForm" class="row g-3 mb-4 p-3 border rounded shadow-sm" (ngSubmit)="guardarPago()">
       <div class="col-md-4">
-        <label for="metodo_pago" class="form-label">Método de Pago</label>
-        <select class="form-select" id="metodo_pago" formControlName="metodo_pago">
-          <option value="" disabled selected>Selecciona un método</option>
-          <option value="Efectivo">Efectivo</option>
-          <option value="Tarjeta">Tarjeta</option>
-          <option value="Yape">Yape</option>
-          <option value="Plin">Plin</option>
-          <option value="Transferencia">Transferencia</option>
-        </select>
-      </div>
-      <div class="col-md-4">
         <label for="total" class="form-label">Total</label>
         <input type="number" class="form-control" id="total" formControlName="total" placeholder="Monto total" />
         @if (total?.invalid && (total?.dirty || total?.touched)) {
@@ -25,11 +14,8 @@
         <label for="estado_pago" class="form-label">Estado del Pago</label>
         <select class="form-select" id="estado_pago" formControlName="estado_pago">
           <option value="" disabled selected>Selecciona</option>
-          <option value="PENDIENTE"> PENDIENTE</option>
           <option value="APROBADO">APROBADO</option>
           <option value="RECHAZADO">RECHAZADO</option>
-          <option value="ACTIVO">ACTIVO</option>
-          <option value="FINALIZADO">FINALIZADO</option>
         </select>
       </div>
 
@@ -40,21 +26,37 @@
 
       <div class="col-md-4">
         <label for="id_reserva" class="form-label">Reserva</label>
-        <select class="form-select" id="id_reserva" formControlName="id_reserva">
+        <select class="form-select" id="id_reserva" formControlName="reserva" [compareWith]="compararReserva">
           <option [ngValue]="null" disabled selected>Seleccionar una reserva</option>
           @if (reservas$ | async; as reservas) {
           @for (res of reservas; track res.id_reserva) {
           <option [ngValue]="res">
-            Reserva #{{ res.id_reserva }} - {{ res.usuario || 'Sin nombre' }}
+            Reserva #{{ res.id_reserva }} - {{ res.usuario?.nombre_usuario || 'Sin nombre' }}
           </option>
           }
           }
         </select>
-        @if (pagoForm.get('id_reserva')?.invalid && (pagoForm.get('id_reserva')?.touched ||
-        pagoForm.get('id_reserva')?.dirty)) {
-        <div class="text-danger mt-1">
-          <small>Debes seleccionar una reserva.</small>
-        </div>
+        @if (pagoForm.get('reserva')?.invalid && (pagoForm.get('reserva')?.touched || pagoForm.get('reserva')?.dirty)) {
+        <div class="text-danger mt-1"><small>Debes seleccionar una reserva.</small></div>
+        }
+      </div>
+
+      <div class="col-md-4">
+        <label for="metodo_pago" class="form-label">Método de Pago</label>
+        <select class="form-select" id="metodo_pago" formControlName="metodoPago" [compareWith]="compararMetodoPago">
+          <option [ngValue]="null" disabled selected>Seleccionar un método de pago</option>
+          @if (metodosPago$ | async; as metodos) {
+          @for (m of metodos; track m.id_metodo_pago) {
+          <option [ngValue]="m">
+            {{ m.tipo }} — {{ m.usuario?.nombre_usuario || 'Usuario ' + m.usuario?.id_usuario }}
+            @if (m.ultimoscuatrodigitos) { (····{{ m.ultimoscuatrodigitos }}) }
+          </option>
+          }
+          }
+        </select>
+        @if (pagoForm.get('metodoPago')?.invalid && (pagoForm.get('metodoPago')?.touched ||
+        pagoForm.get('metodoPago')?.dirty)) {
+        <div class="text-danger mt-1"><small>Debes seleccionar un método de pago.</small></div>
         }
       </div>
 
@@ -79,6 +81,7 @@
             <th>IGV</th>
             <th>Estado</th>
             <th>Fecha</th>
+            <th>Reserva</th>
             <th>Método</th>
             <th>Acciones</th>
           </tr>
@@ -92,7 +95,8 @@
             <td>{{ pago.igv }}</td>
             <td>{{ pago.estado_pago }}</td>
             <td>{{ pago.fecha_pago | date:'yyyy-MM-dd' }}</td>
-            <td>{{ pago.metodoPago }}</td>
+            <td>{{ pago.reserva?.id_reserva }}</td>
+            <td>{{ pago.metodoPago?.tipo}}</td>
             <td>
               <button class="btn btn-sm btn-warning" (click)="editarPago(pago)">Editar</button>
               <button class="btn btn-sm btn-danger ms-2" (click)="eliminarPago(pago.id_pago!)">Eliminar</button>
