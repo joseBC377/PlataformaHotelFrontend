@@ -14,21 +14,23 @@
 
                 <div class="col-12 col-sm-6 text-center">
                     <label class="form-label fw-bold text-secondary mb-2">Entrada</label>
-                    <div class="input-group shadow-sm">
+                    <div class="input-group shadow-sm cursor-pointer" (click)="pickerEntrada.open()">
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-calendar-check text-primary"></i>
                         </span>
-                        <input type="date" class="form-control text-center border-start-0" [formControl]="entradaControl">
+                        <input matInput [min]="minDate" [matDatepicker]="pickerEntrada" class="form-control text-center border-start-0" [formControl]="entradaControl" readonly>
+                        <mat-datepicker #pickerEntrada></mat-datepicker>
                     </div>
                 </div>
 
                 <div class="col-12 col-sm-6 text-center">
                     <label class="form-label fw-bold text-secondary mb-2">Salida</label>
-                    <div class="input-group shadow-sm">
+                    <div class="input-group shadow-sm cursor-pointer" (click)="pickerSalida.open()">
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-calendar-x text-primary"></i>
                         </span>
-                        <input type="date" class="form-control text-center border-start-0" [formControl]="salidaControl">
+                        <input matInput [min]="entradaControl.value || minDate" [matDatepicker]="pickerSalida" class="form-control text-center border-start-0" [formControl]="salidaControl" readonly>
+                        <mat-datepicker #pickerSalida></mat-datepicker>
                     </div>
                 </div>
 
@@ -43,6 +45,89 @@
 
     </div>
 </section>
+<!-- SECCIÓN HABITACIONES DESTACADAS -->
+<section class="featured-rooms-section my-5 container">
+  <div class="section-title-box text-center mb-5">
+    <span class="section-subtitle">COLECCIÓN EXCLUSIVA</span>
+    <h2 class="section-title">Habitaciones Destacadas</h2>
+    <div class="section-title-line"></div>
+    <p class="section-description text-muted">
+      Explore nuestra selección premium de habitaciones diseñadas para brindarle una experiencia de máximo confort y elegancia.
+    </p>
+  </div>
+
+  @if (cargandoHabitaciones) {
+    <div class="text-center py-5">
+      <div class="luxury-loader mx-auto mb-3">
+        <i class="fas fa-circle-notch fa-spin"></i>
+      </div>
+      <p class="text-muted tracking-wide">Cargando nuestra colección destacada...</p>
+    </div>
+  } @else {
+    <div class="row g-4">
+      @for (hab of habitacionesDestacadas; track hab.id_habitacion) {
+        <div class="col-md-6 col-lg-4">
+          <div class="premium-room-card">
+            <!-- Room Image & Status Badge -->
+            <div class="room-image-wrapper">
+              <img [src]="hab.categoriaHabitacion?.imagen || 'assets/placeholder-habitacion.jpg'" 
+                   alt="{{ hab.nombre_habitacion }}" 
+                   class="room-card-image"
+                   loading="lazy" />
+              <div class="room-status-badge" [class.available]="hab.estado === 'DISPONIBLE'" [class.occupied]="hab.estado === 'OCUPADA'">
+                {{ hab.estado }}
+              </div>
+            </div>
+
+            <!-- Room Details -->
+            <div class="room-card-body">
+              <span class="room-category-label">{{ hab.categoriaHabitacion.nombre_categoria }}</span>
+              <h4 class="room-title">{{ hab.nombre_habitacion }}</h4>
+              <p class="room-description text-muted">
+                {{ hab.descripcion_habitacion || hab.categoriaHabitacion.descripcion_categoria }}
+              </p>
+
+              <!-- Specifications -->
+              <div class="room-specs">
+                <div class="spec-item">
+                  <i class="fas fa-users text-gold"></i>
+                  <span>Capacidad: <strong>{{ hab.categoriaHabitacion.capacidad }} personas</strong></span>
+                </div>
+              </div>
+
+              <!-- Amenities Icons -->
+              <div class="room-amenities">
+                <i class="fas fa-wifi" title="Wifi de alta velocidad"></i>
+                <i class="fas fa-tv" title="Smart TV"></i>
+                <i class="fas fa-bed" title="Camas confortables"></i>
+                <i class="fas fa-shower" title="Baño completo"></i>
+                <i class="fas fa-mug-hot" title="Desayuno incluido"></i>
+              </div>
+
+              <!-- Price and Action -->
+              <div class="room-card-footer mt-auto pt-3 d-flex justify-content-between align-items-center">
+                <div class="price-container">
+                  <span class="currency">S/ </span>
+                  <span class="price-amount">{{ hab.categoriaHabitacion.precio }}</span>
+                  <span class="price-period">/ noche</span>
+                </div>
+                <button class="btn-premium-action" [routerLink]="['/detalle', hab.id_habitacion]">
+                  Ver Detalle
+                  <i class="fas fa-arrow-right ms-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="col-12 text-center py-5">
+          <p class="text-muted italic">No hay habitaciones destacadas disponibles en este momento.</p>
+        </div>
+      }
+    </div>
+  }
+</section>
+
 <div class="container mt-5">
     <section class="welcome-text text-center mb-5">
         <h2 class="titulo-bienvenida">
@@ -96,52 +181,137 @@
             </button>
         </div>
     </section>
-    <div class="beneficios container py-5">
-        <div class="row align-items-center">
-            <!-- Columna izquierda -->
-            <section class="left col-12 col-md-6 col-lg-5 mb-4 mb-md-0">
-                <h2 class="mb-3">
-                    Regístrate en <br />
-                    Royal Suites Hotel
-                </h2>
-                <p class="description mb-4">
-                    Consigue tarifas exclusivas, acumula puntos para noches gratis y mucho más. ¡Únete gratis y
-                    mejora tu estancia!
-                </p>
-                <div class="d-flex flex-wrap gap-3">
-                    <button mat-raised-button class="btn-amarrilo" routerLink="/login">Regístrate gratis</button>
-                    <button mat-raised-button class="btn-azul" routerLink="/login">Inicia sesión</button>
-                </div>
-            </section>
-            <!-- Columna derecha -->
-            <section class="right col-12 col-md-6 col-lg-7 d-flex flex-wrap justify-content-center gap-4">
-                <div class="feature-col text-center" style="width: 110px;">
-                    <i class="fas fa-wifi fa-2x mb-2"></i>
-                    <p class="feature-text">Wifi Gratis</p>
-                </div>
-                <div class="feature-col text-center" style="width: 110px;">
-                    <i class="fas fa-tags fa-2x mb-2"></i>
-                    <p class="feature-text">Descuentos</p>
-                </div>
-                <div class="feature-col text-center" style="width: 110px;">
-                    <i class="fas fa-star fa-2x mb-2"></i>
-                    <p class="feature-text">Noches gratis</p>
-                </div>
-                <div class="feature-col text-center" style="width: 110px;">
-                    <i class="fas fa-mug-hot fa-2x mb-2"></i>
-                    <p class="feature-text">Desayuno gratis</p>
-                </div>
 
-                <div class="feature-col text-center" style="width: 110px;">
-                    <i class="fas fa-dumbbell fa-2x mb-2"></i>
-                    <p class="feature-text">Gimnasio</p>
-                </div>
+    <!-- SECCIÓN DE TESTIMONIOS (CARRUSEL AUTOPLAY) -->
+    @if (resenas.length > 0) {
+      <section class="testimonials-carousel-section py-5 my-5">
+        <div class="testimonials-container">
+          <div class="section-title-box text-center mb-5">
+            <span class="section-subtitle">TESTIMONIOS</span>
+            <h2 class="section-title">La Opinión de Nuestros Huéspedes</h2>
+            <div class="section-title-line"></div>
+          </div>
 
-                <div class="feature-col text-center" style="width: 110px;">
-                    <i class="fas fa-paw fa-2x mb-2"></i>
-                    <p class="feature-text">Pet Friendly</p>
+          <div class="carousel-viewport" (mouseenter)="detenerAutoplay()" (mouseleave)="iniciarAutoplay()">
+            <div class="testimonial-slide">
+              <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+              
+              <div class="testimonial-rating">
+                <div class="stars-gold">
+                  {{ '★'.repeat(resenas[activeReviewIndex].calificacion) + '☆'.repeat(5 - resenas[activeReviewIndex].calificacion) }}
                 </div>
-            </section>
+              </div>
+              
+              <p class="testimonial-comment">
+                “{{ resenas[activeReviewIndex].comentario || 'Sin comentario proporcionado.' }}”
+              </p>
+              
+              <div class="testimonial-author-box">
+                <div class="author-avatar">
+                  <span>{{ (resenas[activeReviewIndex].usuario.nombre_usuario || 'A')[0] | uppercase }}</span>
+                </div>
+                <div class="author-info">
+                  <h4 class="author-name">
+                    {{ resenas[activeReviewIndex].usuario.nombre_usuario || 'Anónimo' }}
+                    @if (resenas[activeReviewIndex].usuario.apellido_paterno) {
+                      {{ resenas[activeReviewIndex].usuario.apellido_paterno }}
+                    }
+                  </h4>
+                  <span class="testimonial-date">
+                    <i class="fa-regular fa-calendar-alt"></i> {{ resenas[activeReviewIndex].fecha | date: 'longDate' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Tags de la habitación/servicio si existen -->
+              @if (resenas[activeReviewIndex].habitacion?.nombre_habitacion || resenas[activeReviewIndex].servicio?.nombre_servicio) {
+                <div class="testimonial-tags mt-3">
+                  @if (resenas[activeReviewIndex].habitacion?.nombre_habitacion) {
+                    <span class="meta-tag room-tag">
+                      <i class="fa-solid fa-door-open"></i> {{ resenas[activeReviewIndex].habitacion.nombre_habitacion }}
+                    </span>
+                  }
+                  @if (resenas[activeReviewIndex].servicio?.nombre_servicio) {
+                    <span class="meta-tag service-tag">
+                      <i class="fa-solid fa-bell-concierge"></i> {{ resenas[activeReviewIndex].servicio.nombre_servicio }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-btn prev-btn" (click)="prevReview()" aria-label="Anterior">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="carousel-control-btn next-btn" (click)="nextReview()" aria-label="Siguiente">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Carousel Indicators (dots) -->
+          <div class="carousel-indicators-dots mt-4">
+            @for (r of resenas; track r.id_resena; let idx = $index) {
+              <button class="dot-btn" 
+                      [class.active]="idx === activeReviewIndex" 
+                      (click)="seleccionarReview(idx)"
+                      [attr.aria-label]="'Testimonio ' + (idx + 1)">
+              </button>
+            }
+          </div>
         </div>
-    </div>
+      </section>
+    }
+
+    <!-- BANNER DE BENEFICIOS (SE MUESTRA SOLO SI NO ESTÁ AUTENTICADO) -->
+    @if (!isLoggedIn) {
+      <div class="beneficios container py-5">
+          <div class="row align-items-center">
+              <!-- Columna izquierda -->
+              <section class="left col-12 col-md-6 col-lg-5 mb-4 mb-md-0">
+                  <h2 class="mb-3">
+                      Regístrate en <br />
+                      Royal Suites Hotel
+                  </h2>
+                  <p class="description mb-4">
+                      Consigue tarifas exclusivas, acumula puntos para noches gratis y mucho más. ¡Únete gratis y
+                      mejora tu estancia!
+                  </p>
+                  <div class="d-flex flex-wrap gap-3">
+                      <button mat-raised-button class="btn-amarrilo" routerLink="/login">Regístrate gratis</button>
+                      <button mat-raised-button class="btn-azul" routerLink="/login">Inicia sesión</button>
+                  </div>
+              </section>
+              <!-- Columna derecha -->
+              <section class="right col-12 col-md-6 col-lg-7 d-flex flex-wrap justify-content-center gap-4">
+                  <div class="feature-col text-center" style="width: 110px;">
+                      <i class="fas fa-wifi fa-2x mb-2"></i>
+                      <p class="feature-text">Wifi Gratis</p>
+                  </div>
+                  <div class="feature-col text-center" style="width: 110px;">
+                      <i class="fas fa-tags fa-2x mb-2"></i>
+                      <p class="feature-text">Descuentos</p>
+                  </div>
+                  <div class="feature-col text-center" style="width: 110px;">
+                      <i class="fas fa-star fa-2x mb-2"></i>
+                      <p class="feature-text">Noches gratis</p>
+                  </div>
+                  <div class="feature-col text-center" style="width: 110px;">
+                      <i class="fas fa-mug-hot fa-2x mb-2"></i>
+                      <p class="feature-text">Desayuno gratis</p>
+                  </div>
+  
+                  <div class="feature-col text-center" style="width: 110px;">
+                      <i class="fas fa-dumbbell fa-2x mb-2"></i>
+                      <p class="feature-text">Gimnasio</p>
+                  </div>
+  
+                  <div class="feature-col text-center" style="width: 110px;">
+                      <i class="fas fa-paw fa-2x mb-2"></i>
+                      <p class="feature-text">Pet Friendly</p>
+                  </div>
+              </section>
+          </div>
+      </div>
+    }
 </div>

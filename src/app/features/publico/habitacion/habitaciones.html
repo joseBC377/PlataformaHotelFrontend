@@ -1,67 +1,107 @@
-<div class="habitaciones-container">
-    <h2 class="titulo-seccion">HABITACIONES</h2>
-    <h3 class="subtitulo-seccion">El descanso que mereces</h3>
-    <p class="descripcion">
-        En cada habitación encontrarás un refugio de paz. Ambientes tranquilos, <br> cuidadosamente decorados y
-        equipados
-        para ofrecerte la mejor <br> experiencia de descanso, rodeado de confort y armonía.
-    </p>
+<div class="habitaciones-page-wrapper">
+  <!-- Hero Banner -->
+  <div class="rooms-hero-banner">
+    <div class="banner-overlay"></div>
+    <div class="container banner-content">
+      <span class="sub-title">Royal Suites Hotel</span>
+      <h1 class="main-title">NUESTRAS HABITACIONES</h1>
+      <h3 class="tagline-title">El descanso que mereces</h3>
+      <p class="lead-text">
+        En cada habitación encontrarás un refugio de paz. Ambientes tranquilos, cuidadosamente decorados y equipados para ofrecerte la mejor experiencia de descanso, rodeado de confort y armonía.
+      </p>
+    </div>
+  </div>
 
-    <div class="tabs">
-        <button class="tab" [class.active]="categoriaSeleccionada === 'Todos'"
-            (click)="filtrarPorCategoria('Todos')">Todos</button>
-        <button class="tab" [class.active]="categoriaSeleccionada === 'Doble'"
-            (click)="filtrarPorCategoria('Doble')">Doble</button>
-        <button class="tab" [class.active]="categoriaSeleccionada === 'Doble Superior'"
-            (click)="filtrarPorCategoria('Doble Superior')">Doble Superior</button>
-        <button class="tab" [class.active]="categoriaSeleccionada === 'Estándar Triple'"
-            (click)="filtrarPorCategoria('Estándar Triple')">Estándar Triple</button>
-        <button class="tab" [class.active]="categoriaSeleccionada === 'Junior Suite'"
-            (click)="filtrarPorCategoria('Junior Suite')">Junior Suite</button>
-        <button class="tab" [class.active]="categoriaSeleccionada === 'Superior Twin'"
-            (click)="filtrarPorCategoria('Superior Twin')">Superior Twin</button>
-    </div>
-    <div class="row">
-        @if (cargando) {
-        <div>
-            <p>Cargando habitaciones</p>
-        </div>
+  <div class="container py-5">
+    <!-- Dynamic Category Filter Chips -->
+    <div class="filters-section mb-5">
+      <div class="filter-chips-container">
+        @for (cat of categorias; track cat) {
+          <button class="filter-chip-btn" 
+                  [class.active]="categoriaSeleccionada.toLowerCase() === cat.toLowerCase()"
+                  (click)="filtrarPorCategoria(cat)">
+            {{ cat }}
+          </button>
         }
-        @if (!cargando) {
-        @if (habitacionesFiltradas.length > 0) {
-        @for (hab of habitacionesFiltradas; track hab.id_habitacion; let i = $index) {
-        <div class="habitacion-card" [ngClass]="{ 'par': i % 2 === 1 }">
-            <div class="habitacion-contenido">
-                <div class="habitacion-carrusel">
-                    <div class="imagenes">
-                        <img [src]="hab.categoriaHabitacion.imagen" alt="{{ hab.nombre_habitacion }}" />
-                    </div>
+      </div>
+    </div>
+
+    <!-- Rooms Display Section -->
+    @if (cargando) {
+      <div class="text-center py-5">
+        <div class="luxury-loader mb-3">
+          <i class="fas fa-circle-notch fa-spin"></i>
+        </div>
+        <p class="text-muted tracking-wide">Cargando nuestra colección exclusiva...</p>
+      </div>
+    } @else {
+      @if (habitacionesFiltradas.length > 0) {
+        <div class="row g-4">
+          @for (hab of habitacionesFiltradas; track hab.id_habitacion; let i = $index) {
+            <div class="col-md-6 col-lg-4">
+              <div class="premium-room-card">
+                
+                <!-- Room Image & Status Badge -->
+                <div class="room-image-wrapper">
+                  <img [src]="hab.categoriaHabitacion?.imagen || 'assets/placeholder-habitacion.jpg'" 
+                       alt="{{ hab.nombre_habitacion }}" 
+                       class="room-card-image"
+                       loading="lazy" />
+                  <div class="room-status-badge" [class.available]="hab.estado === 'DISPONIBLE'" [class.occupied]="hab.estado === 'OCUPADA'">
+                    {{ hab.estado }}
+                  </div>
                 </div>
-                <div class="habitacion-info">
-                    <h4>{{ hab.nombre_habitacion }}</h4>
-                    <h2 style="color: #f4a300;">{{ hab.categoriaHabitacion.nombre_categoria }}</h2>
-                    <p>{{ hab.descripcion_habitacion }}</p>
-                    <p><strong>Capacidad:</strong> {{ hab.categoriaHabitacion.capacidad }} personas</p>
-                    <p><strong>Precio:</strong> S/. {{ hab.categoriaHabitacion.precio }}</p>
-                    <div class="iconos">
-                        <i class="fas fa-wifi" style="color: #CC9F53;"></i>
-                        <i class="fas fa-tv" style="color: #CC9F53;"></i>
-                        <i class="fas fa-bed" style="color: #CC9F53;"></i>
-                        <i class="fas fa-shower" style="color: #CC9F53;"></i>
-                        <i class="fas fa-mug-hot" style="color: #CC9F53;"></i>
+
+                <!-- Room Details -->
+                <div class="room-card-body">
+                  <span class="room-category-label">{{ hab.categoriaHabitacion.nombre_categoria }}</span>
+                  <h4 class="room-title">{{ hab.nombre_habitacion }}</h4>
+                  <p class="room-description text-muted">
+                    {{ hab.descripcion_habitacion || hab.categoriaHabitacion.descripcion_categoria }}
+                  </p>
+
+                  <!-- Specifications -->
+                  <div class="room-specs">
+                    <div class="spec-item">
+                      <i class="fas fa-users text-gold"></i>
+                      <span>Capacidad: <strong>{{ hab.categoriaHabitacion.capacidad }} personas</strong></span>
                     </div>
-                    <button class="btn-detalle mt-3" [routerLink]="['/detalle', hab.id_habitacion]">
-                        Ver Detalle
+                  </div>
+
+                  <!-- Amenities Icons -->
+                  <div class="room-amenities">
+                    <i class="fas fa-wifi" title="Wifi de alta velocidad"></i>
+                    <i class="fas fa-tv" title="Smart TV"></i>
+                    <i class="fas fa-bed" title="Camas confortables"></i>
+                    <i class="fas fa-shower" title="Baño completo"></i>
+                    <i class="fas fa-mug-hot" title="Desayuno incluido / Cafetera"></i>
+                  </div>
+
+                  <!-- Price and Action -->
+                  <div class="room-card-footer mt-auto pt-3 d-flex justify-content-between align-items-center">
+                    <div class="price-container">
+                      <span class="currency">S/ </span>
+                      <span class="price-amount">{{ hab.categoriaHabitacion.precio }}</span>
+                      <span class="price-period">/ noche</span>
+                    </div>
+                    <button class="btn-premium-action" [routerLink]="['/detalle', hab.id_habitacion]">
+                      Ver Detalle
+                      <i class="fas fa-arrow-right ms-1"></i>
                     </button>
+                  </div>
+
                 </div>
+              </div>
             </div>
+          }
         </div>
-        }
-        } @else {
-        <div class="alert alert-info mt-4">
-            No se encontraron habitaciones para la categoría seleccionada.
+      } @else {
+        <div class="text-center py-5 bg-light rounded shadow-sm border border-dashed">
+          <i class="fas fa-hotel huge-icon-gray mb-3"></i>
+          <h4 class="text-dark">No hay habitaciones disponibles</h4>
+          <p class="text-muted small">No se encontraron habitaciones para la categoría "{{ categoriaSeleccionada }}".</p>
         </div>
-        }
-        }
-    </div>
+      }
+    }
+  </div>
 </div>

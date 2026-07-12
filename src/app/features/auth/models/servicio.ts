@@ -8,5 +8,5 @@ export interface Servicio {
     precio:number,
     imagen:string,
     reservaServicio: ReservaServicio[],
-    resena: Resena
+    resena: any
 }

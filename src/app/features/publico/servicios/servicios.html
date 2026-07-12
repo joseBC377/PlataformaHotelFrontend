@@ -1,26 +1,168 @@
-<div class="servicios-container">
-  <h2 class="titulo-seccion">NUESTROS SERVICIOS</h2>
-  <h3 class="subtitulo-seccion">Todo lo que necesitas</h3>
-
-  @if (servicios.length > 0) {
-  @for (servicio of servicios; track servicio.idServicio; let i = $index) {
- <div class="servicio-card" [ngClass]="{ 'par': i % 2 === 1 }">
-    <div class="servicio-contenido">
-      <div class="servicio-carrusel">
-        <div class="imagenes">
-          <img [src]="servicio.imagen" [alt]="servicio.nombre_servicio" />
-        </div>
-      </div>
-      <div class="servicio-info">
-        <h2 style="color: #2c3e75;">{{ servicio.nombre_servicio }}</h2>
-        <p [innerHTML]="servicio.descripcion_servicio"></p>
-      </div>
+<div class="servicios-page-wrapper">
+  <!-- Hero Banner -->
+  <div class="services-hero-banner">
+    <div class="banner-overlay"></div>
+    <div class="container banner-content">
+      <span class="sub-title">Royal Suites Hotel</span>
+      <h1 class="main-title">NUESTROS SERVICIOS</h1>
+      <h3 class="tagline-title">Experiencias de Primer Nivel</h3>
+      <div class="gold-accent-line"></div>
+      <p class="lead-text">
+        Diseñamos cada espacio y detalle para superar tus expectativas. Disfruta de una amplia gama de servicios exclusivos pensados para tu bienestar, comodidad y entretenimiento durante tu estadía.
+      </p>
     </div>
   </div>
-  }
-  } @else {
-  <div class="alert alert-warning mt-3">
-    No se encontraron servicios disponibles.
+
+  <div class="container py-5">
+    @if (servicios.length > 0) {
+      <div class="row g-4 justify-content-center">
+        @for (servicio of servicios; track servicio.idServicio; let i = $index) {
+          <div class="col-md-6 col-lg-4 animate-card" [style.animation-delay]="(i * 120) + 'ms'">
+            <div class="premium-service-card">
+              
+              <!-- Card Image & Price Badge -->
+              <div class="service-image-wrapper">
+                <img [src]="servicio.imagen || 'assets/placeholder-servicio.jpg'" 
+                     [alt]="servicio.nombre_servicio" 
+                     class="service-card-image"
+                     loading="lazy" />
+                <div class="service-overlay-gradient"></div>
+                @if (servicio.precio) {
+                  <div class="service-price-badge">
+                    <span class="price-currency">S/</span>
+                    <span class="price-val">{{ servicio.precio | number:'1.2-2' }}</span>
+                  </div>
+                }
+              </div>
+
+              <!-- Card Body Content -->
+              <div class="service-card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <h4 class="service-title mb-0">{{ servicio.nombre_servicio }}</h4>
+                  <div class="service-icon-box">
+                    @if (servicio.nombre_servicio.toLowerCase().includes('spa') || servicio.nombre_servicio.toLowerCase().includes('masaj') || servicio.nombre_servicio.toLowerCase().includes('relax')) {
+                      <i class="fas fa-spa" title="Servicio de Spa"></i>
+                    } @else if (servicio.nombre_servicio.toLowerCase().includes('restaurante') || servicio.nombre_servicio.toLowerCase().includes('comida') || servicio.nombre_servicio.toLowerCase().includes('gastronom') || servicio.nombre_servicio.toLowerCase().includes('desayun')) {
+                      <i class="fas fa-utensils" title="Gastronomía"></i>
+                    } @else if (servicio.nombre_servicio.toLowerCase().includes('piscina') || servicio.nombre_servicio.toLowerCase().includes('alberca') || servicio.nombre_servicio.toLowerCase().includes('acuatic')) {
+                      <i class="fas fa-swimming-pool" title="Piscina"></i>
+                    } @else if (servicio.nombre_servicio.toLowerCase().includes('gimnasio') || servicio.nombre_servicio.toLowerCase().includes('gym') || servicio.nombre_servicio.toLowerCase().includes('deport')) {
+                      <i class="fas fa-dumbbell" title="Gimnasio"></i>
+                    } @else if (servicio.nombre_servicio.toLowerCase().includes('bar') || servicio.nombre_servicio.toLowerCase().includes('trago') || servicio.nombre_servicio.toLowerCase().includes('coctel')) {
+                      <i class="fas fa-glass-martini-alt" title="Bar & Lounge"></i>
+                    } @else if (servicio.nombre_servicio.toLowerCase().includes('estacionamiento') || servicio.nombre_servicio.toLowerCase().includes('cochera') || servicio.nombre_servicio.toLowerCase().includes('parking') || servicio.nombre_servicio.toLowerCase().includes('auto')) {
+                      <i class="fas fa-parking" title="Estacionamiento Privado"></i>
+                    } @else if (servicio.nombre_servicio.toLowerCase().includes('wifi') || servicio.nombre_servicio.toLowerCase().includes('internet')) {
+                      <i class="fas fa-wifi" title="Conexión Wifi"></i>
+                    } @else {
+                      <i class="fas fa-concierge-bell" title="Conserjería"></i>
+                    }
+                  </div>
+                </div>
+
+                <div class="service-divider mb-3"></div>
+
+                <div class="service-description mb-4" [innerHTML]="servicio.descripcion_servicio"></div>
+                
+                <!-- Dynamic Reviews Integration -->
+                @if (servicio.resena) {
+                  <div class="service-reviews-container">
+                    
+                    <!-- Case 1: Array of reviews -->
+                    @if (servicio.resena.length !== undefined) {
+                      @if (servicio.resena.length > 0) {
+                        <details class="reviews-details">
+                          <summary class="reviews-summary">
+                            <span class="summary-title">
+                              <i class="fas fa-star text-gold me-1"></i>
+                              Opiniones ({{ servicio.resena.length }})
+                            </span>
+                            <span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>
+                          </summary>
+                          
+                          <div class="reviews-content-wrapper">
+                            @for (res of servicio.resena; track res.id_resena) {
+                              <div class="review-card-item">
+                                <div class="review-header d-flex justify-content-between align-items-center mb-1">
+                                  <span class="review-user-name">
+                                    <i class="fas fa-user-circle me-1 text-muted"></i>
+                                    {{ res.usuario?.nombre_usuario || 'Huésped' }} {{ res.usuario?.apellido_paterno || '' }}
+                                  </span>
+                                  <span class="review-date-badge">{{ res.fecha | date: 'dd/MM/yyyy' }}</span>
+                                </div>
+                                <div class="review-rating-stars mb-2">
+                                  @for (star of [1,2,3,4,5]; track star) {
+                                    <i class="fas fa-star" [class.filled]="star <= res.calificacion" [class.empty]="star > res.calificacion"></i>
+                                  }
+                                </div>
+                                <p class="review-comment-text">“{{ res.comentario || 'Sin comentarios.' }}”</p>
+                              </div>
+                            }
+                          </div>
+                        </details>
+                      } @else {
+                        <div class="no-reviews-message py-2">
+                          <i class="far fa-star me-1 text-muted"></i>
+                          Sin opiniones registradas aún
+                        </div>
+                      }
+                    }
+                    
+                    <!-- Case 2: Single review object -->
+                    @else if (servicio.resena.calificacion !== undefined) {
+                      <details class="reviews-details">
+                        <summary class="reviews-summary">
+                          <span class="summary-title">
+                            <i class="fas fa-star text-gold me-1"></i>
+                            Opinión Destacada
+                          </span>
+                          <span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>
+                        </summary>
+                        
+                        <div class="reviews-content-wrapper">
+                          <div class="review-card-item">
+                            <div class="review-header d-flex justify-content-between align-items-center mb-1">
+                              <span class="review-user-name">
+                                <i class="fas fa-user-circle me-1 text-muted"></i>
+                                {{ servicio.resena.usuario?.nombre_usuario || 'Huésped' }} {{ servicio.resena.usuario?.apellido_paterno || '' }}
+                              </span>
+                              <span class="review-date-badge">{{ servicio.resena.fecha | date: 'dd/MM/yyyy' }}</span>
+                            </div>
+                            <div class="review-rating-stars mb-2">
+                              @for (star of [1,2,3,4,5]; track star) {
+                                <i class="fas fa-star" [class.filled]="star <= servicio.resena.calificacion" [class.empty]="star > servicio.resena.calificacion"></i>
+                              }
+                            </div>
+                            <p class="review-comment-text">“{{ servicio.resena.comentario || 'Sin comentarios.' }}”</p>
+                          </div>
+                        </div>
+                      </details>
+                    }
+                    
+                  </div>
+                } @else {
+                  <div class="no-reviews-message py-2">
+                    <i class="far fa-star me-1 text-muted"></i>
+                    Sin opiniones registradas aún
+                  </div>
+                }
+              </div>
+
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <div class="empty-state-container text-center py-5 px-4 rounded-4 shadow-sm">
+        <div class="empty-state-icon mb-4">
+          <i class="fas fa-concierge-bell"></i>
+        </div>
+        <h3 class="empty-state-title">No hay servicios disponibles</h3>
+        <p class="empty-state-description max-w-500 mx-auto">
+          Por el momento no contamos con servicios registrados en nuestro catálogo premium. Por favor, vuelve a consultar más tarde.
+        </p>
+      </div>
+    }
   </div>
-  }
 </div>

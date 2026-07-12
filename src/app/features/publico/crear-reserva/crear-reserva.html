@@ -1,92 +1,326 @@
-<div class="container mt-4 pb-5">
-  <h2 class="mb-4">Crear Reserva</h2>
-
-  <section class="card p-3 mb-4 bg-light border-0 shadow-sm">
-    <h3 class="h5 text-primary">1. Configura tu Estancia</h3>
-    <hr>
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label fw-bold">Fecha de Entrada</label>
-        <input type="date" class="form-control" [(ngModel)]="fechaInicio" name="fechaInicio" [min]="hoy">
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label fw-bold">Fecha de Salida</label>
-        <input type="date" class="form-control" [(ngModel)]="fechaFin" name="fechaFin" [min]="fechaInicio">
-      </div>
+<div class="crear-reserva-wrapper">
+  <!-- Hero / Header Banner -->
+  <div class="reserva-hero-banner">
+    <div class="banner-overlay"></div>
+    <div class="container banner-content">
+      <span class="sub-title">Experiencia Real</span>
+      <h1 class="main-title">RESERVA TU ESTANCIA</h1>
+      <p class="lead-text">Disfruta del máximo confort, elegancia y atención de primera clase en Royal Suites Hotel.</p>
     </div>
-    @if (calcularNoches() > 0) {
-    <div class="text-end">
-      <span class="badge bg-info text-dark font-monospace">Estancia de {{ calcularNoches() }} noches</span>
-    </div>
-    } @else if (fechaInicio && fechaFin) {
-    <div class="text-end">
-      <span class="badge bg-danger">La fecha de salida debe ser posterior a la de entrada</span>
-    </div>
-    }
-  </section>
+  </div>
 
-  <section class="mb-5">
-    <h3 class="h5 text-primary">2. Selecciona tu Habitación</h3>
-    <hr>
-    <div class="row">
-      @for (h of habitacionesList; track h.id_habitacion) {
-      <div class="col-md-4 mb-3">
-        <div class="card h-100 shadow-sm position-relative"
-          [class.border-primary]="estaHabitacionSeleccionada(h.id_habitacion)"
-          [class.opacity-50]="h.estado === 'OCUPADA'">
+  <div class="container mt-5 pb-5">
+    <div class="row g-4">
+      <!-- Column Izquierda: Configuración y Selección de Habitaciones -->
+      <div class="col-lg-8">
+        
+        <!-- Paso 1: Configurar Estancia -->
+        <mat-card class="premium-card mb-4 shadow-sm">
+          <mat-card-header class="card-header-premium">
+            <mat-card-title>
+              <span class="step-num">1</span>
+              Configura tu Estancia
+            </mat-card-title>
+            <mat-card-subtitle>Ingresa las fechas de tu llegada y salida</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content class="pt-4 px-4 pb-3">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <mat-form-field appearance="outline" class="w-100" (click)="pickerEntrada.open()" style="cursor: pointer;">
+                  <mat-label>Fecha de Entrada</mat-label>
+                  <input matInput 
+                         [matDatepicker]="pickerEntrada" 
+                         [(ngModel)]="fechaInicio" 
+                         (dateChange)="onFechaInicioChange()" 
+                         [min]="hoyDate" 
+                         readonly 
+                         style="cursor: pointer;">
+                  <mat-datepicker-toggle matSuffix [for]="pickerEntrada"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerEntrada></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 mb-3">
+                <mat-form-field appearance="outline" class="w-100" (click)="pickerSalida.open()" style="cursor: pointer;">
+                  <mat-label>Fecha de Salida</mat-label>
+                  <input matInput 
+                         [matDatepicker]="pickerSalida" 
+                         [(ngModel)]="fechaFin" 
+                         [min]="minFechaFin" 
+                         readonly 
+                         style="cursor: pointer;">
+                  <mat-datepicker-toggle matSuffix [for]="pickerSalida"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerSalida></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <!-- Alertas de fechas -->
+            <div class="d-flex justify-content-end align-items-center mt-2">
+              @if (calcularNoches() > 0) {
+                <div class="status-badge success-bg">
+                  <mat-icon>done_all</mat-icon>
+                  Estancia de {{ calcularNoches() }} {{ calcularNoches() === 1 ? 'noche' : 'noches' }}
+                </div>
+              } @else if (fechaInicio && fechaFin) {
+                <div class="status-badge error-bg">
+                  <mat-icon>error_outline</mat-icon>
+                  La fecha de salida debe ser posterior a la de entrada
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
 
-          <div class="position-absolute top-0 end-0 m-2">
-            <span class="badge" [ngClass]="h.estado === 'DISPONIBLE' ? 'bg-success' : 'bg-danger'">
-              {{ h.estado }}
-            </span>
+        <!-- Paso 2: Seleccionar Habitación -->
+        <mat-card class="premium-card shadow-sm mb-4">
+          <mat-card-header class="card-header-premium">
+            <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
+              <div>
+                <mat-card-title>
+                  <span class="step-num">2</span>
+                  Selecciona tu Habitación
+                </mat-card-title>
+                <mat-card-subtitle>Elige una o más habitaciones de nuestra selección exclusiva</mat-card-subtitle>
+              </div>
+              
+              <!-- Mostrar solo disponibles toggle -->
+              <div class="d-flex align-items-center pe-3">
+                <label class="d-flex align-items-center text-white small cursor-pointer">
+                  <input type="checkbox" [(ngModel)]="soloDisponibles" class="form-check-input me-2 bg-transparent border-white" style="cursor:pointer;">
+                  Solo disponibles
+                </label>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <!-- Filtro de Categoría por Chips -->
+          <div class="category-filters-container px-4 pt-3 pb-2">
+            <div class="filter-chips">
+              @for (cat of categorias; track cat) {
+                <button class="filter-chip-btn" 
+                        [class.active]="categoriaSeleccionada === cat"
+                        (click)="categoriaSeleccionada = cat">
+                  {{ cat }}
+                </button>
+              }
+            </div>
           </div>
 
-          <div class="card-body">
-            <h5 class="card-title pe-5">Habitación {{ h.nombre_habitacion }}</h5>
-            <p class="badge bg-info text-dark">{{ h.categoriaHabitacion?.nombre_categoria }}</p>
-            <p class="card-text text-muted small">{{ h.categoriaHabitacion?.descripcion_categoria }}</p>
-            <p class="fw-bold text-success">S/ {{ h.categoriaHabitacion?.precio }} / noche</p>
+          <mat-card-content class="px-4 pb-4 pt-3">
+            <!-- Grid de habitaciones -->
+            <div class="row g-4">
+              @for (h of habitacionesFiltradas; track h.id_habitacion) {
+                <div class="col-md-6">
+                  <div class="room-booking-card" 
+                       [class.selected]="estaHabitacionSeleccionada(h.id_habitacion)"
+                       [class.occupied]="h.estado === 'OCUPADA'">
+                    
+                    <!-- Imagen de la habitación con badge de estado -->
+                    <div class="room-card-image" [style.background-image]="'url(' + (h.categoriaHabitacion?.imagen || 'assets/placeholder-habitacion.jpg') + ')'">
+                      <div class="room-status-badge" [class.available]="h.estado === 'DISPONIBLE'" [class.occupied]="h.estado === 'OCUPADA'">
+                        {{ h.estado }}
+                      </div>
+                    </div>
 
-            @if (h.estado === 'DISPONIBLE') {
-            <button class="btn w-100"
-              [ngClass]="estaHabitacionSeleccionada(h.id_habitacion) ? 'btn-primary' : 'btn-outline-primary'"
-              (click)="seleccionarHabitacion(h)">
-              <i class="bi"
-                [ngClass]="estaHabitacionSeleccionada(h.id_habitacion) ? 'bi-check-circle-fill' : 'bi-plus-circle'"></i>
-              {{ estaHabitacionSeleccionada(h.id_habitacion) ? ' Seleccionada' : ' Seleccionar' }}
-            </button>
-            } @else {
-            <button class="btn btn-secondary w-100" disabled>
-              <i class="bi bi-slash-circle"></i> No Disponible
-            </button>
-            }
-          </div>
+                    <!-- Detalles de la habitación -->
+                    <div class="room-card-details">
+                      <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="pe-2">
+                          <h4 class="room-title">Habitación {{ h.nombre_habitacion }}</h4>
+                          <span class="room-category">{{ h.categoriaHabitacion?.nombre_categoria }}</span>
+                        </div>
+                        <div class="room-price-box">
+                          <span class="currency">S/</span>
+                          <span class="price-val">{{ h.categoriaHabitacion?.precio }}</span>
+                          <span class="per-night">/ noche</span>
+                        </div>
+                      </div>
+
+                      <p class="room-description text-muted small mb-3">
+                        {{ h.categoriaHabitacion?.descripcion_categoria }}
+                      </p>
+
+                      <!-- Capacidad y Amenidades -->
+                      <div class="room-features d-flex justify-content-between align-items-center mb-3">
+                        <div class="room-capacity text-muted small">
+                          <i class="fas fa-users me-1 text-gold"></i> Capacidad: <strong>{{ h.categoriaHabitacion?.capacidad }} pers.</strong>
+                        </div>
+                        <div class="room-amenities">
+                          <i class="fas fa-wifi text-gold" title="Wifi de alta velocidad"></i>
+                          <i class="fas fa-tv text-gold" title="Smart TV"></i>
+                          <i class="fas fa-shower text-gold" title="Baño completo"></i>
+                          <i class="fas fa-mug-hot text-gold" title="Cafetera / Tetera"></i>
+                        </div>
+                      </div>
+
+                      <!-- Botón de Acción -->
+                      @if (h.estado === 'DISPONIBLE') {
+                        <button mat-raised-button 
+                                [color]="estaHabitacionSeleccionada(h.id_habitacion) ? 'primary' : ''"
+                                class="w-100 select-btn"
+                                [class.selected]="estaHabitacionSeleccionada(h.id_habitacion)"
+                                (click)="seleccionarHabitacion(h)">
+                          <mat-icon>{{ estaHabitacionSeleccionada(h.id_habitacion) ? 'check_circle' : 'add_circle_outline' }}</mat-icon>
+                          {{ estaHabitacionSeleccionada(h.id_habitacion) ? 'Habitación Seleccionada' : 'Seleccionar Habitación' }}
+                        </button>
+                      } @else {
+                        <button mat-raised-button disabled class="w-100 select-btn">
+                          <mat-icon>block</mat-icon>
+                          No Disponible
+                        </button>
+                      }
+                    </div>
+
+                  </div>
+                </div>
+              } @empty {
+                <div class="col-12 py-5 text-center text-muted">
+                  <mat-icon class="huge-icon mb-2">hotel</mat-icon>
+                  <p class="fs-5 mb-1">No se encontraron habitaciones</p>
+                  <p class="small">Intenta cambiando los filtros o recargando la página.</p>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+
+      <!-- Column Derecha: Resumen de Selección Sticky -->
+      <div class="col-lg-4">
+        <div class="sticky-sidebar">
+          <mat-card class="premium-card summary-card shadow-lg">
+            <mat-card-header class="card-header-premium-gold">
+              <mat-card-title class="d-flex align-items-center gap-2 text-white">
+                <mat-icon>receipt_long</mat-icon>
+                Resumen de Reserva
+              </mat-card-title>
+              <mat-card-subtitle class="text-white-50">Detalle de tu estancia</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="p-4">
+              <!-- Fechas Seleccionadas -->
+              <div class="summary-section mb-3">
+                <h5 class="section-title"><mat-icon>date_range</mat-icon> Fechas Elegidas</h5>
+                <div class="d-flex justify-content-between align-items-center py-2 px-3 bg-light rounded border-start border-3 border-primary">
+                  <div>
+                    <span class="d-block small text-muted">Entrada</span>
+                    <strong class="text-dark">{{ fechaInicio ? (fechaInicio | date:'dd/MM/yyyy') : 'No seleccionada' }}</strong>
+                  </div>
+                  <mat-icon class="text-muted">arrow_forward</mat-icon>
+                  <div class="text-end">
+                    <span class="d-block small text-muted">Salida</span>
+                    <strong class="text-dark">{{ fechaFin ? (fechaFin | date:'dd/MM/yyyy') : 'No seleccionada' }}</strong>
+                  </div>
+                </div>
+                @if (calcularNoches() > 0) {
+                  <div class="text-end mt-1 text-primary small fw-bold">
+                    {{ calcularNoches() }} {{ calcularNoches() === 1 ? 'noche' : 'noches' }} de hospedaje
+                  </div>
+                }
+              </div>
+
+              <mat-divider class="my-3"></mat-divider>
+
+              <!-- Habitaciones Seleccionadas -->
+              <div class="summary-section mb-3">
+                <h5 class="section-title d-flex justify-content-between align-items-center">
+                  <span class="d-flex align-items-center gap-1">
+                    <mat-icon>bedroom_parent</mat-icon> Habitaciones
+                  </span>
+                  <span class="badge bg-primary text-white rounded-pill">{{ habitacionesSeleccionadas.length }}</span>
+                </h5>
+
+                @if (habitacionesSeleccionadas.length > 0) {
+                  <div class="selected-rooms-list gap-2 d-flex flex-column max-height-rooms pt-2">
+                    @for (room of habitacionesSeleccionadas; track room.id_habitacion) {
+                      <div class="selected-room-item p-2 bg-light rounded d-flex justify-content-between align-items-center">
+                        <div class="pe-2">
+                          <strong class="text-dark d-block" style="font-size:0.9rem;">Habitación {{ room.nombre_habitacion }}</strong>
+                          <span class="small text-muted" style="font-size:0.75rem;">{{ room.categoriaHabitacion?.nombre_categoria }}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="fw-bold text-success" style="font-size:0.9rem;">S/ {{ room.categoriaHabitacion?.precio }}</span>
+                          <button mat-icon-button color="warn" class="btn-remove-room" (click)="seleccionarHabitacion(room)" title="Quitar">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="text-center py-4 bg-light rounded border-dashed text-muted">
+                    <mat-icon class="text-muted-40 mb-1" style="font-size:2rem; width:32px; height:32px;">king_bed</mat-icon>
+                    <p class="small mb-0">Ninguna habitación seleccionada</p>
+                  </div>
+                }
+              </div>
+
+              <mat-divider class="my-3"></mat-divider>
+
+              <!-- Detalle de precios -->
+              @if (habitacionesSeleccionadas.length > 0 && calcularNoches() > 0) {
+                <div class="price-breakdown bg-light p-3 rounded mb-4">
+                  @for (room of habitacionesSeleccionadas; track room.id_habitacion) {
+                    <div class="d-flex justify-content-between text-muted small mb-1">
+                      <span>Hab. {{ room.nombre_habitacion }} (S/ {{ room.categoriaHabitacion?.precio }} × {{ calcularNoches() }} n.)</span>
+                      <span>S/ {{ (room.categoriaHabitacion?.precio || 0) * calcularNoches() }}</span>
+                    </div>
+                  }
+                  <mat-divider class="my-2"></mat-divider>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <span class="fw-bold text-dark fs-6">Importe Total</span>
+                    <span class="total-price-gold">S/ {{ calcularTotalConNoches(calcularNoches()) }}</span>
+                  </div>
+                </div>
+              } @else {
+                <div class="d-flex justify-content-between align-items-center py-2 px-1 mb-4">
+                  <span class="fw-bold text-muted">Total</span>
+                  <span class="fs-4 fw-bold text-muted">S/ 0</span>
+                </div>
+              }
+
+              <!-- Botón Continuar -->
+              <button mat-raised-button 
+                      color="accent" 
+                      class="w-100 btn-continue-booking py-3"
+                      [disabled]="habitacionesSeleccionadas.length === 0 || calcularNoches() <= 0"
+                      (click)="irAResumen()">
+                <mat-icon>credit_card</mat-icon>
+                Continuar a Servicios y Pago
+              </button>
+
+              @if (habitacionesSeleccionadas.length === 0) {
+                <p class="small text-danger text-center mt-2 mb-0">
+                  * Selecciona al menos una habitación.
+                </p>
+              } @else if (calcularNoches() <= 0) {
+                <p class="small text-danger text-center mt-2 mb-0">
+                  * Selecciona fechas de estancia válidas.
+                </p>
+              }
+            </mat-card-content>
+          </mat-card>
         </div>
       </div>
-      } @empty {
-      <p class="text-muted">Cargando habitaciones...</p>
-      }
+
     </div>
-  </section>
+  </div>
 
-  <div class="card bg-dark text-white p-3 fixed-bottom shadow-lg border-0 rounded-0">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <p class="mb-0 small text-secondary">Resumen de selección:</p>
-          <span class="fw-bold">{{ habitacionesSeleccionadas.length }} hab. seleccionadas</span>
-          @if (calcularNoches() > 0) {
-          <span class="ms-2 badge bg-secondary">{{ calcularNoches() }} noches</span>
-          }
-        </div>
-        <div class="text-end">
-          <h4 class="mb-0 text-success">Total: S/ {{ calcularTotalConNoches(calcularNoches()) }}</h4>
-          <button class="btn btn-success px-4"
-            [disabled]="habitacionesSeleccionadas.length === 0 || calcularNoches() <= 0" (click)="irAResumen()">
-            Continuar a Servicios y Pago
-          </button>
-        </div>
+  <!-- Barra de Resumen flotante para móviles -->
+  <div class="mobile-summary-bar d-lg-none shadow-lg py-2 px-3">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div>
+        <span class="d-block small text-light-50" style="font-size:0.75rem;">{{ habitacionesSeleccionadas.length }} hab. seleccionada(s)</span>
+        <span class="fw-bold text-white fs-5">Total: S/ {{ calcularTotalConNoches(calcularNoches()) }}</span>
       </div>
+      <button mat-flat-button color="accent" 
+              [disabled]="habitacionesSeleccionadas.length === 0 || calcularNoches() <= 0" 
+              (click)="irAResumen()">
+        Continuar
+        <mat-icon class="ms-1">arrow_forward</mat-icon>
+      </button>
     </div>
   </div>
 </div>

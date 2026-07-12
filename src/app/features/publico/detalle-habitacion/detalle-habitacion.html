@@ -1,45 +1,133 @@
-<div class="container mt-4 mb-5" style="max-width: 800px;">
+<div class="container room-detail-container mt-4 mb-5">
 
-  <a routerLink="/habitaciones" class="text-decoration-none text-muted mb-3 d-inline-block">
-    &larr; Volver a las habitaciones
+  <a routerLink="/habitaciones" class="back-link mb-4 d-inline-flex align-items-center text-decoration-none">
+    <i class="bi bi-arrow-left me-2"></i> Volver a las habitaciones
   </a>
 
   @if (cargando) {
-  <p class="text-muted">Cargando...</p>
+  <div class="loading-state text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted mt-3">Cargando detalles de la habitación...</p>
+  </div>
   } @else if (!habitacion) {
-  <p class="text-danger">No se encontró la habitación.</p>
+  <div class="error-state text-center py-5">
+    <i class="bi bi-exclamation-triangle text-danger display-3 mb-3 d-block"></i>
+    <h4 class="fw-bold text-dark">No se encontró la habitación</h4>
+    <p class="text-muted">La habitación que busca no está disponible en este momento.</p>
+    <a routerLink="/habitaciones" class="btn btn-outline-primary rounded-pill mt-2">Explorar otras habitaciones</a>
+  </div>
   } @else {
-  <img [src]="habitacion.categoriaHabitacion.imagen || 'assets/placeholder-habitacion.jpg'"
-    class="img-fluid rounded mb-4 w-100" style="max-height: 400px; object-fit: cover;"
-    alt="{{ habitacion.nombre_habitacion }}">
+  <div class="card room-detail-card shadow border-0 overflow-hidden">
+    
+    <!-- Hero Image Section with Status Badge -->
+    <div class="room-hero-image-wrapper position-relative">
+      <img [src]="habitacion.categoriaHabitacion.imagen || 'assets/placeholder-habitacion.jpg'"
+        class="room-hero-image w-100"
+        alt="{{ habitacion.nombre_habitacion }}">
+      <div class="status-overlay-badge badge" [ngClass]="habitacion.estado === 'DISPONIBLE' ? 'status-available' : 'status-unavailable'">
+        <i class="bi" [ngClass]="habitacion.estado === 'DISPONIBLE' ? 'bi-check-circle-fill' : 'bi-dash-circle-fill'"></i>
+        {{ habitacion.estado }}
+      </div>
+    </div>
 
-  <h2 class="fw-bold">{{ habitacion.categoriaHabitacion.nombre_categoria }}</h2>
+    <div class="card-body p-4 p-md-5">
+      
+      <!-- Room Title & Category -->
+      <div class="mb-4">
+        <span class="text-uppercase tracking-widest text-gold text-xs fw-bold d-block mb-1">Categoría Premium</span>
+        <h1 class="room-title fw-bold text-dark mb-3">{{ habitacion.categoriaHabitacion.nombre_categoria }}</h1>
+        
+        <!-- Room Meta Info (Capacity & Room Number) -->
+        <div class="room-meta-info d-flex gap-4 flex-wrap">
+          <div class="meta-item d-flex align-items-center">
+            <div class="meta-icon-circle bg-light-gold text-gold me-2">
+              <i class="bi bi-people-fill"></i>
+            </div>
+            <span>Capacidad: <strong class="text-dark">{{ habitacion.categoriaHabitacion.capacidad }} personas</strong></span>
+          </div>
+          <div class="meta-item d-flex align-items-center">
+            <div class="meta-icon-circle bg-light-blue text-primary me-2">
+              <i class="bi bi-door-closed-fill"></i>
+            </div>
+            <span>Habitación: <strong class="text-dark">{{ habitacion.nombre_habitacion }}</strong></span>
+          </div>
+        </div>
+      </div>
 
-  <div class="d-flex gap-4 text-muted small mb-3">
-    <span><i class="bi bi-people"></i> Capacidad: {{ habitacion.categoriaHabitacion.capacidad }} personas</span>
-    <span><i class="bi bi-door-open"></i> Habitación {{ habitacion.nombre_habitacion }}</span>
-    <span class="badge" [ngClass]="habitacion.estado === 'DISPONIBLE' ? 'bg-success' : 'bg-danger'">
-      {{ habitacion.estado }}
-    </span>
-  </div>
+      <!-- Grid for Description & Amenities -->
+      <div class="row g-4 mt-2">
+        <!-- Description Column -->
+        <div class="col-12 col-lg-7">
+          <h5 class="section-title text-uppercase fw-bold text-dark mb-3">Descripción de la Habitación</h5>
+          <div class="description-content text-muted lh-lg">
+            <p class="mb-3 lead-text">{{ habitacion.categoriaHabitacion.descripcion_categoria }}</p>
+            <p class="mb-0">{{ habitacion.descripcion_habitacion }}</p>
+          </div>
+        </div>
 
-  <h5 class="fw-bold mt-4">Descripción</h5>
-  <p class="text-muted">{{ habitacion.categoriaHabitacion.descripcion_categoria }}</p>
-  <p class="text-muted">{{ habitacion.descripcion_habitacion }}</p>
+        <!-- Amenities Column -->
+        <div class="col-12 col-lg-5">
+          <div class="amenities-card p-4 rounded-4 bg-light-card border border-light">
+            <h5 class="section-title text-uppercase fw-bold text-dark mb-3">Comodidades Incluidas</h5>
+            
+            <div class="d-flex flex-column gap-3 mt-3">
+              <div class="amenity-item d-flex align-items-center">
+                <span class="amenity-badge-custom bg-white shadow-xs border text-primary me-3">
+                  <i class="bi bi-wifi"></i>
+                </span>
+                <div>
+                  <span class="fw-semibold text-dark d-block text-sm">WiFi de alta velocidad</span>
+                  <span class="text-muted text-xs">Acceso ilimitado incluido</span>
+                </div>
+              </div>
+              
+              <div class="amenity-item d-flex align-items-center">
+                <span class="amenity-badge-custom bg-white shadow-xs border text-primary me-3">
+                  <i class="bi bi-tv"></i>
+                </span>
+                <div>
+                  <span class="fw-semibold text-dark d-block text-sm">Smart TV con Cable</span>
+                  <span class="text-muted text-xs">Pantalla plana con canales premium</span>
+                </div>
+              </div>
+              
+              <div class="amenity-item d-flex align-items-center">
+                <span class="amenity-badge-custom bg-white shadow-xs border text-primary me-3">
+                  <i class="bi bi-cup-hot"></i>
+                </span>
+                <div>
+                  <span class="fw-semibold text-dark d-block text-sm">Desayuno Buffet</span>
+                  <span class="text-muted text-xs">Desayuno de cortesía por las mañanas</span>
+                </div>
+              </div>
+            </div>
 
-  <h5 class="fw-bold mt-4">Comodidades</h5>
-  <div class="d-flex gap-2 flex-wrap mb-4">
-    <span class="badge bg-light text-dark border"><i class="bi bi-wifi"></i> WiFi</span>
-    <span class="badge bg-light text-dark border"><i class="bi bi-tv"></i> TV</span>
-    <span class="badge bg-light text-dark border"><i class="bi bi-cup-hot"></i> Desayuno</span>
-  </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="d-flex justify-content-between align-items-center border-top pt-3">
-    <h3 class="fw-bold mb-0">S/ {{ habitacion.categoriaHabitacion.precio }} <small class="text-muted fs-6">por
-        noche</small></h3>
-    <button class="btn btn-dark px-4" [disabled]="habitacion.estado !== 'DISPONIBLE'" (click)="reservarAhora()">
-      Reservar Ahora
-    </button>
+      <!-- Action Footer with Price and Booking Button -->
+      <div class="room-action-footer d-flex justify-content-between align-items-center flex-wrap gap-4 mt-5 pt-4 border-top">
+        <div class="price-display">
+          <span class="price-label text-uppercase text-muted d-block tracking-wider">Tarifa de estadía</span>
+          <div class="d-flex align-items-baseline">
+            <span class="price-currency text-dark fw-bold me-1">S/</span>
+            <span class="price-val text-dark fw-bold">{{ habitacion.categoriaHabitacion.precio }}</span>
+            <span class="price-period text-muted ms-2">/ noche</span>
+          </div>
+        </div>
+
+        <button class="btn btn-reserve btn-gold btn-lg px-5 py-3 fw-bold rounded-pill text-uppercase tracking-wider shadow-sm"
+          [disabled]="habitacion.estado !== 'DISPONIBLE'"
+          (click)="reservarAhora()">
+          <span>Reservar Ahora</span>
+          <i class="bi bi-arrow-right-short ms-2 align-middle fs-5"></i>
+        </button>
+      </div>
+
+    </div>
   </div>
   }
 </div>

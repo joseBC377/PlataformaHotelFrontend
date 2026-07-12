@@ -279,3 +279,262 @@ $max-width: 1200px;
     }
   }
 }
+
+// ==========================================
+// ROOM DETAIL STYLES (DETALLE DE HABITACION)
+// ==========================================
+
+.room-detail-container {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem;
+
+  .back-link {
+    font-family: 'Inter', sans-serif;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.25s ease;
+
+    i {
+      transition: transform 0.25s ease;
+    }
+
+    &:hover {
+      color: #394E8C;
+      
+      i {
+        transform: translateX(-3px);
+      }
+    }
+  }
+}
+
+.room-detail-card {
+  background-color: #ffffff;
+  border-radius: 1.5rem !important;
+  box-shadow: 0 20px 40px rgba(27, 54, 89, 0.07) !important;
+  overflow: hidden;
+}
+
+.room-hero-image-wrapper {
+  height: 420px;
+  overflow: hidden;
+
+  @media (max-width: 767.98px) {
+    height: 280px;
+  }
+
+  .room-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.8s ease;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+
+  .status-overlay-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 0.65rem 1.25rem;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    &.status-available {
+      background-color: #10b981 !important;
+      color: #ffffff !important;
+    }
+
+    &.status-unavailable {
+      background-color: #ef4444 !important;
+      color: #ffffff !important;
+    }
+  }
+}
+
+.text-gold {
+  color: #FFA000 !important;
+}
+
+.bg-light-gold {
+  background-color: rgba(255, 160, 0, 0.08) !important;
+}
+
+.bg-light-blue {
+  background-color: rgba(57, 78, 140, 0.08) !important;
+}
+
+.room-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 2.25rem;
+  letter-spacing: -0.75px;
+  line-height: 1.2;
+
+  @media (max-width: 767.98px) {
+    font-size: 1.75rem;
+  }
+}
+
+.room-meta-info {
+  .meta-item {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: #475569;
+
+    .meta-icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+    }
+  }
+}
+
+.section-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  color: #1e293b !important;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem !important;
+}
+
+.description-content {
+  font-family: 'Inter', sans-serif;
+  
+  .lead-text {
+    font-size: 1.1rem;
+    color: #334155;
+    font-weight: 500;
+  }
+}
+
+.amenities-card {
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+
+  .amenity-item {
+    font-family: 'Inter', sans-serif;
+
+    .amenity-badge-custom {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      background-color: #ffffff;
+      color: #394E8C !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    .text-sm {
+      font-size: 0.9rem;
+    }
+    
+    .text-xs {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.room-action-footer {
+  .price-display {
+    font-family: 'Inter', sans-serif;
+
+    .price-label {
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      color: #64748b;
+      margin-bottom: 0.25rem;
+    }
+
+    .price-currency {
+      font-size: 1.25rem;
+      color: #394E8C !important;
+      margin-right: 0.15rem;
+    }
+
+    .price-val {
+      font-size: 2.25rem;
+      color: #394E8C !important;
+      line-height: 1;
+
+      @media (max-width: 575.98px) {
+        font-size: 1.85rem;
+      }
+    }
+
+    .price-period {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+
+  .btn-reserve {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    i {
+      transition: transform 0.25s ease;
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 160, 0, 0.4) !important;
+
+      i {
+        transform: translateX(4px);
+      }
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  .btn-gold {
+    background-color: #FFA000 !important;
+    border-color: #FFA000 !important;
+    color: #000000 !important;
+    box-shadow: 0 4px 15px rgba(255, 160, 0, 0.3);
+
+    &:disabled {
+      background-color: #cbd5e1 !important;
+      border-color: #cbd5e1 !important;
+      color: #94a3b8 !important;
+      box-shadow: none !important;
+      opacity: 0.7;
+    }
+  }
+}
+
+.loading-state,
+.error-state {
+  font-family: 'Inter', sans-serif;
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  padding: 4rem 2rem !important;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+}

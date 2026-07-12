@@ -1,0 +1,566 @@
+@use 'variables' as var;
+
+// Hero Banner
+.reserva-hero-banner {
+  position: relative;
+  background-image: url('/assets/images/inicio/carrusel1.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 2rem;
+
+  .banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(27, 54, 89, 0.8) 0%, rgba(27, 54, 89, 0.95) 100%);
+    z-index: 1;
+  }
+
+  .banner-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 1rem;
+
+    .sub-title {
+      color: var.$color-secundario;
+      font-size: 0.9rem;
+      letter-spacing: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .main-title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .lead-text {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+}
+
+// Cards Style
+.premium-card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  background: var.$backgraound-terciario;
+  
+  .card-header-premium {
+    background-color: var.$backgraound-primario;
+    color: white;
+    padding: 1.5rem;
+    
+    mat-card-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: white !important;
+      
+      .step-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var.$color-secundario;
+        color: var.$backgraound-primario;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        font-size: 0.95rem;
+        font-weight: 800;
+      }
+    }
+    
+    mat-card-subtitle {
+      color: rgba(255, 255, 255, 0.7) !important;
+      margin-top: 0.25rem;
+      margin-left: 2.5rem;
+      font-size: 0.85rem;
+    }
+  }
+
+  .card-header-premium-gold {
+    background: linear-gradient(135deg, var.$backgraound-primario 0%, #2c4a75 100%);
+    color: white;
+    padding: 1.5rem;
+    border-bottom: 3px solid var.$color-secundario;
+
+    mat-card-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+  }
+}
+
+// Category Filters
+.category-filters-container {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  
+  .filter-chips {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.15);
+      border-radius: 10px;
+    }
+    
+    .filter-chip-btn {
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      color: #555;
+      padding: 0.5rem 1.25rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      
+      &:hover {
+        background-color: rgba(27, 54, 89, 0.05);
+        border-color: var.$color-primario;
+        color: var.$color-primario;
+      }
+      
+      &.active {
+        background-color: var.$backgraound-primario;
+        border-color: var.$backgraound-primario;
+        color: white;
+        box-shadow: 0 4px 10px rgba(27, 54, 89, 0.25);
+      }
+    }
+  }
+}
+
+// Room Grid Card Selection
+.room-booking-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: rgba(27, 54, 89, 0.25);
+  }
+  
+  &.selected {
+    border: 2px solid var.$color-primario;
+    box-shadow: 0 8px 24px rgba(27, 54, 89, 0.15);
+    background-color: rgba(27, 54, 89, 0.01);
+    
+    .room-card-image {
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(27, 54, 89, 0.1);
+      }
+    }
+  }
+  
+  &.occupied {
+    opacity: 0.65;
+    background-color: #fafafa;
+    
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  
+  .room-card-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    
+    .room-status-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+      
+      &.available {
+        background-color: #2e7d32;
+      }
+      
+      &.occupied {
+        background-color: #c62828;
+      }
+    }
+  }
+  
+  .room-card-details {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    
+    .room-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 0.2rem;
+    }
+    
+    .room-category {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var.$color-secundario;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+    
+    .room-price-box {
+      text-align: right;
+      
+      .currency {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #2e7d32;
+        vertical-align: super;
+        margin-right: 1px;
+      }
+      
+      .price-val {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #2e7d32;
+        font-family: 'Inter', sans-serif;
+      }
+      
+      .per-night {
+        font-size: 0.75rem;
+        color: #666;
+        display: block;
+        margin-top: -2px;
+      }
+    }
+    
+    .room-description {
+      line-height: 1.4;
+      margin-bottom: 1rem;
+      height: 48px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    
+    .room-features {
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 0.65rem 0;
+      
+      .room-capacity {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      
+      .text-gold {
+        color: #CC9F53;
+      }
+      
+      .room-amenities {
+        display: flex;
+        gap: 10px;
+        font-size: 0.9rem;
+      }
+    }
+    
+    .select-btn {
+      margin-top: auto;
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+      background-color: white;
+      border: 1px solid var.$color-primario;
+      color: var.$color-primario;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      
+      mat-icon {
+        font-size: 1.15rem;
+        width: 20px;
+        height: 20px;
+      }
+      
+      &.selected {
+        background-color: var.$backgraound-primario !important;
+        color: white !important;
+        border-color: var.$backgraound-primario !important;
+      }
+      
+      &:hover:not(:disabled) {
+        box-shadow: 0 4px 12px rgba(27, 54, 89, 0.2);
+      }
+    }
+  }
+}
+
+// Sidebar Sticky Selection
+.sticky-sidebar {
+  position: sticky;
+  top: 2rem;
+  z-index: 10;
+}
+
+.summary-card {
+  border-radius: 12px;
+  overflow: hidden;
+  
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var.$backgraound-primario;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 0.75rem;
+    
+    mat-icon {
+      font-size: 1.15rem;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .max-height-rooms {
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+  }
+  
+  .selected-room-item {
+    border-left: 3px solid var.$color-secundario;
+    transition: all 0.2s;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04) !important;
+    }
+    
+    .btn-remove-room {
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      
+      mat-icon {
+        font-size: 1.1rem;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  
+  .border-dashed {
+    border: 2px dashed rgba(0, 0, 0, 0.12);
+    background-color: #fafafa;
+    
+    .text-muted-40 {
+      color: rgba(0, 0, 0, 0.25);
+      font-size: 2.5rem;
+      width: 40px;
+      height: 40px;
+    }
+  }
+  
+  .price-breakdown {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    
+    .total-price-gold {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #2e7d32;
+      font-family: 'Inter', sans-serif;
+    }
+  }
+  
+  .btn-continue-booking {
+    border-radius: 8px;
+    background-color: var.$backgraound-secundario !important;
+    color: white !important;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+    padding: 0.85rem 1rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    mat-icon {
+      font-size: 1.25rem;
+      width: 22px;
+      height: 22px;
+    }
+    
+    &:hover:not(:disabled) {
+      background-color: darken(#F7A72E, 5%) !important;
+      box-shadow: 0 6px 18px rgba(247, 167, 46, 0.35);
+      transform: translateY(-1px);
+    }
+    
+    &:disabled {
+      background-color: rgba(0, 0, 0, 0.12) !important;
+      color: rgba(0, 0, 0, 0.26) !important;
+    }
+  }
+}
+
+// Status Badges (Step 1)
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.45rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  
+  mat-icon {
+    font-size: 1.15rem;
+    width: 20px;
+    height: 20px;
+  }
+  
+  &.success-bg {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: #2e7d32;
+  }
+  
+  &.error-bg {
+    background-color: rgba(198, 40, 40, 0.1);
+    color: #c62828;
+  }
+}
+
+// Mobile Floating Summary Bar
+.mobile-summary-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var.$backgraound-primario;
+  color: white;
+  z-index: 100;
+  border-top: 2px solid var.$color-secundario;
+  
+  button {
+    background-color: var.$backgraound-secundario !important;
+    color: white !important;
+    font-weight: 700;
+    
+    &:disabled {
+      background-color: rgba(255, 255, 255, 0.12) !important;
+      color: rgba(255, 255, 255, 0.35) !important;
+    }
+  }
+}
+
+// Global modifications & fixes
+.huge-icon {
+  font-size: 3rem;
+  width: 48px;
+  height: 48px;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+// Responsive adjustments
+@media (max-width: 991px) {
+  .reserva-hero-banner {
+    height: 180px;
+    
+    .banner-content {
+      .main-title {
+        font-size: 1.85rem;
+      }
+      .lead-text {
+        font-size: 0.95rem;
+      }
+    }
+  }
+  
+  .sticky-sidebar {
+    position: static;
+    margin-top: 1rem;
+  }
+  
+  .container {
+    padding-bottom: 80px !important; // Evitar que el floating bottom bar tape contenido
+  }
+}
