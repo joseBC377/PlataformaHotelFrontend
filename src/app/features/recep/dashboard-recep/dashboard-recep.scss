@@ -312,7 +312,7 @@
       }
 
       .kpi-value-num {
-        font-size: 1.85rem;
+        font-size: 1.25rem;
         font-weight: 800;
         margin: 0;
         color: var(--text-primary);
@@ -419,6 +419,14 @@
       .kpi-icon-wrap {
         background-color: var(--gold-bg);
         color: var(--accent-gold);
+      }
+    }
+
+    &.kpi-teal {
+      border-left: 4px solid #0D9488;
+      .kpi-icon-wrap {
+        background-color: rgba(13, 148, 136, 0.08);
+        color: #0D9488;
       }
     }
   }

@@ -141,18 +141,18 @@
       </div>
     </div>
 
-    <!-- Ingresos del Periodo -->
-    <div class="kpi-card kpi-gold">
+    <!-- Ingresos Totales -->
+    <div class="kpi-card kpi-teal">
       <div class="kpi-icon-wrap">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="1" x2="12" y2="23"></line>
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+          <line x1="1" y1="10" x2="23" y2="10"></line>
         </svg>
       </div>
       <div class="kpi-details">
-        <span class="kpi-title">Ingresos Activos</span>
-        <h3 class="kpi-value-num">S/ {{ totalIngresos | number:'1.2-2' }}</h3>
-        <p class="kpi-subtext">Reservas aprobadas</p>
+        <span class="kpi-title">Ingresos Totales</span>
+        <h3 class="kpi-value-num">S/ {{ ingresosTotales | number:'1.2-2' }}</h3>
+        <p class="kpi-subtext">Pagos registrados</p>
       </div>
     </div>
   </section>

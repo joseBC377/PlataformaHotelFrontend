@@ -35,7 +35,7 @@ export class DashboardRecep implements OnInit {
   clientes: UsuarioModel[] = [];
   cargando = true;
   totalReservasCount = 0;
-  totalIngresos = 0;
+  ingresosTotales = 0;
 
   entradasPendientesCount = 0;
   entradasPendientesList: ReservaHabitacion[] = [];
@@ -93,7 +93,17 @@ export class DashboardRecep implements OnInit {
   }
 
   get proximasSalidas(): ReservaHabitacion[] {
-    return [...this.salidasProgramadasList].sort((a, b) => {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const reservasSalidas = this.reservasHabitaciones.filter(rh => {
+      if (!rh.fechaFin || !rh.reserva) return false;
+      const fin = this.parseLocalDate(rh.fechaFin);
+      const estado = rh.reserva.estado;
+      return fin.getTime() >= hoy.getTime() && estado !== 'CANCELADO';
+    });
+
+    return [...reservasSalidas].sort((a, b) => {
       const dateA = this.parseLocalDate(a.fechaFin).getTime();
       const dateB = this.parseLocalDate(b.fechaFin).getTime();
       return dateA - dateB;
@@ -140,19 +150,19 @@ export class DashboardRecep implements OnInit {
   cargarDatos(): void {
     this.cargando = true;
     forkJoin({
-      reservasServicio: this.reservaServicioService.listar(),
+      reservas: this.reservaService.getAllReservas(),
       pagos: this.pagoService.getAll(),
       reservasHab: this.reservaService.getReservasHabitaciones(),
       habs: this.habitacionService.getAllHabitaciones(),
       cls: this.adminService.getAllUsers()
     }).subscribe({
-      next: ({ reservasServicio, pagos, reservasHab, habs, cls }) => {
+      next: ({ reservas, pagos, reservasHab, habs, cls }) => {
         this.reservasHabitaciones = reservasHab || [];
         this.pagos = this.normalizarPagos(pagos);
         this.habitaciones = habs || [];
         this.clientes = cls || [];
-        this.totalReservasCount = Array.isArray(reservasServicio) ? reservasServicio.length : 0;
-        this.totalIngresos = this.calcularTotalIngresos(this.pagos);
+        this.totalReservasCount = Array.isArray(reservas) ? reservas.length : 0;
+        this.ingresosTotales = this.calcularTotalIngresos(this.pagos);
         this.calcularKPIs();
         this.cargando = false;
       },
@@ -162,6 +172,7 @@ export class DashboardRecep implements OnInit {
       }
     });
   }
+
 
   private calcularTotalIngresos(pagos: PagoModel[]): number {
     const totalAprobado = pagos
@@ -296,53 +307,60 @@ export class DashboardRecep implements OnInit {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    // 1. Entradas Pendientes
-    const reservasEntradas = this.reservasHabitaciones.filter(rh => {
+    // 1. Entradas Pendientes (Check-in Hoy)
+    const checkinsHoy = this.reservasHabitaciones.filter(rh => {
       if (!rh.fechaInicio || !rh.reserva) return false;
       const inicio = this.parseLocalDate(rh.fechaInicio);
       const estado = rh.reserva.estado;
-      return inicio.getTime() > hoy.getTime() && estado !== 'CANCELADO';
+      return inicio.getTime() === hoy.getTime() && estado !== 'CANCELADO';
     });
 
     const uniqueEntradasIds = new Set(
-      reservasEntradas
+      checkinsHoy
         .map(rh => rh.reserva?.id_reserva)
         .filter((id): id is number => id !== undefined && id !== null)
     );
     this.entradasPendientesCount = uniqueEntradasIds.size;
 
     const seenEntradasIds = new Set<number>();
-    this.entradasPendientesList = reservasEntradas.filter(rh => {
+    this.entradasPendientesList = checkinsHoy.filter(rh => {
       if (!rh.reserva?.id_reserva) return false;
       if (seenEntradasIds.has(rh.reserva.id_reserva)) return false;
       seenEntradasIds.add(rh.reserva.id_reserva);
       return true;
     });
 
-    // 2. Salidas Programadas
-    const reservasSalidas = this.reservasHabitaciones.filter(rh => {
+    // 2. Salidas Programadas (Check-out Hoy)
+    const checkoutsHoy = this.reservasHabitaciones.filter(rh => {
       if (!rh.fechaFin || !rh.reserva) return false;
       const fin = this.parseLocalDate(rh.fechaFin);
       const estado = rh.reserva.estado;
-      return fin.getTime() >= hoy.getTime() && estado !== 'CANCELADO';
+      return fin.getTime() === hoy.getTime() && estado !== 'CANCELADO';
     });
 
     const uniqueSalidasIds = new Set(
-      reservasSalidas
+      checkoutsHoy
         .map(rh => rh.reserva?.id_reserva)
         .filter((id): id is number => id !== undefined && id !== null)
     );
     this.salidasProgramadasCount = uniqueSalidasIds.size;
 
     const seenSalidasIds = new Set<number>();
-    this.salidasProgramadasList = reservasSalidas.filter(rh => {
+    this.salidasProgramadasList = checkoutsHoy.filter(rh => {
       if (!rh.reserva?.id_reserva) return false;
       if (seenSalidasIds.has(rh.reserva.id_reserva)) return false;
       seenSalidasIds.add(rh.reserva.id_reserva);
       return true;
     });
 
-    // 3. Próximas Llegadas (Sorted by fechaInicio ascending)
+    // 3. Próximas Llegadas: date >= today and state !== CANCELADO
+    const reservasEntradas = this.reservasHabitaciones.filter(rh => {
+      if (!rh.fechaInicio || !rh.reserva) return false;
+      const inicio = this.parseLocalDate(rh.fechaInicio);
+      const estado = rh.reserva.estado;
+      return inicio.getTime() >= hoy.getTime() && estado !== 'CANCELADO';
+    });
+
     this.proximasLlegadas = [...reservasEntradas].sort((a, b) => {
       const dateA = this.parseLocalDate(a.fechaInicio).getTime();
       const dateB = this.parseLocalDate(b.fechaInicio).getTime();
