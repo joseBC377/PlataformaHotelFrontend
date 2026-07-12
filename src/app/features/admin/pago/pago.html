@@ -1,112 +1,293 @@
-<div class="cuerpo">
-  <div class="container">
-    <h2 class="mb-4">Gestión de Pagos 💳</h2>
+<div class="pagos-dashboard-container">
 
-    <form [formGroup]="pagoForm" class="row g-3 mb-4 p-3 border rounded shadow-sm" (ngSubmit)="guardarPago()">
-      <div class="col-md-4">
-        <label for="total" class="form-label">Total</label>
-        <input type="number" class="form-control" id="total" formControlName="total" placeholder="Monto total" />
-        @if (total?.invalid && (total?.dirty || total?.touched)) {
-        <div class="text-danger mt-1"><small>Total obligatorio y debe ser numérico.</small></div>
-        }
+  <!-- HEADER SECTOR -->
+  <header class="dashboard-header">
+    <div class="header-main-info">
+      <div class="welcome-box">
+        <span class="welcome-label">Royal Suite Hotel</span>
+        <h2>Gestión de Pagos</h2>
+        <p class="current-date-info">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+            <line x1="12" y1="4" x2="12" y2="20"></line>
+          </svg>
+          <span>Administración de comprobantes y transacciones de huéspedes</span>
+        </p>
       </div>
-      <div class="col-md-4">
-        <label for="estado_pago" class="form-label">Estado del Pago</label>
-        <select class="form-select" id="estado_pago" formControlName="estado_pago">
-          <option value="" disabled selected>Selecciona</option>
+    </div>
+
+    <div class="header-action-zone">
+      <!-- Buscador Global -->
+      <div class="global-search-bar">
+        <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" [(ngModel)]="buscarQuery" (ngModelChange)="actualizarTabla()" placeholder="Buscar por cliente, ID o método..." id="globalSearchInput" />
+        <button *ngIf="buscarQuery" class="clear-search-btn" (click)="buscarQuery = ''; actualizarTabla()">
+          &times;
+        </button>
+      </div>
+
+      <!-- Filtro de Estado -->
+      <div class="status-filter-select-wrapper">
+        <select class="form-select-custom-filter" [(ngModel)]="filtroEstado" (ngModelChange)="actualizarTabla()">
+          <option value="">Todos los Estados</option>
           <option value="APROBADO">APROBADO</option>
           <option value="RECHAZADO">RECHAZADO</option>
         </select>
       </div>
 
-      <div class="col-md-4">
-        <label for="fecha_pago" class="form-label">Fecha de Pago</label>
-        <input type="date" class="form-control" id="fecha_pago" formControlName="fecha_pago" />
+      <!-- Botón Nuevo Pago -->
+      <button class="btn-create-booking-new" (click)="abrirModalNuevo()" id="btnNuevoPago">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="16"></line>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+        <span>Nuevo Pago</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="dashboard-main-layout">
+    <section class="dashboard-section-card">
+      <div class="section-card-header">
+        <div class="header-titles">
+          <h3>Listado de Pagos</h3>
+          <p>Registro total de transacciones financieras</p>
+        </div>
+        <span class="badge-count" *ngIf="!cargando">{{ pagosFiltrados.length }}</span>
       </div>
 
-      <div class="col-md-4">
-        <label for="id_reserva" class="form-label">Reserva</label>
-        <select class="form-select" id="id_reserva" formControlName="reserva" [compareWith]="compararReserva">
-          <option [ngValue]="null" disabled selected>Seleccionar una reserva</option>
-          @if (reservas$ | async; as reservas) {
-          @for (res of reservas; track res.id_reserva) {
-          <option [ngValue]="res">
-            Reserva #{{ res.id_reserva }} - {{ res.usuario?.nombre_usuario || 'Sin nombre' }}
-          </option>
-          }
-          }
-        </select>
-        @if (pagoForm.get('reserva')?.invalid && (pagoForm.get('reserva')?.touched || pagoForm.get('reserva')?.dirty)) {
-        <div class="text-danger mt-1"><small>Debes seleccionar una reserva.</small></div>
-        }
+      <div class="table-scroll-container">
+        <!-- Skeleton Loader -->
+        <div *ngIf="cargando" class="skeleton-table-rows">
+          <div class="skeleton-row skeleton-pulse" *ngFor="let i of [1,2,3,4,5]"></div>
+        </div>
+
+        <!-- Tabla Premium -->
+        <table class="premium-table" *ngIf="!cargando && pagosPaginados.length > 0">
+          <thead>
+            <tr>
+              <th>ID Pago</th>
+              <th>Reserva</th>
+              <th>Huésped / Cliente</th>
+              <th>Total</th>
+              <th>IGV (18%)</th>
+              <th>Método</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th class="actions-col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of pagosPaginados">
+              <td>
+                <span class="pago-id-val">#{{ p.id_pago }}</span>
+              </td>
+              <td>
+                <span class="reserva-id-ref">Reserva #{{ p.reserva?.id_reserva }}</span>
+              </td>
+              <td>
+                <span class="guest-fullname" *ngIf="p.reserva?.usuario">
+                  {{ p.reserva?.usuario?.nombre_usuario }} {{ p.reserva?.usuario?.apellido_paterno }}
+                </span>
+                <span class="guest-fullname muted" *ngIf="!p.reserva?.usuario">No especificado</span>
+              </td>
+              <td>
+                <span class="total-amount-val">S/ {{ p.total | number:'1.2-2' }}</span>
+              </td>
+              <td>
+                <span class="igv-amount-val">S/ {{ p.igv | number:'1.2-2' }}</span>
+              </td>
+              <td>
+                <span class="method-type-val" *ngIf="p.metodoPago">
+                  {{ p.metodoPago.tipo }}
+                  <small class="muted" *ngIf="p.metodoPago.ultimoscuatrodigitos"> (••••{{ p.metodoPago.ultimoscuatrodigitos }})</small>
+                </span>
+                <span class="method-type-val muted" *ngIf="!p.metodoPago">No asignado</span>
+              </td>
+              <td>
+                <span class="date-val">{{ p.fecha_pago | date:'dd/MM/yyyy' }}</span>
+              </td>
+              <td>
+                <span class="badge-status" [ngClass]="badgeClass(p.estado_pago)">
+                  {{ p.estado_pago }}
+                </span>
+              </td>
+              <td class="actions-col">
+                <div class="table-actions-btns">
+                  <button class="action-btn edit-btn" (click)="editarPago(p)" title="Editar pago">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button class="action-btn delete-btn" (click)="eliminarPago(p.id_pago!)" title="Eliminar pago">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty State -->
+        <div class="empty-state-card" *ngIf="!cargando && pagosFiltrados.length === 0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <div class="empty-state-text">
+            <span class="empty-title">Sin Pagos</span>
+            <p>No se encontraron registros de transacciones que coincidan con la búsqueda.</p>
+          </div>
+        </div>
       </div>
 
-      <div class="col-md-4">
-        <label for="metodo_pago" class="form-label">Método de Pago</label>
-        <select class="form-select" id="metodo_pago" formControlName="metodoPago" [compareWith]="compararMetodoPago">
-          <option [ngValue]="null" disabled selected>Seleccionar un método de pago</option>
-          @if (metodosPago$ | async; as metodos) {
-          @for (m of metodos; track m.id_metodo_pago) {
-          <option [ngValue]="m">
-            {{ m.tipo }} — {{ m.usuario?.nombre_usuario || 'Usuario ' + m.usuario?.id_usuario }}
-            @if (m.ultimoscuatrodigitos) { (····{{ m.ultimoscuatrodigitos }}) }
-          </option>
-          }
-          }
-        </select>
-        @if (pagoForm.get('metodoPago')?.invalid && (pagoForm.get('metodoPago')?.touched ||
-        pagoForm.get('metodoPago')?.dirty)) {
-        <div class="text-danger mt-1"><small>Debes seleccionar un método de pago.</small></div>
-        }
+      <!-- Pagination Footer -->
+      <div class="table-pagination-footer" *ngIf="!cargando && pagosFiltrados.length > 0">
+        <span class="pagination-info">
+          Mostrando {{ (paginaActual - 1) * itemsPorPagina + 1 }} a {{ minIndex }} de {{ pagosFiltrados.length }} pagos
+        </span>
+        
+        <div class="pagination-controls">
+          <button class="pag-btn" [disabled]="paginaActual === 1" (click)="cambiarPagina(paginaActual - 1)">
+            Anterior
+          </button>
+          
+          <button *ngFor="let page of paginasArray" 
+                  class="pag-btn page-num" 
+                  [ngClass]="{'active': page === paginaActual}"
+                  (click)="cambiarPagina(page)">
+            {{ page }}
+          </button>
+          
+          <button class="pag-btn" [disabled]="paginaActual === totalPaginas" (click)="cambiarPagina(paginaActual + 1)">
+            Siguiente
+          </button>
+        </div>
       </div>
+    </section>
+  </main>
 
+  <!-- PIE DE PAGINA -->
+  <footer class="hotel-dashboard-footer">
+    <p>&copy; 2026 Royal Suites Hotel</p>
+  </footer>
 
-      <div class="col-12 mt-3">
-        <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
-          [disabled]="pagoForm.invalid">
-          {{ modoEdicion ? 'Actualizar Pago' : 'Registrar Pago' }}
+  <!-- MODAL NUEVO/EDITAR PAGO -->
+  <div class="modal-backdrop-premium" *ngIf="mostrarModalPago">
+    <div class="modal-card-container">
+      
+      <!-- Modal Header -->
+      <div class="modal-card-header">
+        <div class="title-wrap">
+          <span class="badge-form">Finanzas</span>
+          <h3>{{ modoEdicion ? 'Editar Pago' : 'Registrar Pago' }}</h3>
+          <p>{{ modoEdicion ? 'Modificar datos del pago seleccionado' : 'Registrar una nueva transacción en el sistema' }}</p>
+        </div>
+        <button class="modal-close-icon-btn" (click)="cerrarModal()" aria-label="Cerrar modal">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
-        @if (modoEdicion) {
-        <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar</button>
-        }
       </div>
-    </form>
 
-    <div class="table-responsive mt-4">
-      <table class="table table-bordered table-hover">
-        <thead class="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Total</th>
-            <th>IGV</th>
-            <th>Estado</th>
-            <th>Fecha</th>
-            <th>Reserva</th>
-            <th>Método</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (pagos$ | async; as pagos) {
-          @for (pago of pagos; track pago.id_pago) {
-          <tr>
-            <td>{{ pago.id_pago }}</td>
-            <td>{{ pago.total }}</td>
-            <td>{{ pago.igv }}</td>
-            <td>{{ pago.estado_pago }}</td>
-            <td>{{ pago.fecha_pago | date:'yyyy-MM-dd' }}</td>
-            <td>{{ pago.reserva?.id_reserva }}</td>
-            <td>{{ pago.metodoPago?.tipo}}</td>
-            <td>
-              <button class="btn btn-sm btn-warning" (click)="editarPago(pago)">Editar</button>
-              <button class="btn btn-sm btn-danger ms-2" (click)="eliminarPago(pago.id_pago!)">Eliminar</button>
-            </td>
-          </tr>
-          }
-          }
-        </tbody>
+      <!-- Formulario -->
+      <form [formGroup]="pagoForm" (ngSubmit)="guardarPago()">
+        <div class="modal-card-body">
+          
+          <!-- Fila 1: Total y Estado -->
+          <div class="form-group-custom">
+            <label for="total" class="form-label-custom">Monto Total (S/) *</label>
+            <input type="number" id="total" formControlName="total" class="form-input-custom" placeholder="0.00" />
+            <span class="error-alert-txt" *ngIf="total?.touched && total?.invalid">
+              El total es obligatorio y debe ser mayor a 0.
+            </span>
+          </div>
 
-      </table>
+          <div class="form-group-custom">
+            <label for="estado_pago" class="form-label-custom">Estado del Pago *</label>
+            <div class="select-wrapper">
+              <select id="estado_pago" formControlName="estado_pago" class="form-select-custom">
+                <option value="" disabled>Selecciona el estado</option>
+                <option value="APROBADO">APROBADO</option>
+                <option value="RECHAZADO">RECHAZADO</option>
+              </select>
+              <div class="select-arrow-custom"></div>
+            </div>
+            <span class="error-alert-txt" *ngIf="estado_pago?.touched && estado_pago?.invalid">
+              El estado de pago es obligatorio.
+            </span>
+          </div>
+
+          <!-- Fila 2: Fecha de Pago -->
+          <div class="form-group-custom">
+            <label for="fecha_pago" class="form-label-custom">Fecha de Pago *</label>
+            <input type="date" id="fecha_pago" formControlName="fecha_pago" class="form-input-custom" />
+            <span class="error-alert-txt" *ngIf="fecha_pago?.touched && fecha_pago?.invalid">
+              La fecha es obligatoria.
+            </span>
+          </div>
+
+          <!-- Fila 3: Reserva Relacionada -->
+          <div class="form-group-custom">
+            <label for="reservaSelect" class="form-label-custom">Reserva Relacionada *</label>
+            <div class="select-wrapper">
+              <select id="reservaSelect" formControlName="reserva" [compareWith]="compararReserva" class="form-select-custom">
+                <option [ngValue]="null" disabled selected>Seleccione una reserva</option>
+                <option *ngFor="let res of reservas" [ngValue]="res">
+                  Reserva #{{ res.id_reserva }} — {{ res.usuario?.nombre_usuario || 'Sin nombre' }} {{ res.usuario?.apellido_paterno || '' }}
+                </option>
+              </select>
+              <div class="select-arrow-custom"></div>
+            </div>
+            <span class="error-alert-txt" *ngIf="reserva?.touched && reserva?.invalid">
+              Debe seleccionar una reserva relacionada.
+            </span>
+          </div>
+
+          <!-- Fila 4: Método de Pago -->
+          <div class="form-group-custom">
+            <label for="metodoSelect" class="form-label-custom">Método de Pago *</label>
+            <div class="select-wrapper">
+              <select id="metodoSelect" formControlName="metodoPago" [compareWith]="compararMetodoPago" class="form-select-custom">
+                <option [ngValue]="null" disabled selected>Seleccione un método de pago</option>
+                <option *ngFor="let m of metodosPago" [ngValue]="m">
+                  {{ m.tipo }} — {{ m.usuario?.nombre_usuario || 'Usuario ' + m.usuario?.id_usuario }}
+                  <ng-container *ngIf="m.ultimoscuatrodigitos"> (••••{{ m.ultimoscuatrodigitos }})</ng-container>
+                </option>
+              </select>
+              <div class="select-arrow-custom"></div>
+            </div>
+            <span class="error-alert-txt" *ngIf="metodoPago?.touched && metodoPago?.invalid">
+              Debe seleccionar un método de pago.
+            </span>
+          </div>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-card-footer">
+          <button type="button" class="btn-modal-cancel" (click)="cerrarModal()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-modal-submit" [disabled]="pagoForm.invalid">
+            {{ modoEdicion ? 'Actualizar' : 'Registrar' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
+
 </div>

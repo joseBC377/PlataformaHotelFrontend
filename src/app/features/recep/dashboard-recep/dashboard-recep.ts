@@ -290,13 +290,29 @@ export class DashboardRecep implements OnInit {
   }
 
   private parseLocalDate(dateStr: string): Date {
-    if (!dateStr) return new Date();
-    const parts = dateStr.split('-');
-    if (parts.length === 3) {
-      const year = parseInt(parts[0], 10);
-      const month = parseInt(parts[1], 10) - 1; // 0-based month
-      const day = parseInt(parts[2], 10);
-      return new Date(year, month, day, 0, 0, 0, 0);
+    if (!dateStr) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d;
+    }
+    const cleanStr = dateStr.substring(0, 10);
+    if (cleanStr.includes('-')) {
+      const parts = cleanStr.split('-');
+      if (parts.length === 3) {
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const day = parseInt(parts[2], 10);
+        return new Date(year, month, day, 0, 0, 0, 0);
+      }
+    }
+    if (cleanStr.includes('/')) {
+      const parts = cleanStr.split('/');
+      if (parts.length === 3) {
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const year = parseInt(parts[2], 10);
+        return new Date(year, month, day, 0, 0, 0, 0);
+      }
     }
     const d = new Date(dateStr);
     d.setHours(0, 0, 0, 0);
@@ -578,9 +594,30 @@ export class DashboardRecep implements OnInit {
 
         this.reservaService.postInsertReservaHabitacion(reservaHabitacion).subscribe({
           next: () => {
-            alert('¡Reserva creada con éxito en el sistema!');
-            this.cerrarModalReserva();
-            this.cargarDatos(); // Actualiza dashboard y listado automáticamente sin recargar
+            const roomToUpdate = this.habitaciones.find(h => h.id_habitacion === Number(formVal.idHabitacion));
+            if (roomToUpdate && roomToUpdate.id_habitacion) {
+              const updatedRoom: Habitacion = {
+                ...roomToUpdate,
+                estado: 'OCUPADA' as any
+              };
+              this.habitacionService.putEditarHabitacion(roomToUpdate.id_habitacion, updatedRoom).subscribe({
+                next: () => {
+                  alert('¡Reserva creada con éxito y estado de la habitación actualizado a OCUPADA!');
+                  this.cerrarModalReserva();
+                  this.cargarDatos();
+                },
+                error: (err) => {
+                  console.error('Error al actualizar el estado de la habitación en la BD:', err);
+                  alert('¡Reserva registrada con éxito, pero no se pudo cambiar el estado de la habitación a OCUPADA!');
+                  this.cerrarModalReserva();
+                  this.cargarDatos();
+                }
+              });
+            } else {
+              alert('¡Reserva creada con éxito en el sistema!');
+              this.cerrarModalReserva();
+              this.cargarDatos();
+            }
           },
           error: (err) => {
             console.error('Error al asociar la habitación a la reserva:', err);

@@ -1,102 +1,241 @@
-<div class="cuerpo">
-  <div class="container">
-    <h2 class="mb-4">Gestión de Servicios 🛎️</h2>
+<div class="servicios-dashboard-container">
 
-    <form [formGroup]="servicioForm" (ngSubmit)="guardarServicio()" class="row g-3">
-      <div class="col-md-3">
-        <label class="form-label">Nombre</label>
-        <input type="text" class="form-control" placeholder="Nombre del Servicio" formControlName="nombre_servicio" />
-        @if (nombre_servicio?.invalid && (nombre_servicio?.touched || nombre_servicio?.dirty)) {
-        <div class="text-danger mt-1">
-          @if (nombre_servicio?.errors?.['required']) { <small>El nombre es obligatorio.</small> }
-          @if (nombre_servicio?.errors?.['minlength']) { <small>Mínimo 3 caracteres.</small> }
-        </div>
-        }
+  <!-- HEADER SECTOR -->
+  <header class="dashboard-header">
+    <div class="header-main-info">
+      <div class="welcome-box">
+        <span class="welcome-label">Royal Suite Hotel</span>
+        <h2>Gestión de Servicios</h2>
+        <p class="current-date-info">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+          </svg>
+          <span>Administración de catálogos y tarifas de servicios del hotel</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="header-action-zone">
+      <!-- Buscador Global -->
+      <div class="global-search-bar">
+        <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" [(ngModel)]="buscarQuery" (ngModelChange)="actualizarTabla()" placeholder="Buscar por nombre o descripción..." id="globalSearchInput" />
+        <button *ngIf="buscarQuery" class="clear-search-btn" (click)="buscarQuery = ''; actualizarTabla()">
+          &times;
+        </button>
       </div>
 
-      <div class="col-md-4">
-        <label class="form-label">Descripción</label>
-        <input type="text" class="form-control" placeholder="Descripción" formControlName="descripcion_servicio" />
-        @if (descripcion_servicio?.invalid && (descripcion_servicio?.touched || descripcion_servicio?.dirty)) {
-        <div class="text-danger mt-1">
-          <small>La descripción es obligatoria.</small>
+      <!-- Botón Nuevo Servicio -->
+      <button class="btn-create-booking-new" (click)="abrirModalNuevo()" id="btnNuevoServicio">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Nuevo Servicio</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="dashboard-main-layout">
+    <section class="dashboard-section-card">
+      <div class="section-card-header">
+        <div class="header-titles">
+          <h3>Listado de Servicios</h3>
+          <p>Catálogo de servicios disponibles para los huéspedes</p>
         </div>
-        }
+        <span class="badge-count" *ngIf="!cargando">{{ serviciosFiltrados.length }}</span>
       </div>
 
-      <div class="col-md-2">
-        <label for="precio" class="form-label">Precio</label>
-        <input type="number" id="precio" class="form-control" formControlName="precio" step="0.01" />
-        @if (precio?.invalid && (precio?.touched || precio?.dirty)) {
-        <div class="text-danger mt-1">
-          @if (precio?.errors?.['required']) { <small>El precio es obligatorio.</small> }
-          @if (precio?.errors?.['min']) { <small>No se aceptan números negativos.</small> }
+      <div class="table-scroll-container">
+        <!-- Skeleton Loader -->
+        <div *ngIf="cargando" class="skeleton-table-rows">
+          <div class="skeleton-row skeleton-pulse" *ngFor="let i of [1,2,3,4,5]"></div>
         </div>
-        }
+
+        <!-- Tabla Premium -->
+        <table class="premium-table" *ngIf="!cargando && serviciosPaginados.length > 0">
+          <thead>
+            <tr>
+              <th>Servicio</th>
+              <th>Descripción</th>
+              <th>Precio</th>
+              <th class="actions-col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of serviciosPaginados">
+              <td>
+                <div class="service-info-cell">
+                  <div class="service-image-preview">
+                    <img *ngIf="s.imagen" [src]="s.imagen" alt="{{ s.nombre_servicio }}" />
+                    <div *ngIf="!s.imagen" class="no-img-placeholder">🛎️</div>
+                  </div>
+                  <div class="service-name-wrapper">
+                    <span class="service-fullname">{{ s.nombre_servicio }}</span>
+                    <span class="service-id">ID: #{{ s.idServicio }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="desc-val">{{ s.descripcion_servicio }}</span>
+              </td>
+              <td>
+                <span class="price-val">S/ {{ s.precio | number:'1.2-2' }}</span>
+              </td>
+              <td class="actions-col">
+                <div class="table-actions-btns">
+                  <button class="action-btn edit-btn" (click)="editarServicio(s)" title="Editar servicio">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button class="action-btn delete-btn" *ngIf="s.idServicio" (click)="eliminarServicio(s.idServicio)" title="Eliminar servicio">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty State -->
+        <div class="empty-state-card" *ngIf="!cargando && serviciosFiltrados.length === 0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <div class="empty-state-text">
+            <span class="empty-title">Sin Servicios</span>
+            <p>No se encontraron registros de servicios que coincidan con la búsqueda.</p>
+          </div>
+        </div>
       </div>
 
-      <div class="col-md-6">
-        <label for="imagen" class="form-label">Imagen (Archivo)</label>
-        <input id="imagen" type="file" class="form-control" (change)="onFileChange($event)" #fileInput />
-        @if (servicioForm.value.imagen) {
-        <div class="col-md-6 mt-2">
-          <label class="form-label">Vista previa de imagen:</label><br />
-          <img [src]="servicioForm.value.imagen" alt="Vista previa" width="120" class="border rounded" />
-        </div>
-        }
-      </div>
-
-      <div class="col-12 mt-4">
-        <div class="d-flex flex-nowrap justify-content-start">
-          <button type="submit" class="btn" [ngClass]="modoEdicion ? 'btn-warning' : 'btn-success'"
-            [disabled]="servicioForm.invalid">
-            {{ modoEdicion ? 'Actualizar Servicio' : 'Agregar Servicio' }}
+      <!-- Pagination Footer -->
+      <div class="table-pagination-footer" *ngIf="!cargando && serviciosFiltrados.length > 0">
+        <span class="pagination-info">
+          Mostrando {{ (paginaActual - 1) * itemsPorPagina + 1 }} a {{ minIndex }} de {{ serviciosFiltrados.length }} servicios
+        </span>
+        
+        <div class="pagination-controls">
+          <button class="pag-btn" [disabled]="paginaActual === 1" (click)="cambiarPagina(paginaActual - 1)">
+            Anterior
           </button>
-          @if (modoEdicion) {
-          <button type="button" class="btn btn-secondary ms-2" (click)="resetFormulario()">Cancelar Edición</button>
-          }
+          
+          <button *ngFor="let page of paginasArray" 
+                  class="pag-btn page-num" 
+                  [ngClass]="{'active': page === paginaActual}"
+                  (click)="cambiarPagina(page)">
+            {{ page }}
+          </button>
+          
+          <button class="pag-btn" [disabled]="paginaActual === totalPaginas" (click)="cambiarPagina(paginaActual + 1)">
+            Siguiente
+          </button>
         </div>
       </div>
-    </form>
+    </section>
+  </main>
 
-    <div class="table-responsive mt-4">
-      <table class="table table-bordered table-hover">
-        <thead class="table-hotel">
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio (S/)</th>
-            <th>Imagen</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (servicio$ | async; as servicio) {
-          @for (s of servicio; track s.idServicio) {
-          <tr>
-            <td>{{ s.idServicio }}</td>
-            <td>{{ s.nombre_servicio }}</td>
-            <td>{{ s.descripcion_servicio }}</td>
-            <td>{{ s.precio | number:'1.2-2' }}</td>
-            <td><img [src]="s.imagen" alt="{{ s.nombre_servicio }}" width="80" /></td>
-            <td >
-              <button class="btn btn-warning btn-sm me-1" (click)="editarServicio(s)">Editar</button>
-              <button class="btn btn-danger btn-sm" *ngIf="s.idServicio" (click)="eliminarServicio(s.idServicio)">Eliminar</button>
-            </td>
-          </tr>
-          } @empty {
-          <tr>
-            <td colspan="6">No hay servicios registrados</td>
-          </tr>
-          }
-          } @else {
-          <tr>
-            <td colspan="6">Cargando servicios...</td>
-          </tr>
-          }
-        </tbody>
-      </table>
+  <!-- PIE DE PAGINA -->
+  <footer class="hotel-dashboard-footer">
+    <p>&copy; 2026 Royal Suites Hotel</p>
+  </footer>
+
+  <!-- MODAL NUEVO/EDITAR SERVICIO -->
+  <div class="modal-backdrop-premium" *ngIf="mostrarModalServicio">
+    <div class="modal-card-container">
+      
+      <!-- Modal Header -->
+      <div class="modal-card-header">
+        <div class="title-wrap">
+          <span class="badge-form">Operaciones</span>
+          <h3>{{ modoEdicion ? 'Editar Servicio' : 'Nuevo Servicio' }}</h3>
+          <p>{{ modoEdicion ? 'Modificar datos del servicio seleccionado' : 'Registrar un nuevo servicio en el catálogo' }}</p>
+        </div>
+        <button class="modal-close-icon-btn" (click)="cerrarModal()" aria-label="Cerrar modal">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Formulario -->
+      <form [formGroup]="servicioForm" (ngSubmit)="guardarServicio()">
+        <div class="modal-card-body">
+          
+          <!-- Nombre Servicio -->
+          <div class="form-group-custom">
+            <label for="nombre_servicio" class="form-label-custom">Nombre del Servicio *</label>
+            <input type="text" id="nombre_servicio" formControlName="nombre_servicio" class="form-input-custom" placeholder="Ej. Desayuno Buffet" />
+            <span class="error-alert-txt" *ngIf="nombre_servicio?.touched && nombre_servicio?.invalid">
+              <span *ngIf="nombre_servicio?.errors?.['required']">El nombre es obligatorio.</span>
+              <span *ngIf="nombre_servicio?.errors?.['minlength']">Mínimo 3 caracteres.</span>
+            </span>
+          </div>
+
+          <!-- Descripción -->
+          <div class="form-group-custom">
+            <label for="descripcion_servicio" class="form-label-custom">Descripción *</label>
+            <textarea id="descripcion_servicio" formControlName="descripcion_servicio" class="form-input-custom textarea-custom" placeholder="Describa el servicio..." rows="3"></textarea>
+            <span class="error-alert-txt" *ngIf="descripcion_servicio?.touched && descripcion_servicio?.invalid">
+              La descripción es obligatoria.
+            </span>
+          </div>
+
+          <!-- Precio -->
+          <div class="form-group-custom">
+            <label for="precio" class="form-label-custom">Precio (S/) *</label>
+            <input type="number" id="precio" formControlName="precio" step="0.01" class="form-input-custom" placeholder="0.00" />
+            <span class="error-alert-txt" *ngIf="precio?.touched && precio?.invalid">
+              <span *ngIf="precio?.errors?.['required']">El precio es obligatorio.</span>
+              <span *ngIf="precio?.errors?.['min']">El precio no puede ser negativo.</span>
+            </span>
+          </div>
+
+          <!-- Imagen (Archivo y Vista previa) -->
+          <div class="form-group-custom">
+            <label for="imagenFile" class="form-label-custom">Imagen del Servicio *</label>
+            <input id="imagenFile" type="file" class="form-input-custom file-input-custom" (change)="onFileChange($event)" #fileInput />
+            <span class="error-alert-txt" *ngIf="imagenInvalida">
+              Por favor, seleccione una imagen válida.
+            </span>
+
+            <!-- Preview panel inside modal -->
+            <div class="image-upload-preview-panel" *ngIf="servicioForm.value.imagen">
+              <span class="preview-label">Vista Previa:</span>
+              <div class="preview-box">
+                <img [src]="servicioForm.value.imagen" alt="Vista previa" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-card-footer">
+          <button type="button" class="btn-modal-cancel" (click)="cerrarModal()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-modal-submit" [disabled]="servicioForm.invalid">
+            {{ modoEdicion ? 'Actualizar' : 'Registrar' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
+
 </div>
