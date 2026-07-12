@@ -28,6 +28,6 @@ export class HabitacionServices {
   }
 
   deleteHabitacion(id: number): Observable<Habitacion> {
-    return this.http.delete<Habitacion>(`${this.API_URL}/${id}`);
+  return this.http.delete<Habitacion>(`${this.API_URL}/${id}`);
   }
 }

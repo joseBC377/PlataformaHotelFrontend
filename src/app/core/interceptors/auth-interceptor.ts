@@ -4,33 +4,26 @@ import { AuthService } from '../services/auth.service';
 import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
-
 let isRefreshing = false;
-const refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+const refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-
-  // console.log("INTERCEPTOR EJECUTADO");
-
   const authServ = inject(AuthService);
   const router = inject(Router);
-  let authReq = req;
-  const access_token = authServ.getTokenAcces();
 
-  // const token= authServ.getTokenAcces();
-  // if (token) {
-  //   const colnedReq= req.clone({
-  //     headers: req.headers.set("Authorization", `Bearer ${token}`)
-  //   });
-  //   return next(colnedReq);
-  // }
-  // return next(req);
-  if (access_token) {
-    authReq = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${access_token}`)
-    });
+  // 1. EXCLUSIÓN CRÍTICA: No interceptar peticiones de login o refresh para evitar bucles o 403
+  if (req.url.includes('/autenticarse') || req.url.includes('/refresh')) {
+    return next(req);
   }
-  //manejar errores
+
+  const access_token = authServ.getTokenAcces();
+  let authReq = req;
+
+  if (access_token) {
+    authReq = addTokenHeader(req, access_token);
+  }
+
+  // 2. Manejo de errores de autenticación
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 || error.status === 403) {
@@ -40,43 +33,49 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
-//manejar token
+
+// 3. Manejar lógica de expiración y cola de peticiones
 function handleTokenExpiration(request: HttpRequest<any>, next: HttpHandlerFn, authServ: AuthService, router: Router) {
-  if (!isRefreshing) {
-    isRefreshing = true;
-    refreshTokenSubject.next(null);
-    const refresh_token = authServ.getRefreshToken();
-    if (refresh_token) {
-      return authServ.refreshToken(refresh_token).pipe(
-        switchMap((response: any) => {
-          isRefreshing = false;
-          authServ['almacenarTokens'](response);
-          refreshTokenSubject.next(response.access_token);
-          return next(addTokenHeader(request, response.access_token));
-        }),
-        catchError((refreshError) => {
-          isRefreshing = false;
-          console.error('Refresh token falló. Redirigiendo al login:', refreshError);
-          authServ.clearTokens();
-          router.navigate(['/login']);
-          return throwError(() => refreshError);
-        })
-      );
-    } else {
-      console.error('No hay refresh token disponible, redirigiendo al login');
-      authServ.clearTokens();
-      router.navigate(['/login']);
-      return throwError(() => new Error('No hay token de actualización disponible'));
-    }
-  } else {
+  if (isRefreshing) {
+    // Si ya se está refrescando, esperamos a que el BehaviorSubject emita el nuevo token
     return refreshTokenSubject.pipe(
       filter(token => token !== null),
       take(1),
-      switchMap(token => next(addTokenHeader(request, token)))
+      switchMap(token => next(addTokenHeader(request, token!)))
     );
   }
+
+  isRefreshing = true;
+  refreshTokenSubject.next(null);
+
+  const refresh_token = authServ.getRefreshToken();
+
+  if (!refresh_token) {
+    authServ.clearTokens();
+    router.navigate(['/login']);
+    return throwError(() => new Error('No hay refresh token disponible'));
+  }
+
+  return authServ.refreshToken(refresh_token).pipe(
+    switchMap((response: any) => {
+      isRefreshing = false;
+      // Guardamos tokens (ajusta el método según tu AuthService)
+      authServ['almacenarTokens'](response); 
+      refreshTokenSubject.next(response.access_token);
+      return next(addTokenHeader(request, response.access_token));
+    }),
+    catchError((refreshError) => {
+      isRefreshing = false;
+      authServ.clearTokens();
+      router.navigate(['/login']);
+      return throwError(() => refreshError);
+    })
+  );
 }
-//clonar solicitud
+
+// 4. Utilidad para clonar la petición con el nuevo header
 function addTokenHeader(request: HttpRequest<any>, token: string) {
-  return request.clone({ headers: request.headers.set('Authorization', `Bearer ${token}`) });
+  return request.clone({ 
+    headers: request.headers.set('Authorization', `Bearer ${token}`) 
+  });
 }

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ReservaService } from '../../admin/services/reserva.services';
@@ -13,7 +13,7 @@ import { Location } from '@angular/common';
   templateUrl: './resumen-reserva.html',
   styleUrl: './resumen-reserva.scss'
 })
-export class ResumenReserva {
+export class ResumenReserva implements OnInit {
   reservaData: any = null;
   usuarioLogueado: any = null;
 
@@ -21,21 +21,30 @@ export class ResumenReserva {
     private router: Router,
     private authService: AuthService,
     private reservaService: ReservaService,
-    private location: Location
+    private location: Location,
+    @Inject(PLATFORM_ID) private platformId: Object // Inyección necesaria para SSR
   ) {
-    // Recuperamos el objeto enviado por el router
     const navigation = this.router.getCurrentNavigation();
-    this.reservaData = navigation?.extras.state?.['data'];
+    
+    // Solo accedemos a localStorage si estamos en el navegador
+    if (isPlatformBrowser(this.platformId)) {
+      this.reservaData = navigation?.extras.state?.['data'] || 
+                         JSON.parse(localStorage.getItem('temp_reserva') || 'null');
+    }
   }
 
   ngOnInit(): void {
-    // Seguridad: Si no hay datos, regresar a la selección
     if (!this.reservaData) {
       this.router.navigate(['/publico/crear-reserva']);
       return;
     }
-    // Jalamos el ID del cliente logueado
     this.usuarioLogueado = this.authService.getId();
+  }
+
+  private formatToISO(date: any): string {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().split('T')[0];
   }
 
   confirmarYGuardar() {
@@ -45,32 +54,45 @@ export class ResumenReserva {
       return;
     }
 
+    // Validación del array de habitaciones
+    if (!this.reservaData?.habitaciones || this.reservaData.habitaciones.length === 0) {
+      alert('Error: Los datos de la habitación no están completos.');
+      return;
+    }
+
+    const detalles = this.reservaData.habitaciones.map((h: any) => ({
+      fecha_inicio: this.formatToISO(this.reservaData.fechaInicio),
+      fecha_fin: this.formatToISO(this.reservaData.fechaFin),
+      precio_uni: h.categoriaHabitacion?.precio || 0,
+      habitacion: { id: h.id }
+    }));
+
     const bodyFinal = {
-      fechaCreacion: new Date().toISOString().split('T')[0],
-      usuario: this.usuarioLogueado,
+      fechaCreacion: this.formatToISO(new Date()),
+      usuario: { id_usuario: this.usuarioLogueado }, 
       estado: EstadoReserva.PENDIENTE,
       pago: null,
-      detallesHabitaciones: [{
-        fecha_inicio: this.reservaData.fechaInicio,
-        fecha_fin: this.reservaData.fechaFin,
-        precio_uni: this.reservaData.habitacion.categoriaHabitacion.precio,
-        habitacion: { id: this.reservaData.habitacion.id }
-      }],
-      detallesServicios: this.reservaData.servicios.map((s: any) => ({
+      detallesHabitaciones: detalles,
+      detallesServicios: this.reservaData.servicios?.map((s: any) => ({
         id: { id_reserva: 0, id_servicio: s.id },
         servicio: { id: s.id },
         precioUnitario: s.precio
-      }))
+      })) || []
     };
 
-    // Cast to any to satisfy ReservaModel requirement for pago when it's not provided here
     this.reservaService.postInsertReserva(bodyFinal as any).subscribe({
       next: (res) => {
         alert('¡Reserva registrada con éxito!');
+        
+        // Limpiamos el almacenamiento local de forma segura
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.removeItem('temp_reserva');
+        }
+        
         this.router.navigate(['/crear-reserva']);
       },
       error: (err) => {
-        console.error(err);
+        console.error('Error del servidor:', err);
         alert('Error al conectar con el servidor.');
       }
     });
@@ -79,5 +101,4 @@ export class ResumenReserva {
   cancelar() {
     this.location.back();
   }
-
 }

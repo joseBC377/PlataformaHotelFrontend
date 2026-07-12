@@ -144,31 +144,32 @@ export class Usuario {
       correo: form.correo,
       telefono: form.telefono,
       password: form.password?.trim() || undefined,
-      rol: this.rolLogueado === 'RECEPCION'  ? 'CLIENT'
-      : form.rol
+      rol: this.rolLogueado === 'RECEPCION' ? 'CLIENT' : form.rol
     };
 
     if (this.editando) {
-      this.serv.updateIdClient(this.idEditando, user).subscribe({
+      // Ahora llama a putUpdateUser
+      this.serv.putUpdateUser(this.idEditando, user).subscribe({
         next: () => {
-          this.editando = false,
-          this.idEditando = 0,
+          this.editando = false;
+          this.idEditando = 0;
           this.usuarioForm.reset();
           this.listarUsuarios();
         },
-        error: (err) => {
+        // 2. CORREGIDO: Se agregó ': any' para solucionar el error TS7006
+        error: (err: any) => {
           alert("Error al editar");
-
         }
-      })
+      });
     } else {
       this.serv.insertIdClient(user).subscribe({
         next: () => {
           this.usuarioForm.reset();
           this.listarUsuarios();
         },
-        error: (errr) => {
-          alert("Error al registrar usuario")
+        // 2. CORREGIDO: Se agregó ': any' para solucionar el error TS7006
+        error: (errr: any) => {
+          alert("Error al registrar usuario");
         }
       });
     }

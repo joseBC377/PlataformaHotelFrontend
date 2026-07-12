@@ -72,48 +72,37 @@ export class ReservasAdminComponent implements OnInit {
 
 
   registroReserva(): void {
-    if (this.reservaForm.invalid) {
-      this.reservaForm.markAllAsTouched();
-      return;
-    }
-
-    const form = this.reservaForm.value;
-
-    const reserva: ReservaModel = {
-      id_reserva: form.id_reserva,
-      fechaCreacion: form.fechaCreacion,
-      usuario: form.usuario,
-      estado: form.estado,
-      pago: form.pago
-    };
-
-
-    if (this.modoEdicion && this.idReservaEditar) {
-      this.serv.putUpdateReserva(this.idReservaEditar, reserva).subscribe({
-        next: () => {
-          this.erroresBackend = {};
-          this.resetFormulario();
-          this.reservas$ = this.serv.getAllReservas();
-        },
-        error: err => {
-          console.log(err.error);
-          this.erroresBackend = err.error;
-        }
-      });
-    } else {
-      this.serv.postInsertReserva(reserva).subscribe({
-        next: () => {
-          this.erroresBackend = {};
-          this.resetFormulario();
-          this.reservas$ = this.serv.getAllReservas();
-        },
-        error: err => {
-          console.log(err.error);
-          this.erroresBackend = err.error;
-        }
-      });
-    }
+  if (this.reservaForm.invalid) {
+    this.reservaForm.markAllAsTouched();
+    return;
   }
+
+  const form = this.reservaForm.value;
+
+  // Aseguramos que 'usuario' sea el objeto con el ID, no solo el ID suelto.
+  const reserva: ReservaModel = {
+    ...form,
+    usuario: typeof form.usuario === 'object' ? form.usuario : { id_usuario: form.usuario }
+  };
+
+  if (this.modoEdicion && this.idReservaEditar) {
+    this.serv.putUpdateReserva(this.idReservaEditar, reserva).subscribe({
+      next: () => {
+        this.resetFormulario();
+        this.reservas$ = this.serv.getAllReservas();
+      },
+      error: err => this.erroresBackend = err.error
+    });
+  } else {
+    this.serv.postInsertReserva(reserva).subscribe({
+      next: () => {
+        this.resetFormulario();
+        this.reservas$ = this.serv.getAllReservas();
+      },
+      error: err => this.erroresBackend = err.error
+    });
+  }
+}
 
 
   editarReserva(res: ReservaModel): void {

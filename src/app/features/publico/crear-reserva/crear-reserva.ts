@@ -16,7 +16,6 @@ export class CrearReserva implements OnInit {
   habitacionesList: any[] = [];
   serviciosList: any[] = [];
 
-  // Selección múltiple
   habitacionesSeleccionadas: any[] = []; 
   serviciosSeleccionados: any[] = [];
 
@@ -34,11 +33,23 @@ export class CrearReserva implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       const guardado = localStorage.getItem('temp_reserva');
       if (guardado) {
-        const data = JSON.parse(guardado);
-        this.fechaInicio = data.fechaInicio || '';
-        this.fechaFin = data.fechaFin || '';
-        this.habitacionesSeleccionadas = data.habitaciones || [];
-        this.serviciosSeleccionados = data.servicios || [];
+        try {
+          const data = JSON.parse(guardado);
+          
+          // Normalización para evitar el error de formato "yyyy-MM-dd"
+          const normalizarFecha = (fecha: string) => {
+            if (!fecha) return '';
+            const d = new Date(fecha);
+            return isNaN(d.getTime()) ? '' : d.toISOString().split('T')[0];
+          };
+
+          this.fechaInicio = normalizarFecha(data.fechaInicio);
+          this.fechaFin = normalizarFecha(data.fechaFin);
+          this.habitacionesSeleccionadas = data.habitaciones || [];
+          this.serviciosSeleccionados = data.servicios || [];
+        } catch (e) {
+          console.error("Error al cargar datos temporales:", e);
+        }
       }
     }
     this.cargarDatos();
@@ -100,7 +111,7 @@ export class CrearReserva implements OnInit {
   irAResumen() {
     const noches = this.calcularNoches();
     if (this.habitacionesSeleccionadas.length === 0 || noches <= 0) {
-      alert('Selecciona al menos una habitación y fechas válidas.');
+      alert('Selecciona al menos una habitación y asegúrate de que las fechas sean correctas.');
       return;
     }
 
