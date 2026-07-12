@@ -10,7 +10,6 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class HeaderAd {
 
-
   private auth = inject(AuthService);
 
   nombre: string | null = '';
@@ -19,13 +18,20 @@ export class HeaderAd {
   id: number | null = null;
 
   mostrarDropdown = false;
-
+  menuMovilAbierto = false; // nuevo
 
   toggleDropdown() {
     this.mostrarDropdown = !this.mostrarDropdown;
   }
 
-  //Se ejecuta cuando angular detecta un cambio
+  toggleMenuMovil() {
+    this.menuMovilAbierto = !this.menuMovilAbierto;
+  }
+
+  cerrarMenuMovil() {
+    this.menuMovilAbierto = false;
+  }
+
   ngDoCheck() {
     this.nombre = this.auth.getNombre();
     this.apellido = this.auth.getApellidoPaterno();
@@ -33,9 +39,7 @@ export class HeaderAd {
     this.id = this.auth.getId();
   }
 
-
   logout() {
     this.auth.cerrarSesion();
   }
-
 }

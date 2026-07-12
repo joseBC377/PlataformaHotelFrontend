@@ -1,33 +1,6 @@
 @use 'variables' as var;
 
 
-
-.reception-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 16rem;
-  min-height: 100vh;
-  padding: 1.5rem;
-  background-color: #18294e;
-  color: #fff;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  box-shadow: 2px 0 10px rgba(0, 0, 0, .08);
-  transition: all .3s ease;
-}
-
-.reception-sidebar:hover {
-  transform: scale(1.01);
-  box-shadow: 8px 0 25px rgba(0, 0, 0, .20);
-}
-
-
-
 .sidebar-content {
   display: flex;
   flex-direction: column;
@@ -40,47 +13,64 @@
   margin-top: 2rem;
 }
 
+.nav-link:hover,
+.nav-link.active {
+  background: #243c6d;
+  color: #fff;
+}
 
+
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 16rem;
+  min-height: 100vh;
+  padding: 1.5rem;
+  background-color: #18294e;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  box-shadow: 2px 0 10px rgba(0,0,0,.08);
+  transition: all .3s ease;
+}
+
+.admin-sidebar:hover {
+  transform: scale(1.01);
+  box-shadow: 8px 0 25px rgba(0,0,0,.20);
+}
 
 .nav-link {
   display: flex;
   align-items: center;
-  gap: .75rem;
-
   padding: .75rem 1rem;
   border-radius: .75rem;
-
   text-decoration: none;
   color: #cbd5e1;
 
-  transition: all .25s ease;
+  transition: all 0.25s ease;
 }
 
 .nav-link.active {
   background: #243c6d;
   color: #fff;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
 }
-
 .nav-link:hover {
   background: #243c6d;
   color: #fff;
-
   transform: translateX(4px);
-
   box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
 }
 
 .nav-icon {
   width: 22px;
   text-align: center;
+  margin-right: .75rem;
   font-size: 1rem;
 }
-
-/* ===========================
-   FOOTER
-=========================== */
 
 .sidebar-footer {
   display: flex;
@@ -99,16 +89,12 @@
     #1e3360
   );
 
-  border: 1px solid rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255,255,255,.08);
 }
 
 .avatar-badge {
   width: 60px;
   height: 60px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
   border-radius: 1rem;
 
@@ -122,6 +108,10 @@
   font-size: 1.3rem;
   font-weight: 700;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   box-shadow: 0 6px 16px rgba(245, 158, 11, .35);
 }
 
@@ -131,10 +121,9 @@
 
 .footer-text h4 {
   margin: 0;
-
-  color: #fff;
   font-size: .95rem;
   font-weight: 600;
+  color: #fff;
 
   word-break: break-word;
 }
@@ -143,23 +132,23 @@
   display: block;
   margin-top: .35rem;
 
-  color: #93c5fd;
-
   font-size: .75rem;
   font-weight: 600;
   letter-spacing: .05rem;
+
+  color: #93c5fd;
   text-transform: uppercase;
 }
 
 .logout-btn {
   width: 100%;
 
-  padding: .85rem;
-
   border: none;
   border-radius: .85rem;
 
-  background: rgba(255, 255, 255, .08);
+  padding: .85rem;
+
+  background: rgba(255,255,255,.08);
   color: white;
 
   font-weight: 600;
@@ -172,19 +161,176 @@
   background: #dc3545;
   transform: translateY(-2px);
 }
+/* ===========================
+   BOTÓN HAMBURGUESA (solo móvil)
+=========================== */
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1100;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 10px;
+  background-color: #18294e;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 
-
-@media (max-width: 767px) {
-  .reception-sidebar {
-    position: static;
-    width: 100%;
-    min-height: auto;
-    height: auto;
-    padding: 1rem;
-    box-shadow: none;
+  span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: #fff;
+    border-radius: 2px;
+    transition: all 0.25s ease;
   }
 
-  .reception-sidebar:hover {
-    transform: none;
+  &.active {
+    span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    span:nth-child(2) {
+      opacity: 0;
+    }
+    span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+  }
+}
+
+.sidebar-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sidebar-close-btn {
+  display: none; /* oculto en desktop */
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* ===========================
+   BACKDROP (fondo oscuro móvil)
+=========================== */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  z-index: 1040;
+  animation: backdrop-fade 0.2s ease;
+}
+
+@keyframes backdrop-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ===========================
+   RESPONSIVE: SIDEBAR COMO DRAWER
+=========================== */
+@media (max-width: 991px) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  .admin-sidebar,
+  .reception-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 16rem;
+    max-width: 80vw;
+    height: 100vh;
+    min-height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1050;
+    overflow-y: auto;
+
+    &.mobile-open {
+      transform: translateX(0);
+    }
+
+    &:hover {
+      transform: translateX(0);
+    }
+
+    &.mobile-open:hover {
+      transform: translateX(0);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-sidebar,
+  .reception-sidebar {
+    width: 85vw;
+  }
+}
+
+@media (max-width: 1200px) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .sidebar-close-btn {
+    display: flex;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  .admin-sidebar,
+  .reception-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 16rem;
+    max-width: 80vw;
+    height: 100vh;
+    min-height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1050;
+    overflow-y: auto;
+
+    &.mobile-open {
+      transform: translateX(0);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-sidebar,
+  .reception-sidebar {
+    width: 85vw;
   }
 }

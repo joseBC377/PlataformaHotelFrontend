@@ -15,16 +15,23 @@ export class HeaderRecep {
   nombre: string | null = '';
   apellido: string | null = '';
   rol: string | null = '';
-  id : number | null = null;
+  id: number | null = null;
 
   mostrarDropdown = false;
-
+  menuMovilAbierto = false; // nuevo
 
   toggleDropdown() {
     this.mostrarDropdown = !this.mostrarDropdown;
   }
 
-  //Se ejecuta cuando angular detecta un cambio
+  toggleMenuMovil() {
+    this.menuMovilAbierto = !this.menuMovilAbierto;
+  }
+
+  cerrarMenuMovil() {
+    this.menuMovilAbierto = false;
+  }
+
   ngDoCheck() {
     this.nombre = this.auth.getNombre();
     this.apellido = this.auth.getApellidoPaterno();
@@ -32,10 +39,7 @@ export class HeaderRecep {
     this.id = this.auth.getId();
   }
 
-
-  logout(){
+  logout() {
     this.auth.cerrarSesion();
   }
-
-
 }

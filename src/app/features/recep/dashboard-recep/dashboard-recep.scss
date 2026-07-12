@@ -296,6 +296,16 @@ body {
           border: 2px solid #ffffff;
         }
       }
+
+      .avatar-bubble.avatar-initials {
+        background-color: #eff6ff;
+        color: #2563eb;
+        font-size: 0.7rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 }
@@ -502,82 +512,14 @@ body {
   }
 
   /* Cuadrícula de Habitaciones por niveles */
-  .rooms-level-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  .rooms-flat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
     margin-bottom: 1.5rem;
 
-    .level-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.75rem;
-
-      /* Aseguramos que la tercera fila tenga solo 2 columnas alineadas a la izquierda */
-      &.level-three {
-        grid-template-columns: repeat(4, 1fr);
-
-        .empty-slot {
-          grid-column: span 2;
-        }
-      }
-    }
-
-    .room-box {
-      aspect-ratio: 1;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0.5rem;
-      transition: var(--transition-default);
-      cursor: pointer;
-
-      &:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      }
-
-      .room-num {
-        font-size: 0.85rem;
-        font-weight: 700;
-      }
-
-      .room-status-badge {
-        font-size: 0.6rem;
-        font-weight: 600;
-        margin-top: 0.125rem;
-        letter-spacing: 0.025em;
-      }
-
-      /* Variaciones de estado de habitación */
-      &.occupied {
-        background-color: var(--room-occupied);
-        color: #ffffff;
-
-        .room-status-badge {
-          color: rgba(255, 255, 255, 0.8);
-        }
-      }
-
-      &.vacant {
-        background-color: var(--room-vacant);
-        color: #475569;
-
-        .room-status-badge {
-          color: #64748b;
-        }
-      }
-
-      &.cleaning {
-        background-color: var(--room-cleaning);
-        color: #1a2e56;
-
-        .room-status-badge {
-          color: #1e3a8a;
-        }
-      }
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 
