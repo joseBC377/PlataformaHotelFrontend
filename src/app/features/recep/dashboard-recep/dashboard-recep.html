@@ -393,4 +393,119 @@
     </div>
   </div>
 
+  <!-- MODAL CAMBIAR ESTADO DE HABITACIÓN (PREMIUM Y REDISEÑADO) -->
+  <div class="modal-backdrop-premium" *ngIf="mostrarModalEstadoHabitacion">
+    <div class="modal-card-container">
+      
+      <!-- Modal Header -->
+      <div class="modal-card-header">
+        <div class="title-wrap">
+          <span class="badge-form">Operaciones</span>
+          <h3>Estado de Habitación</h3>
+          <p>Habitación {{ habitacionSeleccionada?.nombre_habitacion }}</p>
+        </div>
+        <button class="modal-close-icon-btn" (click)="cerrarModalEstadoHabitacion()" aria-label="Cerrar modal">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Formulario / Contenedor -->
+      <div class="modal-card-body">
+        
+        <!-- Detalle de Habitación -->
+        <div class="billing-summary-panel">
+          <h4 class="summary-title">Detalles Actuales</h4>
+          <div class="summary-rows">
+            <div class="summary-row-item">
+              <span>Categoría:</span>
+              <strong>{{ habitacionSeleccionada?.categoriaHabitacion?.nombre_categoria || 'Standard' }}</strong>
+            </div>
+            <div class="summary-row-item">
+              <span>Precio por Noche:</span>
+              <strong>S/ {{ habitacionSeleccionada?.categoriaHabitacion?.precio || 0 | number:'1.2-2' }}</strong>
+            </div>
+            <div class="summary-row-item">
+              <span>Descripción:</span>
+              <strong>{{ habitacionSeleccionada?.descripcion_habitacion || 'Sin descripción' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estado Comercial Form Group -->
+        <div class="form-group-custom">
+          <label for="estadoComercial" class="form-label-custom">Estado Comercial (Reserva) *</label>
+          <div class="input-group-premium-modal">
+            <span class="modal-input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            </span>
+            <div class="select-wrapper">
+              <select id="estadoComercial" [(ngModel)]="nuevoEstadoComercial" class="form-select-custom">
+                <option value="DISPONIBLE">DISPONIBLE</option>
+                <option value="OCUPADA">OCUPADA</option>
+              </select>
+              <div class="select-arrow-custom"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estado Operativo Form Group -->
+        <div class="form-group-custom">
+          <label for="estadoOperativo" class="form-label-custom">Estado Operativo (Limpieza/Mantenimiento) *</label>
+          <div class="input-group-premium-modal">
+            <span class="modal-input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+              </svg>
+            </span>
+            <div class="select-wrapper">
+              <select id="estadoOperativo" [(ngModel)]="nuevoEstadoOperativo" class="form-select-custom">
+                <option value="LIMPIO">LIMPIO</option>
+                <option value="EN_LIMPIEZA">EN LIMPIEZA</option>
+                <option value="SUCIO">SUCIO</option>
+                <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+              </select>
+              <div class="select-arrow-custom"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón para ir a reservar si está disponible -->
+        <div class="alert-box-custom warning-status" *ngIf="habitacionSeleccionada && getRoomVisualState(habitacionSeleccionada) === 'libre'">
+          <div class="alert-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
+          <div class="alert-txt-content" style="flex-grow: 1;">
+            <strong>Habitación Disponible</strong>
+            <p>Esta habitación está libre. Puedes registrar una reserva directamente.</p>
+          </div>
+          <button type="button" class="btn-note-action" (click)="irAReservarHabitacion()" style="margin-left: auto;">
+            Reservar
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-card-footer">
+        <button type="button" class="btn-modal-cancel" (click)="cerrarModalEstadoHabitacion()">
+          Cancelar
+        </button>
+        <button type="button" class="btn-modal-submit" (click)="guardarEstadoHabitacion()">
+          Guardar Cambios
+        </button>
+      </div>
+
+    </div>
+  </div>
+
 </div>

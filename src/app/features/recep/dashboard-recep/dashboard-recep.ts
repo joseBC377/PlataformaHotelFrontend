@@ -54,6 +54,12 @@ export class DashboardRecep implements OnInit {
   errorMensaje: string | null = null;
   cruceFechasDetectado = false;
 
+  // Modal de estado de habitación
+  mostrarModalEstadoHabitacion = false;
+  habitacionSeleccionada: Habitacion | null = null;
+  nuevoEstadoComercial = '';
+  nuevoEstadoOperativo = '';
+
   // Búsqueda en tiempo real
   buscarQuery = '';
 
@@ -448,11 +454,50 @@ export class DashboardRecep implements OnInit {
   }
 
   seleccionarHabitacion(room: Habitacion): void {
-    const estadoVisual = this.getRoomVisualState(room);
-    if (estadoVisual === 'libre') {
+    this.abrirModalEstadoHabitacion(room);
+  }
+
+  abrirModalEstadoHabitacion(room: Habitacion): void {
+    this.habitacionSeleccionada = room;
+    this.nuevoEstadoComercial = room.estado || 'DISPONIBLE';
+    this.nuevoEstadoOperativo = room.tipo || 'LIMPIO';
+    this.mostrarModalEstadoHabitacion = true;
+  }
+
+  cerrarModalEstadoHabitacion(): void {
+    this.mostrarModalEstadoHabitacion = false;
+    this.habitacionSeleccionada = null;
+  }
+
+  guardarEstadoHabitacion(): void {
+    if (!this.habitacionSeleccionada || !this.habitacionSeleccionada.id_habitacion) return;
+
+    const updatedRoom: Habitacion = {
+      ...this.habitacionSeleccionada,
+      estado: this.nuevoEstadoComercial as any,
+      tipo: this.nuevoEstadoOperativo as any
+    };
+
+    this.cargando = true;
+    this.habitacionService.putEditarHabitacion(this.habitacionSeleccionada.id_habitacion, updatedRoom).subscribe({
+      next: () => {
+        alert('¡El estado de la habitación ha sido actualizado con éxito!');
+        this.cerrarModalEstadoHabitacion();
+        this.cargarDatos();
+      },
+      error: (err) => {
+        console.error('Error al actualizar el estado de la habitación:', err);
+        alert('No se pudo actualizar el estado de la habitación.');
+        this.cargando = false;
+      }
+    });
+  }
+
+  irAReservarHabitacion(): void {
+    if (this.habitacionSeleccionada) {
+      const room = this.habitacionSeleccionada;
+      this.cerrarModalEstadoHabitacion();
       this.abrirModalReserva(room);
-    } else {
-      console.log('La habitación no está libre. Estado:', estadoVisual);
     }
   }
 
