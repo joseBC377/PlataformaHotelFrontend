@@ -1,155 +1,184 @@
 <div class="cuerpo">
-    <div class="container mt-4">
-        <h2>Intranet de Administrador</h2>
-        <div class="container my-4">
-            <div class="row align-items-center g-2">
-                <div class="col-12 col-md-6 d-flex align-items-center p-3">
-                    <p>¡Hola, administrador&#64;! Nos alegra verte por aquí. Esta es tu área dedicada para tener una
-                        vista
-                        completa de todos los clientes que usan la plataforma web de nuestro hotel. Desde aquí, podrás
-                        consultar rápidamente los datos de cada usuario, explorar sus reservas activas e históricas, y
-                        revisar los conteos por rol para mantener un control total sobre nuestra comunidad de usuarios.
-                    </p>
-                </div>
-                <div class="col-12 col-md-6 d-flex justify-content-center"> <img
-                        src="https://www.baoss.es/wp-content/uploads/2024/12/asistente-virtual-3.jpg" alt="imagen"
-                        style="width: auto; height: 15rem;"> </div>
-            </div>
-        </div>
-        <!-- <button type="button" (click)="getUsuario()">
-        Obtener clientes
-    </button>
-    @if (usuario$ |async; as usuario) {
-    <pre>{{usuario|json}}</pre>
-    } -->
-    </div>
-    <div class="container mt-4 mb-4">
-        <h2 class="mb-4">Tabla de Clientes 👩‍👧‍👦</h2>
-        <div class="table-responsive mt-4">
-            <table class="table">
-                <thead class="table-hotel">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Apellido Paterno</th>
-                        <th>Apellido Materno</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Rol</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (usuario$|async; as client) {
-                    @for (c of client; track c.id_usuario) {
-                    <tr>
-                        <td>{{c.id_usuario}}</td>
-                        <td>{{c.nombre_usuario}}</td>
-                        <td>{{c.apellido_paterno}}</td>
-                        <td>{{c.apellido_materno}}</td>
-                        <td>{{c.correo}}</td>
-                        <td>{{c.telefono}}</td>
-                        <td>{{c.rol}}</td>
-                    </tr>
-                    }@empty {
-                    <tr>
-                        <td colspan="6"> No hay clientes registrados</td>
-                    </tr>
-                    }}@else {
-                    <tr>
-                        <td colspan="6">Cargando clientes</td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <ng-template #sinUsuarios>
-            <div class="alert alert-info mt-4">No hay Clientes registrados</div>
-        </ng-template>
-        <h2 class="mb-4">Reservas de Clientes 👪</h2>
-        <div class="table-responsive mt-4">
-            <table class="table">
-                <thead class="table-hotel">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Rol</th>
-                        <th>Reserva</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (usuarioReserva$|async; as userRes) {
-                    @for (c of userRes; track c.id_usuario) {
-                    <tr>
-                        <td>{{c.id_usuario}}</td>
-                        <td>{{c.nombre_usuario}}</td>
-                        <td>{{c.apellido_paterno}}</td>
-                        <td>{{c.apellido_materno}}</td>
-                        <td>{{c.correo}}</td>
-                        <td>{{c.telefono}}</td>
-                        <td>{{c.rol}}</td>
-                        <td>
-                            @if (c.reserva && c.reserva.length > 0) {
-                            <ul class="mb-0">
-                                @for (r of c.reserva; track r.id_reserva) {
-                                <a>
-                                    {{ r.fechaCreacion | date:'yyyy-MM-dd' }}
-                                </a>
-                                }
-                            </ul>
-                            } @else {
-                            <span class="text-muted">Sin reservas</span>
-                            }
-                        </td>
+  <div class="dashboard-wrapper">
 
-                    </tr>
-                    }@empty {
-                    <tr>
-                        <td colspan="7"> No hay clientes registrados</td>
-                    </tr>
-                    }}@else {
-                    <tr>
-                        <td colspan="7">Cargando clientes</td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <ng-template #sinUsuarios>
-            <div class="alert alert-info mt-4">No hay Reservas de Clientes</div>
-        </ng-template>
-        <h2 class="mb-4">Conteo de Roles 📊</h2>
-        <div class=" table-responsive mt-4">
-            <table class="table">
-                <thead class="table-hotel">
-                    <tr>
-                        <th>Rol</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (contero$|async; as conteo) {
-                    @for (c of conteo; track contero$) {
-                    <tr>
-                        <td>{{c.rol}}</td>
-                        <td>{{c.cantidad}}</td>
-                    </tr>
-                    }@empty {
-                    <tr>
-                        <td colspan="2"> No hay clientes registrados</td>
-                    </tr>
-                    }}@else {
-                    <tr>
-                        <td colspan="2">Cargando clientes</td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <ng-template #sinUsuarios>
-            <div class="alert alert-info mt-4">No hay Roles asignados</div>
-        </ng-template>
+    <!-- ENCABEZADO DE SECCIÓN -->
+    <section class="dashboard-header-section">
+      <div class="welcome-text">
+        <span class="welcome-label">Plataforma Hotelera</span>
+        <h2>Intranet de Administrador</h2>
+        <p>Panel de control para la gestión de usuarios, roles y reservas activas.</p>
+      </div>
+    </section>
+
+    <!-- TARJETA BIENVENIDA HERO -->
+    <div class="welcome-hero-card">
+      <div class="hero-content">
+        <h3>¡Hola, <span>Administrador</span>!</h3>
+        <p>
+          Nos alegra verte por aquí. Esta es tu área dedicada para tener una vista completa de todos los clientes que usan la plataforma web de nuestro hotel.
+        </p>
+        <p>
+          Desde aquí, podrás consultar rápidamente los datos de cada usuario, explorar sus reservas activas e históricas, y revisar los conteos por rol para mantener un control total sobre nuestra comunidad de usuarios.
+        </p>
+      </div>
+      <div class="hero-image-wrap">
+        <img src="https://www.baoss.es/wp-content/uploads/2024/12/asistente-virtual-3.jpg" alt="Intranet Ilustración">
+      </div>
     </div>
+
+    <!-- TABLA DE CLIENTES -->
+    <div class="card">
+      <div class="card-header-custom">
+        <h3 class="card-title">Comunidad de Clientes 👩‍👧‍👦</h3>
+        @if (usuario$ | async; as client) {
+          <span class="badge-count">{{ client.length }} registrados</span>
+        }
+      </div>
+      
+      <div class="responsive-table-holder">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th style="width: 80px;">ID</th>
+              <th>Nombre Completo</th>
+              <th>Correo Electrónico</th>
+              <th>Teléfono</th>
+              <th style="width: 150px;">Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (usuario$|async; as client) {
+              @for (c of client; track c.id_usuario) {
+                <tr>
+                  <td><span class="user-id-badge">#{{ c.id_usuario }}</span></td>
+                  <td>
+                    <span class="highlight-name">{{ c.nombre_usuario }}</span> 
+                    {{ c.apellido_paterno }} {{ c.apellido_materno }}
+                  </td>
+                  <td>{{ c.correo }}</td>
+                  <td>{{ c.telefono || '—' }}</td>
+                  <td>
+                    <span class="role-pill" [ngClass]="{
+                      'role-admin': c.rol === 'ADMIN',
+                      'role-recepcionista': c.rol === 'RECEPCION',
+                      'role-cliente': c.rol === 'CLIENT'
+                    }">
+                      {{ c.rol }}
+                    </span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="text-center py-4">No hay clientes registrados en la plataforma.</td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="5" class="text-center py-4">Cargando lista de clientes...</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DISTRIBUCIÓN Y RESERVAS (SPLIT LAYOUT) -->
+    <div class="intranet-split-layout">
+      
+      <!-- RESERVAS DE CLIENTES -->
+      <div class="card">
+        <div class="card-header-custom">
+          <h3 class="card-title">Reservas por Cliente 👪</h3>
+        </div>
+        
+        <div class="responsive-table-holder">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">ID</th>
+                <th>Cliente</th>
+                <th>Contacto</th>
+                <th>Reservas Realizadas</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (usuarioReserva$|async; as userRes) {
+                @for (c of userRes; track c.id_usuario) {
+                  <tr>
+                    <td><span class="user-id-badge">#{{ c.id_usuario }}</span></td>
+                    <td>
+                      <span class="highlight-name">{{ c.nombre_usuario }}</span> 
+                      {{ c.apellido_paterno }}
+                    </td>
+                    <td>
+                      <div style="font-size: 0.85rem; line-height: 1.35;">
+                        <div>{{ c.correo }}</div>
+                        <div class="text-muted">{{ c.telefono }}</div>
+                      </div>
+                    </td>
+                    <td>
+                      @if (c.reserva && c.reserva.length > 0) {
+                        <div class="d-flex flex-wrap">
+                          @for (r of c.reserva; track r.id_reserva) {
+                            <a class="reserva-badge">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 3px;">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                              </svg>
+                              {{ r.fechaCreacion | date:'yyyy-MM-dd' }}
+                            </a>
+                          }
+                        </div>
+                      } @else {
+                        <span class="text-muted" style="font-size: 0.8rem;">Sin reservas activas</span>
+                      }
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="4" class="text-center py-4">No hay reservas de clientes registradas.</td>
+                  </tr>
+                }
+              } @else {
+                <tr>
+                  <td colspan="4" class="text-center py-4">Cargando reservas de clientes...</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CONTEO DE ROLES -->
+      <div class="role-distribution-card card">
+        <div class="card-header-custom">
+          <h3 class="card-title">Distribución de Roles 📊</h3>
+        </div>
+        
+        <div class="role-list">
+          @if (contero$|async; as conteo) {
+            @for (c of conteo; track c.rol) {
+              <div class="role-item">
+                <div class="role-info">
+                  <span class="role-name">{{ c.rol }}</span>
+                  <span class="role-count">{{ c.cantidad }}</span>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-fill" [style.width.%]="c.cantidad * 12"></div>
+                </div>
+              </div>
+            } @empty {
+              <p class="text-center text-muted">No hay conteo disponible.</p>
+            }
+          } @else {
+            <p class="text-center text-muted">Cargando distribución...</p>
+          }
+        </div>
+      </div>
+
+    </div>
+
+  </div>
 </div>

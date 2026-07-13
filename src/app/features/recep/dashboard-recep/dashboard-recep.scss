@@ -2,7 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 // Luxury Hotel Color System & Core Design Tokens
-:root {
+:host {
+  display: block;
+  width: 100%;
+
   // Main Theme Colors
   --primary-navy: #0A192C;
   --secondary-navy: #1E3E62;

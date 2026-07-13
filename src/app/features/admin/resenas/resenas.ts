@@ -10,6 +10,7 @@ import { RequestResenaModel } from '../../auth/models/request-resena-model';
 import { AdminServices } from '../services/admin.services';
 import { UsuarioModel } from '../../auth/models/usuario';
 import { Servicio } from '../../auth/models/servicio';
+import { ServicioService } from '../services/servicio.service';
 
 @Component({
   selector: 'app-resena-admin',
@@ -23,6 +24,8 @@ export class ResenaAdminComponent implements OnInit {
   private servUsuario = inject(AdminServices)
   private servHabitacion = inject(HabitacionServices);
   private servResena = inject(ResenaService);
+  private servServicio = inject(ServicioService);
+
   protected user$!: Observable<UsuarioModel[]>;
   protected habit$!: Observable<Habitacion[]>;
   public rese$!: Observable<Resena[]>;
@@ -30,6 +33,15 @@ export class ResenaAdminComponent implements OnInit {
 
   resenaForm!: FormGroup;
   resenas: Resena[] = [];
+
+  // Variables para métricas
+  totalResenas = 0;
+  promedioCalificacion = 0;
+  resenasExcelentes = 0;
+  resenasBajas = 0;
+
+  // Control de modal de formulario
+  mostrarModalForm = false;
 
   // ¡NUEVA PROPIEDAD! Array para las opciones del select de calificación
   calificacionesDisponibles: number[] = [];
@@ -54,6 +66,7 @@ export class ResenaAdminComponent implements OnInit {
 
     this.cargarUsuarios();
     this.cargarHabitacion();
+    this.cargarServicios();
     this.cargarResena();
   }
 
@@ -80,12 +93,55 @@ export class ResenaAdminComponent implements OnInit {
     this.habit$ = this.servHabitacion.getAllHabitaciones();
   }
 
+  cargarServicios() {
+    this.servicio$ = this.servServicio.listar();
+  }
+
   cargarResena() {
     this.rese$ = this.servResena.listar();
+    this.rese$.subscribe({
+      next: (data) => {
+        this.resenas = data || [];
+        this.calcularMetricas();
+      }
+    });
+  }
+
+  calcularMetricas() {
+    if (!this.resenas.length) {
+      this.totalResenas = 0;
+      this.promedioCalificacion = 0;
+      this.resenasExcelentes = 0;
+      this.resenasBajas = 0;
+      return;
+    }
+    this.totalResenas = this.resenas.length;
+    const suma = this.resenas.reduce((acc, r) => acc + (r.calificacion || 0), 0);
+    this.promedioCalificacion = suma / this.totalResenas;
+    this.resenasExcelentes = this.resenas.filter(r => r.calificacion >= 4).length;
+    this.resenasBajas = this.resenas.filter(r => r.calificacion < 3).length;
   }
 
   editando: boolean = false;
   idEditando!: number;
+
+  abrirModalNuevaResena(): void {
+    this.editando = false;
+    this.resenaForm.reset({
+      calificacion: '',
+      fecha: new Date().toISOString().substring(0, 10),
+      comentario: '',
+      id_usuario: null,
+      id_habitacion: null,
+      id_servicio: null
+    });
+    this.mostrarModalForm = true;
+  }
+
+  cerrarModal(): void {
+    this.mostrarModalForm = false;
+    this.resenaForm.reset();
+  }
 
   editarResena(resena: Resena) {
     this.editando = true;
@@ -95,10 +151,11 @@ export class ResenaAdminComponent implements OnInit {
       calificacion: resena.calificacion,
       fecha: resena.fecha,
       comentario: resena.comentario,
-      id_usuario: resena.usuario.id_usuario,
-      id_habitacion: resena.habitacion.id_habitacion,
-      id_servicio: resena.servicio.id_servicio
+      id_usuario: resena.usuario?.id_usuario || null,
+      id_habitacion: resena.habitacion?.id_habitacion || null,
+      id_servicio: resena.servicio?.id_servicio || null
     });
+    this.mostrarModalForm = true;
   }
 
   guardarResena() {
@@ -113,32 +170,33 @@ export class ResenaAdminComponent implements OnInit {
       calificacion: form.calificacion,
       comentario: form.comentario,
       fecha: form.fecha,
-      usuario: { id_usuario: form.id_usuario },   // 👈 corregido
-      habitacion: { id_habitacion: form.id_habitacion }, // 👈 corregido
-      servicio: { idServicio: form.id_servicio } // 👈 agregado para incluir el servicio
+      usuario: { id_usuario: form.id_usuario },
+      habitacion: { id_habitacion: form.id_habitacion },
+      servicio: { idServicio: form.id_servicio }
     };
-
 
     if (this.editando) {
       this.servResena.editar(this.idEditando, resena).subscribe({
         next: () => {
-          this.editando = false
+          this.editando = false;
           this.idEditando = 0;
+          this.mostrarModalForm = false;
           this.resenaForm.reset();
           this.cargarResena();
         },
         error: () => {
-          alert('Error al actualizar reseña')
+          alert('Error al actualizar reseña');
         }
       });
     } else {
       this.servResena.insertar(resena).subscribe({
         next: () => {
+          this.mostrarModalForm = false;
           this.resenaForm.reset();
           this.cargarResena();
         },
         error: () => {
-          alert('Error al registrar reseña')
+          alert('Error al registrar reseña');
         }
       });
     }
@@ -151,5 +209,30 @@ export class ResenaAdminComponent implements OnInit {
         error: () => alert('Error al eliminar reseña')
       });
     }
+  }
+
+  getIniciales(nombre: string): string {
+    if (!nombre) return 'U';
+    const parts = nombre.split(' ');
+    if (parts.length >= 2) {
+      return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+    }
+    return nombre.substring(0, 2).toUpperCase();
+  }
+
+  getEstrellasArray(calificacion: number): number[] {
+    const fullStars = Math.floor(calificacion);
+    return Array(fullStars).fill(0);
+  }
+
+  tieneMediaEstrella(calificacion: number): boolean {
+    return calificacion % 1 !== 0;
+  }
+
+  getEstrellasVaciasArray(calificacion: number): number[] {
+    const fullStars = Math.floor(calificacion);
+    const hasHalf = calificacion % 1 !== 0;
+    const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+    return Array(emptyStars).fill(0);
   }
 }
