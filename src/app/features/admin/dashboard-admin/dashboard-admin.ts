@@ -37,6 +37,32 @@ export class DashboardAdmin implements OnInit {
   habitaciones: Habitacion[] = [];
   clientes: UsuarioModel[] = [];
 
+  // Sistema de Notificaciones de la Campana
+  mostrarNotificaciones = false;
+  notificaciones: any[] = [];
+
+  get unreadNotificationsCount(): number {
+    return this.notificaciones.filter(n => !n.read).length;
+  }
+
+  toggleNotificaciones(): void {
+    this.mostrarNotificaciones = !this.mostrarNotificaciones;
+  }
+
+  marcarTodasComoLeidas(): void {
+    this.notificaciones.forEach(n => n.read = true);
+  }
+
+  agregarNotificacion(text: string, icon: string): void {
+    this.notificaciones.unshift({
+      id: Date.now().toString(),
+      text,
+      time: 'Hace un momento',
+      icon,
+      read: false
+    });
+  }
+
   // Modal de nueva reserva
   mostrarModalReserva = false;
   reservaForm!: FormGroup;
@@ -90,6 +116,10 @@ export class DashboardAdmin implements OnInit {
         this.reservasHabitaciones = reservasHab || [];
         this.habitaciones = habs || [];
         this.clientes = cls || [];
+        
+        // Generar feed de notificaciones iniciales dinámicas
+        this.generarNotificacionesIniciales();
+
         this.initForm();
         this.cargando = false;
       },
@@ -97,6 +127,46 @@ export class DashboardAdmin implements OnInit {
         console.error('Error al cargar datos del dashboard administrativo:', err);
         this.cargando = false;
       }
+    });
+  }
+
+  generarNotificacionesIniciales(): void {
+    this.notificaciones = [];
+
+    // 1. Nuevas Reservas (las últimas 3 ordenadas por reserva ID desc)
+    const reservasOrdenadas = [...this.reservasHabitaciones]
+      .filter(rh => rh.reserva && rh.reserva.id_reserva)
+      .sort((a, b) => (b.reserva!.id_reserva! - a.reserva!.id_reserva!));
+      
+    const ultimasReservas = reservasOrdenadas.slice(0, 3);
+    ultimasReservas.forEach(rh => {
+      const huesped = rh.reserva?.usuario?.nombre_usuario 
+        ? `${rh.reserva.usuario.nombre_usuario} ${rh.reserva.usuario.apellido_paterno || ''}` 
+        : 'Huésped';
+      const habitacion = rh.habitacion?.nombre_habitacion || 'habitación';
+      this.notificaciones.push({
+        id: `res-${rh.reserva!.id_reserva}`,
+        text: `Nueva reserva #${rh.reserva!.id_reserva}: ${huesped} asignado a la ${habitacion}.`,
+        time: `Check-in: ${rh.fechaInicio}`,
+        icon: 'booking',
+        read: false
+      });
+    });
+
+    // 2. Nuevos Clientes (los últimos 3 ordenadas por ID desc)
+    const clientesOrdenados = [...this.clientes]
+      .filter(c => c.id_usuario)
+      .sort((a, b) => (b.id_usuario! - a.id_usuario!));
+
+    const ultimosClientes = clientesOrdenados.slice(0, 3);
+    ultimosClientes.forEach(c => {
+      this.notificaciones.push({
+        id: `cli-${c.id_usuario}`,
+        text: `Nuevo cliente registrado: ${c.nombre_usuario} ${c.apellido_paterno || ''}.`,
+        time: 'Cuenta creada recientemente',
+        icon: 'user',
+        read: false
+      });
     });
   }
 
@@ -295,6 +365,7 @@ export class DashboardAdmin implements OnInit {
     this.cargando = true;
     this.habitacionService.putEditarHabitacion(this.habitacionSeleccionada.id_habitacion, updatedRoom).subscribe({
       next: () => {
+        this.agregarNotificacion(`Habitación ${this.habitacionSeleccionada?.nombre_habitacion} actualizada a ${this.nuevoEstadoComercial} - ${this.nuevoEstadoOperativo}`, 'update');
         alert('¡El estado de la habitación ha sido actualizado con éxito!');
         this.cerrarModalEstadoHabitacion();
         this.cargarDatos();
@@ -388,6 +459,7 @@ export class DashboardAdmin implements OnInit {
               };
               this.habitacionService.putEditarHabitacion(roomToUpdate.id_habitacion, updatedRoom).subscribe({
                 next: () => {
+                  this.agregarNotificacion(`Reserva creada para ${client.nombre_usuario} en la habitación ${roomToUpdate.nombre_habitacion}`, 'booking');
                   alert('¡Reserva creada con éxito y estado de la habitación actualizado a OCUPADA!');
                   this.cerrarModalReserva();
                   this.cargarDatos();
@@ -400,6 +472,7 @@ export class DashboardAdmin implements OnInit {
                 }
               });
             } else {
+              this.agregarNotificacion(`Reserva creada con éxito para ${client.nombre_usuario}`, 'booking');
               alert('¡Reserva creada con éxito en el sistema!');
               this.cerrarModalReserva();
               this.cargarDatos();
