@@ -68,6 +68,16 @@
   gap: 2.25rem;
   box-sizing: border-box;
 
+  @media (max-width: 1024px) {
+    padding: 1.5rem 1.5rem 2.5rem 1.5rem;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 576px) {
+    padding: 1rem 1rem 2rem 1rem;
+    gap: 1.25rem;
+  }
+
   * {
     box-sizing: border-box;
   }
@@ -90,6 +100,12 @@
   gap: 1.75rem;
   padding-bottom: 0.5rem;
 
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+
   .header-main-info {
     .welcome-box {
       .welcome-label {
@@ -109,6 +125,10 @@
         margin: 0 0 0.5rem 0;
         letter-spacing: -0.01em;
         color: var(--primary-navy);
+
+        @media (max-width: 768px) {
+          font-size: 1.85rem;
+        }
       }
 
       .current-date-info {
@@ -139,6 +159,12 @@
     gap: 1.25rem;
     flex-wrap: wrap;
 
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+    }
+
     // Search Bar
     .global-search-bar {
       position: relative;
@@ -158,6 +184,14 @@
         border-color: var(--accent-gold);
         box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.12);
         width: 380px;
+      }
+
+      @media (max-width: 768px) {
+        width: 100% !important;
+        max-width: 100%;
+        &:focus-within {
+          width: 100% !important;
+        }
       }
 
       .search-icon {
@@ -214,6 +248,11 @@
       box-shadow: var(--shadow-md);
       transition: var(--transition-normal);
 
+      @media (max-width: 768px) {
+        width: 100%;
+        justify-content: center;
+      }
+
       svg {
         width: 1.3rem;
         height: 1.3rem;
@@ -236,20 +275,17 @@
 // KPI METRICS CARDS
 .kpi-metrics-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   width: 100%;
 
-  @media (max-width: 1500px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: 868px) {
+  @media (max-width: 1200px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 576px) {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .kpi-card {
@@ -481,6 +517,11 @@
     gap: 1.25rem;
     flex-wrap: wrap;
 
+    @media (max-width: 768px) {
+      padding: 1.25rem;
+      gap: 1rem;
+    }
+
     &.flex-header {
       align-items: center;
     }
@@ -507,6 +548,13 @@
       display: flex;
       align-items: center;
       gap: 0.85rem;
+      flex-wrap: wrap;
+
+      @media (max-width: 576px) {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
 
       .badge-status-pill {
         font-size: 0.78rem;
@@ -518,6 +566,13 @@
         gap: 0.45rem;
         box-shadow: var(--shadow-sm);
         border: 1px solid transparent;
+
+        @media (max-width: 576px) {
+          flex-grow: 1;
+          justify-content: center;
+          font-size: 0.72rem;
+          padding: 0.35rem 0.5rem;
+        }
 
         .dot {
           width: 7px;
@@ -593,6 +648,15 @@
     border: 1.5px solid var(--border-light); // Elegant visible boundary border
     border-radius: 12px;
     box-shadow: inset 0 2px 8px rgba(10, 25, 47, 0.03); // Inner depth shadow
+
+    @media (max-width: 768px) {
+      padding: 1.25rem;
+      max-height: 480px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.85rem;
+    }
 
     // Custom Luxury Scrollbar
     &::-webkit-scrollbar {
@@ -857,6 +921,17 @@
     flex-wrap: wrap;
     gap: 1.5rem;
     background-color: #FAFAFC;
+
+    @media (max-width: 768px) {
+      padding: 1rem 1.25rem;
+      gap: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.85rem 1rem;
+      gap: 0.75rem;
+      justify-content: center;
+    }
 
     .legend-element {
       display: flex;
@@ -1422,6 +1497,10 @@
   justify-content: center;
   padding: 1.5rem;
   animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @media (max-width: 480px) {
+    padding: 0.5rem;
+  }
 }
 
 .modal-card-container {
@@ -1437,6 +1516,11 @@
   overflow: hidden;
   animation: modalScaleUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 
+  @media (max-width: 768px) {
+    border-radius: 16px;
+    max-height: 95vh;
+  }
+
   .modal-card-header {
     padding: 2.25rem 2.25rem;
     background: linear-gradient(135deg, #0A192C 0%, #15163C 55%, #221338 100%); // Subtle Navy-to-Purple gradient
@@ -1444,6 +1528,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-width: 768px) {
+      padding: 1.25rem 1.5rem;
+    }
 
     .title-wrap {
       .badge-form {
@@ -1468,6 +1556,10 @@
         color: #ffffff; // High contrast white text
         margin: 0;
         letter-spacing: -0.01em;
+
+        @media (max-width: 768px) {
+          font-size: 1.45rem;
+        }
       }
 
       p {
@@ -1475,6 +1567,10 @@
         color: #cbd5e1; // Light slate for description text
         margin: 0.25rem 0 0 0;
         font-weight: 500;
+
+        @media (max-width: 768px) {
+          font-size: 0.8rem;
+        }
       }
     }
 
@@ -1510,6 +1606,11 @@
     gap: 1.65rem;
     max-height: 60vh;
     background-color: #FAF8F5; // Soft warm gray background for layout contrast
+
+    @media (max-width: 768px) {
+      padding: 1.25rem 1.5rem;
+      gap: 1.25rem;
+    }
 
     &::-webkit-scrollbar {
       width: 5px;
@@ -1775,6 +1876,16 @@
     gap: 1.15rem;
     background-color: #F8FAFC;
 
+    @media (max-width: 768px) {
+      padding: 1.25rem 1.5rem;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 480px) {
+      flex-direction: column-reverse;
+      align-items: stretch;
+    }
+
     .btn-modal-cancel {
       background: #FFFFFF;
       color: var(--text-secondary);
@@ -1786,6 +1897,11 @@
       font-weight: 700;
       cursor: pointer;
       transition: var(--transition-fast);
+
+      @media (max-width: 480px) {
+        width: 100%;
+        justify-content: center;
+      }
 
       &:hover {
         background-color: #F1F5F9;
@@ -1808,6 +1924,11 @@
       transition: var(--transition-fast);
       position: relative;
       overflow: hidden;
+
+      @media (max-width: 480px) {
+        width: 100%;
+        justify-content: center;
+      }
 
       &::after {
         content: '';
