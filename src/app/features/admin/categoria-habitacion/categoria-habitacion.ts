@@ -29,6 +29,7 @@ export class CategoriaHabitacionComponent {
 
   public modoEdicion = false;
   public idCategoriaEditar: number | null = null;
+  public mostrarModalForm = false;
   selectedFile: File | null = null; imagenInvalida = false;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
@@ -41,6 +42,20 @@ export class CategoriaHabitacionComponent {
 
   ngOnInit(): void {
     this.categorias$ = this.serv.getAllCategorias();
+  }
+
+  abrirModalNuevaCategoria(): void {
+    this.modoEdicion = false;
+    this.categoriaForm.reset({
+      id_categoria_habitacion: null,
+      nombre_categoria: '',
+      descripcion_categoria: '',
+      capacidad: 0,
+      precio: 0,
+      imagen: '',
+      habitacion: []
+    });
+    this.mostrarModalForm = true;
   }
 
   onFileChange(event: Event): void {
@@ -85,6 +100,7 @@ export class CategoriaHabitacionComponent {
     this.categoriaForm.patchValue(cat);
     this.idCategoriaEditar = cat.id_categoria_habitacion ?? null;
     this.modoEdicion = true;
+    this.mostrarModalForm = true;
   }
 
   eliminarCategoria(id: number): void {
@@ -102,6 +118,7 @@ export class CategoriaHabitacionComponent {
     this.idCategoriaEditar = null;
     this.selectedFile = null;
     this.imagenInvalida = false;
+    this.mostrarModalForm = false;
 
     if (this.fileInput?.nativeElement) {
       this.fileInput.nativeElement.value = '';

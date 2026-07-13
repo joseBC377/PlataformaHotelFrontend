@@ -40,6 +40,20 @@ export class HabitacionesAdminComponent implements OnInit {
 
   public modoEdicion: boolean = false;
   public idHabitacionEditar: number | null = null;
+  public mostrarModalForm = false;
+
+  abrirModalNuevaHabitacion(): void {
+    this.modoEdicion = false;
+    this.habitacionForm.reset({
+      id_habitacion: null,
+      nombre_habitacion: '',
+      descripcion_habitacion: '',
+      estado: null,
+      categoriaHabitacion: null,
+      tipo: null
+    });
+    this.mostrarModalForm = true;
+  }
 
   registroHabitacion(): void {
     if (this.habitacionForm.invalid) {
@@ -66,7 +80,6 @@ export class HabitacionesAdminComponent implements OnInit {
       }
     };
 
-
     console.log('Datos a enviar:', data);
 
     if (this.modoEdicion) {
@@ -82,7 +95,6 @@ export class HabitacionesAdminComponent implements OnInit {
     }
   }
 
-
   editarHabitacion(hab: Habitacion): void {
     console.log('Editando habitación:', hab);
 
@@ -97,6 +109,7 @@ export class HabitacionesAdminComponent implements OnInit {
 
     this.idHabitacionEditar = hab.id_habitacion!;
     this.modoEdicion = true;
+    this.mostrarModalForm = true;
   }
 
   eliminarHabitacion(id: number): void {
@@ -112,12 +125,12 @@ export class HabitacionesAdminComponent implements OnInit {
     this.habitacionForm.reset();
     this.modoEdicion = false;
     this.idHabitacionEditar = null;
+    this.mostrarModalForm = false;
   }
 
   ngOnInit(): void {
     this.habitacion$ = this.serv.getAllHabitaciones();
     this.categorias$ = this.catServ.getAllCategorias();
-
   }
 
   compararCategoria = (c1: CategoriaHabitacion, c2: CategoriaHabitacion): boolean => {
