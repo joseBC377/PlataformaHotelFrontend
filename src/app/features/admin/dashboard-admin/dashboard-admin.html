@@ -38,8 +38,8 @@
       <p>Bienvenido de nuevo. Aquí tienes el estado actual de tu propiedad.</p>
     </div>
     <div class="action-buttons">
-      <button class="btn btn-secondary">Descargar Reporte</button>
-      <button class="btn btn-primary">
+      <button class="btn btn-secondary" (click)="descargarReporte()">Descargar Reporte</button>
+      <button class="btn btn-primary" (click)="abrirModalReserva()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -51,211 +51,548 @@
   </section>
 
   @if (cargando) {
-  <p class="text-center py-5">Cargando estadísticas...</p>
+    <p class="text-center py-5">Cargando estadísticas y habitaciones...</p>
   } @else {
 
-  <!-- KPIs -->
-  <section class="kpi-grid">
+    <!-- KPIs -->
+    <section class="kpi-grid">
 
-    <div class="kpi-card border-blue">
-      <div class="kpi-top">
-        <div class="kpi-icon-wrapper bg-blue-soft text-blue">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="1" x2="12" y2="23"></line>
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-        </div>
-        <span class="badge badge-blue">{{ stats.porcentajeVariacionIngresos >= 0 ? '+' : '' }}{{
-          stats.porcentajeVariacionIngresos | number:'1.1-1' }}%</span>
-      </div>
-      <span class="kpi-label">Ingresos Totales (Mes)</span>
-      <h3 class="kpi-value">S/ {{ stats.ingresosMes | number:'1.2-2' }}</h3>
-      <div class="progress-bar-container">
-        <div class="progress-bar-fill" [style.width.%]="stats.porcentajeOcupacion"></div>
-      </div>
-    </div>
-
-    <div class="kpi-card border-orange">
-      <div class="kpi-top">
-        <div class="kpi-icon-wrapper bg-orange-soft text-orange">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 4v16M2 8h18M2 12h18M2 16h18M22 4v16"></path>
-          </svg>
-        </div>
-        <span class="badge badge-orange">{{ stats.porcentajeOcupacion >= 70 ? 'ÓPTIMO' : 'BAJO' }}</span>
-      </div>
-      <span class="kpi-label">Habitaciones ocupadas</span>
-      <h3 class="kpi-value">{{ stats.porcentajeOcupacion | number:'1.1-1' }}%</h3>
-      <p class="kpi-subtext">{{ stats.habitacionesOcupadas }} de {{ stats.habitacionesTotal }} habitaciones ocupadas
-        actuales</p>
-    </div>
-
-    <div class="kpi-card border-green">
-      <div class="kpi-top">
-        <div class="kpi-icon-wrapper bg-green-soft text-green">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
-            <path d="m9 16 2 2 4-4"></path>
-          </svg>
-        </div>
-        <span class="badge badge-yellow">ESTABLE</span>
-      </div>
-      <span class="kpi-label">Reservas del Mes</span>
-      <h3 class="kpi-value">{{ stats.reservasMes }}</h3>
-    </div>
-
-    <div class="kpi-card border-purple">
-      <div class="kpi-top">
-        <div class="kpi-icon-wrapper bg-purple-soft text-purple">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <line x1="19" y1="8" x2="19" y2="14"></line>
-            <line x1="22" y1="11" x2="16" y2="11"></line>
-          </svg>
-        </div>
-        <span class="badge badge-purple">TOTAL</span>
-      </div>
-      <span class="kpi-label">Clientes Registrados</span>
-      <h3 class="kpi-value">{{ stats.totalClientes ?? '—' }}</h3>
-    </div>
-
-  </section>
-
-  <!-- GRÁFICO + WIDGETS -->
-  <section class="main-split-section">
-
-    <div class="chart-box-container card">
-      <div class="chart-header">
-        <h3 class="card-title">Ingresos Mensuales</h3>
-        <div class="tab-controls">
-          <button class="tab-btn active">Mensual</button>
-        </div>
-      </div>
-
-      <div class="custom-chart-wrapper">
-        <div class="chart-grid-lines">
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-        </div>
-
-        <div class="chart-bars-flex">
-          @for (m of stats.ingresosPorMes; track m.mes; let last = $last) {
-          <div class="chart-column">
-            <div class="bar-container" [attr.title]="'S/ ' + (m.total | number:'1.2-2')">
-              <div class="bar-background-fill" style="height: 100%;"></div>
-              <div class="bar-value-fill" [class.bar-yellow]="last" [style.height.%]="alturaBarra(m.total)"></div>
-              <span class="bar-tooltip" [style.bottom.%]="alturaBarra(m.total)">S/ {{ m.total | number:'1.0-0' }}</span>
-            </div>
-            <span class="bar-month">{{ m.mes }}</span>
+      <div class="kpi-card border-blue">
+        <div class="kpi-top">
+          <div class="kpi-icon-wrapper bg-blue-soft text-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
           </div>
-          }
+          <span class="badge badge-blue" *ngIf="stats?.porcentajeVariacionIngresos">{{ stats.porcentajeVariacionIngresos >= 0 ? '+' : '' }}{{
+            stats.porcentajeVariacionIngresos | number:'1.1-1' }}%</span>
+        </div>
+        <span class="kpi-label">Ingresos Totales (Mes)</span>
+        <h3 class="kpi-value">S/ {{ stats?.ingresosMes | number:'1.2-2' }}</h3>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" [style.width.%]="stats?.porcentajeOcupacion"></div>
         </div>
       </div>
 
-      <div class="chart-legend">
-        <span class="legend-color-dot"></span>
-        <span class="legend-text">Ingresos últimos 6 meses</span>
+      <div class="kpi-card border-orange">
+        <div class="kpi-top">
+          <div class="kpi-icon-wrapper bg-orange-soft text-orange">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 4v16M2 8h18M2 12h18M2 16h18M22 4v16"></path>
+            </svg>
+          </div>
+          <span class="badge badge-orange">{{ stats?.porcentajeOcupacion >= 70 ? 'ÓPTIMO' : 'BAJO' }}</span>
+        </div>
+        <span class="kpi-label">Habitaciones ocupadas</span>
+        <h3 class="kpi-value">{{ stats?.porcentajeOcupacion | number:'1.1-1' }}%</h3>
+        <p class="kpi-subtext">{{ stats?.habitacionesOcupadas }} de {{ stats?.habitacionesTotal }} habitaciones ocupadas
+          actuales</p>
       </div>
-    </div>
 
-    <div class="right-widgets-stack">
+      <div class="kpi-card border-green">
+        <div class="kpi-top">
+          <div class="kpi-icon-wrapper bg-green-soft text-green">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <path d="m9 16 2 2 4-4"></path>
+            </svg>
+          </div>
+          <span class="badge badge-yellow">ESTABLE</span>
+        </div>
+        <span class="kpi-label">Reservas del Mes</span>
+        <h3 class="kpi-value">{{ stats?.reservasMes }}</h3>
+      </div>
 
-      <!-- Estado de Habitaciones -->
-      <div class="rooms-status-widget card">
-        <h3 class="card-title">Estado de Habitaciones</h3>
-        <div class="rooms-grid">
-          <div class="room-stat-card">
-            <h4>{{ stats.estadoHabitaciones.limpias }}</h4>
-            <p>LIMPIAS</p>
+      <div class="kpi-card border-purple">
+        <div class="kpi-top">
+          <div class="kpi-icon-wrapper bg-purple-soft text-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <line x1="19" y1="8" x2="19" y2="14"></line>
+              <line x1="22" y1="11" x2="16" y2="11"></line>
+            </svg>
           </div>
-          <div class="room-stat-card text-orange-bold">
-            <h4>{{ stats.estadoHabitaciones.enLimpieza }}</h4>
-            <p>EN LIMPIEZA</p>
-          </div>
-          <div class="room-stat-card text-red-bold">
-            <h4>{{ stats.estadoHabitaciones.mantenimiento }}</h4>
-            <p>MANTENIMIENTO</p>
-          </div>
-          <div class="room-stat-card text-gray-bold">
-            <h4>{{ stats.estadoHabitaciones.sucias }}</h4>
-            <p>SUCIAS</p>
+          <span class="badge badge-purple">TOTAL</span>
+        </div>
+        <span class="kpi-label">Clientes Registrados</span>
+        <h3 class="kpi-value">{{ stats?.totalClientes ?? '—' }}</h3>
+      </div>
+
+    </section>
+
+    <!-- GRÁFICO + WIDGETS -->
+    <section class="main-split-section">
+
+      <div class="chart-box-container card">
+        <div class="chart-header">
+          <h3 class="card-title">Ingresos Mensuales</h3>
+          <div class="tab-controls">
+            <button class="tab-btn active">Mensual</button>
           </div>
         </div>
-      </div>
 
+        <div class="custom-chart-wrapper">
+          <div class="chart-grid-lines">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
 
-
-    </div>
-
-  </section>
-
-  <!-- PRÓXIMAS LLEGADAS -->
-  <section class="arrivals-section card">
-    <div class="arrivals-header">
-      <h3 class="card-title">Próximas Llegadas (Hoy)</h3>
-      <a routerLink="/admin/reserva" class="view-all-link">
-        <span>Ver todas</span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </a>
-    </div>
-
-    <div class="responsive-table-holder">
-      <table class="arrivals-table">
-        <thead>
-          <tr>
-            <th>Huésped</th>
-            <th>Habitación</th>
-            <th>Check-in</th>
-            <th class="align-center">Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (llegada of stats.proximasLlegadas; track llegada.nombreHuesped) {
-          <tr>
-            <td>
-              <div class="guest-profile">
-                <div class="guest-avatar bg-blue-avatar">{{ llegada.iniciales }}</div>
-                <div class="guest-details">
-                  <span class="guest-name">{{ llegada.nombreHuesped }}</span>
-                  <span class="guest-badge text-blue">{{ llegada.categoria }}</span>
-                </div>
+          <div class="chart-bars-flex">
+            @for (m of stats?.ingresosPorMes; track m.mes; let last = $last) {
+            <div class="chart-column">
+              <div class="bar-container" [attr.title]="'S/ ' + (m.total | number:'1.2-2')">
+                <div class="bar-background-fill" style="height: 100%;"></div>
+                <div class="bar-value-fill" [class.bar-yellow]="last" [style.height.%]="alturaBarra(m.total)"></div>
+                <span class="bar-tooltip" [style.bottom.%]="alturaBarra(m.total)">S/ {{ m.total | number:'1.0-0' }}</span>
               </div>
-            </td>
-            <td><span class="table-text-highlight">{{ llegada.habitacion }}</span></td>
-            <td><span class="table-text-highlight">{{ llegada.fechaInicio }}</span></td>
-            <td class="align-center">
-              <button class="action-triple-dot">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="1"></circle>
-                  <circle cx="12" cy="5" r="1"></circle>
-                  <circle cx="12" cy="19" r="1"></circle>
+              <span class="bar-month">{{ m.mes }}</span>
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="chart-legend">
+          <span class="legend-color-dot"></span>
+          <span class="legend-text">Ingresos últimos 6 meses</span>
+        </div>
+      </div>
+
+      <div class="right-widgets-stack">
+        <!-- Resumen Rápido Estado Habitaciones -->
+        <div class="rooms-status-widget card">
+          <h3 class="card-title">Resumen de Habitaciones</h3>
+          <div class="rooms-grid">
+            <div class="room-stat-card">
+              <h4>{{ countLibres }}</h4>
+              <p>LIBRES</p>
+            </div>
+            <div class="room-stat-card text-orange-bold">
+              <h4>{{ countLimpieza }}</h4>
+              <p>LIMPIEZA</p>
+            </div>
+            <div class="room-stat-card text-red-bold">
+              <h4>{{ countMantenimiento }}</h4>
+              <p>MANTENIMIENTO</p>
+            </div>
+            <div class="room-stat-card text-gray-bold">
+              <h4>{{ countOcupadas }}</h4>
+              <p>OCUPADAS</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- MAPA INTERACTIVO DE HABITACIONES (NUEVO TABLERO COMPLETO) -->
+    <section class="dashboard-section-card room-map-section card">
+      <div class="section-card-header">
+        <div class="header-titles">
+          <h3 class="card-title">Tablero de Habitaciones</h3>
+          <p>Estado de ocupación comercial y operativo en tiempo real. Haz clic para cambiar estado o reservar.</p>
+        </div>
+        <div class="room-stats-quick-bar">
+          <span class="badge-status-pill libres"><span class="dot"></span> {{ countLibres }} Libres</span>
+          <span class="badge-status-pill ocupadas"><span class="dot"></span> {{ countOcupadas }} Ocupadas</span>
+          <span class="badge-status-pill reservadas"><span class="dot"></span> {{ countReservadas }} Reservas</span>
+        </div>
+      </div>
+
+      <div class="room-map-scroll-area">
+        <!-- Cuadrícula dinámica de Habitaciones -->
+        <div class="rooms-dashboard-grid" *ngIf="habitaciones.length > 0">
+          <button *ngFor="let room of habitaciones" 
+               class="room-card-box" 
+               [ngClass]="getRoomVisualState(room)"
+               (click)="seleccionarHabitacion(room)"
+               [id]="'room-' + room.id_habitacion"
+               [title]="'Habitación ' + room.nombre_habitacion + ': Click para reservar o cambiar estado'">
+            
+            <div class="room-header-status">
+              <span class="room-status-indicator"></span>
+              <span class="room-category-badge">{{ room.categoriaHabitacion.nombre_categoria || 'Standard' }}</span>
+            </div>
+            
+            <div class="room-center-info">
+              <h4 class="room-name-text">{{ room.nombre_habitacion }}</h4>
+              <p class="room-price-lbl">S/ {{ room.categoriaHabitacion.precio || 0 | number:'1.2-2' }}</p>
+            </div>
+
+            <div class="room-footer-status">
+              <span class="room-state-txt">{{ getRoomStatusText(getRoomVisualState(room)) }}</span>
+              <span class="room-state-full-desc">{{ getRoomVisualState(room) | uppercase }}</span>
+            </div>
+          </button>
+        </div>
+
+        <div *ngIf="habitaciones.length === 0" class="text-center py-4 text-muted">
+          No hay habitaciones cargadas en el sistema.
+        </div>
+      </div>
+
+      <!-- Leyenda Interactiva -->
+      <div class="map-interactive-legend">
+        <div class="legend-element">
+          <span class="legend-color bg-libre-color"></span>
+          <span>Libre (Disponible)</span>
+        </div>
+        <div class="legend-element">
+          <span class="legend-color bg-reservada-color"></span>
+          <span>Reservada (Futura)</span>
+        </div>
+        <div class="legend-element">
+          <span class="legend-color bg-ocupada-color"></span>
+          <span>Ocupada (Activa)</span>
+        </div>
+        <div class="legend-element">
+          <span class="legend-color bg-limpieza-color"></span>
+          <span>Limpieza / Sucia</span>
+        </div>
+        <div class="legend-element">
+          <span class="legend-color bg-mantenimiento-color"></span>
+          <span>Mantenimiento</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRÓXIMAS LLEGADAS -->
+    <section class="arrivals-section card">
+      <div class="arrivals-header">
+        <h3 class="card-title">Próximas Llegadas (Hoy)</h3>
+        <a routerLink="/admin/reserva" class="view-all-link">
+          <span>Ver todas</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <div class="responsive-table-holder">
+        <table class="arrivals-table">
+          <thead>
+            <tr>
+              <th>Huésped</th>
+              <th>Habitación</th>
+              <th>Check-in</th>
+              <th class="align-center">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (llegada of stats?.proximasLlegadas; track llegada.nombreHuesped) {
+            <tr>
+              <td>
+                <div class="guest-profile">
+                  <div class="guest-avatar bg-blue-avatar">{{ llegada.iniciales }}</div>
+                  <div class="guest-details">
+                    <span class="guest-name">{{ llegada.nombreHuesped }}</span>
+                    <span class="guest-badge text-blue">{{ llegada.categoria }}</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="table-text-highlight">{{ llegada.habitacion }}</span></td>
+              <td><span class="table-text-highlight">{{ llegada.fechaInicio }}</span></td>
+              <td class="align-center">
+                <button class="action-triple-dot">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="4" class="text-center text-muted py-3">No hay llegadas programadas para hoy.</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  <!-- MODAL NUEVA RESERVA (MODERNO Y REDISEÑADO) -->
+  <div class="modal-backdrop-premium" *ngIf="mostrarModalReserva">
+    <div class="modal-card-container">
+      
+      <!-- Modal Header -->
+      <div class="modal-card-header">
+        <div class="title-wrap">
+          <span class="badge-form">Operaciones</span>
+          <h3>Nueva Reserva</h3>
+          <p>Registrar una nueva reserva en el sistema</p>
+        </div>
+        <button class="modal-close-icon-btn" (click)="cerrarModalReserva()" aria-label="Cerrar modal">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Formulario -->
+      <form [formGroup]="reservaForm" (ngSubmit)="onSubmitReserva()">
+        <div class="modal-card-body">
+          
+          <!-- Cliente Form Group -->
+          <div class="form-group-custom">
+            <label for="cliente" class="form-label-custom">Cliente *</label>
+            <div class="input-group-premium-modal">
+              <span class="modal-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-              </button>
-            </td>
-          </tr>
-          } @empty {
-          <tr>
-            <td colspan="4" class="text-center text-muted py-3">No hay llegadas programadas para hoy.</td>
-          </tr>
-          }
-        </tbody>
-      </table>
+              </span>
+              <div class="select-wrapper">
+                <select id="cliente" formControlName="idCliente" class="form-select-custom">
+                  <option [ngValue]="null" disabled selected>Seleccione un cliente</option>
+                  <option *ngFor="let c of clientes" [value]="c.id_usuario">
+                    {{ c.nombre_usuario }} {{ c.apellido_paterno }} {{ c.apellido_materno }}
+                  </option>
+                </select>
+                <div class="select-arrow-custom"></div>
+              </div>
+            </div>
+            <span class="error-alert-txt" *ngIf="reservaForm.get('idCliente')?.touched && reservaForm.get('idCliente')?.errors?.['required']">
+              El cliente es obligatorio.
+            </span>
+          </div>
+
+          <!-- Habitación Form Group -->
+          <div class="form-group-custom">
+            <label for="habitacion" class="form-label-custom">Habitación *</label>
+            <div class="input-group-premium-modal">
+              <span class="modal-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="3" x2="9" y2="21"></line>
+                </svg>
+              </span>
+              <div class="select-wrapper">
+                <select id="habitacion" formControlName="idHabitacion" class="form-select-custom">
+                  <option [ngValue]="null" disabled selected>Seleccione una habitación</option>
+                  <option *ngFor="let h of habitacionesDisponiblesParaReserva" [value]="h.id_habitacion">
+                    {{ h.nombre_habitacion }} ({{ h.categoriaHabitacion.nombre_categoria }} - S/ {{ h.categoriaHabitacion.precio }})
+                  </option>
+                </select>
+                <div class="select-arrow-custom"></div>
+              </div>
+            </div>
+            <span class="error-alert-txt" *ngIf="reservaForm.get('idHabitacion')?.touched && reservaForm.get('idHabitacion')?.errors?.['required']">
+              La habitación es obligatoria.
+            </span>
+          </div>
+
+          <!-- Rango de Fechas Form Group (Row) -->
+          <div class="form-grid-dates">
+            <div class="form-group-custom">
+              <label for="fechaInicio" class="form-label-custom">Fecha de Inicio *</label>
+              <div class="input-group-premium-modal">
+                <span class="modal-input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </span>
+                <input type="date" id="fechaInicio" formControlName="fechaInicio" class="form-input-custom" />
+              </div>
+            </div>
+
+            <div class="form-group-custom">
+              <label for="fechaFin" class="form-label-custom">Fecha de Fin *</label>
+              <div class="input-group-premium-modal">
+                <span class="modal-input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </span>
+                <input type="date" id="fechaFin" formControlName="fechaFin" class="form-input-custom" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel de Cálculos en Tiempo Real -->
+          <div class="billing-summary-panel">
+            <h4 class="summary-title">Detalle de Tarifas</h4>
+            <div class="summary-rows">
+              <div class="summary-row-item">
+                <span>Precio por Noche:</span>
+                <strong>S/ {{ precioPorNoche | number:'1.2-2' }}</strong>
+              </div>
+              <div class="summary-row-item">
+                <span>Noches totales:</span>
+                <strong>{{ noches }}</strong>
+              </div>
+              <div class="summary-row-item highlight-total">
+                <span>Importe Total:</span>
+                <strong>S/ {{ total | number:'1.2-2' }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mensajes de Alerta y Errores de Cruces de Fechas -->
+          <div class="alert-box-custom" *ngIf="errorMensaje" [ngClass]="{'danger-status': !cruceFechasDetectado, 'warning-status': cruceFechasDetectado}">
+            <div class="alert-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <div class="alert-txt-content">
+              <strong>Notificación del sistema</strong>
+              <p>{{ errorMensaje }}</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-card-footer">
+          <button type="button" class="btn-modal-cancel" (click)="cerrarModalReserva()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-modal-submit" [disabled]="reservaForm.invalid || (errorMensaje && !cruceFechasDetectado)">
+            Validar y Guardar Reserva
+          </button>
+        </div>
+      </form>
     </div>
-  </section>
+  </div>
+
+  <!-- MODAL CAMBIAR ESTADO DE HABITACIÓN (PREMIUM Y REDISEÑADO) -->
+  <div class="modal-backdrop-premium" *ngIf="mostrarModalEstadoHabitacion">
+    <div class="modal-card-container">
+      
+      <!-- Modal Header -->
+      <div class="modal-card-header">
+        <div class="title-wrap">
+          <span class="badge-form">Operaciones</span>
+          <h3>Estado de Habitación</h3>
+          <p>Habitación {{ habitacionSeleccionada?.nombre_habitacion }}</p>
+        </div>
+        <button class="modal-close-icon-btn" (click)="cerrarModalEstadoHabitacion()" aria-label="Cerrar modal">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Formulario / Contenedor -->
+      <div class="modal-card-body">
+        
+        <!-- Detalle de Habitación -->
+        <div class="billing-summary-panel">
+          <h4 class="summary-title">Detalles Actuales</h4>
+          <div class="summary-rows">
+            <div class="summary-row-item">
+              <span>Categoría:</span>
+              <strong>{{ habitacionSeleccionada?.categoriaHabitacion?.nombre_categoria || 'Standard' }}</strong>
+            </div>
+            <div class="summary-row-item">
+              <span>Precio por Noche:</span>
+              <strong>S/ {{ habitacionSeleccionada?.categoriaHabitacion?.precio || 0 | number:'1.2-2' }}</strong>
+            </div>
+            <div class="summary-row-item">
+              <span>Descripción:</span>
+              <strong>{{ habitacionSeleccionada?.descripcion_habitacion || 'Sin descripción' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estado Comercial Form Group -->
+        <div class="form-group-custom">
+          <label for="estadoComercial" class="form-label-custom">Estado Comercial (Reserva) *</label>
+          <div class="input-group-premium-modal">
+            <span class="modal-input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            </span>
+            <div class="select-wrapper">
+              <select id="estadoComercial" [(ngModel)]="nuevoEstadoComercial" class="form-select-custom">
+                <option value="DISPONIBLE">DISPONIBLE</option>
+                <option value="OCUPADA">OCUPADA</option>
+              </select>
+              <div class="select-arrow-custom"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estado Operativo Form Group -->
+        <div class="form-group-custom">
+          <label for="estadoOperativo" class="form-label-custom">Estado Operativo (Limpieza/Mantenimiento) *</label>
+          <div class="input-group-premium-modal">
+            <span class="modal-input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+              </svg>
+            </span>
+            <div class="select-wrapper">
+              <select id="estadoOperativo" [(ngModel)]="nuevoEstadoOperativo" class="form-select-custom">
+                <option value="LIMPIO">LIMPIO</option>
+                <option value="EN_LIMPIEZA">EN LIMPIEZA</option>
+                <option value="SUCIO">SUCIO</option>
+                <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+              </select>
+              <div class="select-arrow-custom"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón para ir a reservar si está disponible -->
+        <div class="alert-box-custom warning-status" *ngIf="habitacionSeleccionada && getRoomVisualState(habitacionSeleccionada) === 'libre'">
+          <div class="alert-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
+          <div class="alert-txt-content" style="flex-grow: 1;">
+            <strong>Habitación Disponible</strong>
+            <p>Esta habitación está libre. Puedes registrar una reserva directamente.</p>
+          </div>
+          <button type="button" class="btn-note-action" (click)="irAReservarHabitacion()" style="margin-left: auto;">
+            Reservar
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-card-footer">
+        <button type="button" class="btn-modal-cancel" (click)="cerrarModalEstadoHabitacion()">
+          Cancelar
+        </button>
+        <button type="button" class="btn-modal-submit" (click)="guardarEstadoHabitacion()">
+          Guardar Cambios
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   }
 </div>
