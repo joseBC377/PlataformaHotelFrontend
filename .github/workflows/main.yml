@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Ejecutar pruebas unitarias (Karma / Headless)
-        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
 
       - name: Login en Docker Hub
         uses: docker/login-action@v3
