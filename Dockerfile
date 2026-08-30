@@ -17,4 +17,5 @@ COPY --from=build /app/package*.json ./
 
 EXPOSE 4000
 
-CMD ["node", "dist/PlataformaHotelFrontend/server/main.js"]
+# Comando dinámico infalible que localiza el archivo main.js sin lidiar con rutas fijas
+CMD ["sh", "-c", "node $(find dist -name main.js | head -n 1)"]
