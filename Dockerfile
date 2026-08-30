@@ -17,5 +17,5 @@ COPY --from=build /app/package*.json ./
 
 EXPOSE 4000
 
-# Busca dinámicamente el archivo main.js dentro de dist y lo ejecuta sin importar mayúsculas
-CMD ["node", "dist/plataforma-hotel-frontend/server/main.js"]
+# Búsqueda dinámica automática de main.js sin importar la ruta o las mayúsculas
+CMD ["sh", "-c", "node $(find dist -name main.js | head -n 1)"]
