@@ -18,5 +18,5 @@ COPY --from=build /app/package.json ./package.json
 
 EXPOSE 4000
 
-# Lista el contenido de dist para depurar y ejecuta main.js dinámicamente
-CMD ["sh", "-c", "echo '--- CONTENIDO DE DIST ---' && ls -R dist && node $(find dist -name main.js | head -n 1)"]
+# Ejecutar directamente el server.mjs que genera la versión moderna de Angular SSR
+CMD ["node", "dist/PlataformaHotelFrontend/server/server.mjs"]
