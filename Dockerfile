@@ -17,5 +17,4 @@ COPY --from=build /app/package*.json ./
 
 EXPOSE 4000
 
-# Comando temporal para listar las carpetas de dist y descubrir la ruta real
-CMD sh -c "echo '=== CONTENIDO DE /app/dist ===' && ls -R dist && node $(find dist -name main.js | head -n 1)"
+CMD ["node", "dist/PlataformaHotelFrontend/server/main.js"]
