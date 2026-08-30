@@ -13,6 +13,13 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
+ * Health check endpoint para Railway
+ */
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+/**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.
  *
@@ -62,4 +69,3 @@ if (isMainModule(import.meta.url)) {
  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
  */
 export const reqHandler = createNodeRequestHandler(app);
- 
