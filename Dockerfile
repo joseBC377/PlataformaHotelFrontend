@@ -12,10 +12,11 @@ RUN npm run build
 FROM node:22-alpine AS runner
 WORKDIR /app
 
-COPY --from=build /app/dist /app/dist
-COPY --from=build /app/package*.json ./
+# Copiar los artefactos compilados, dependencias y package.json necesarios para producción
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
 
 EXPOSE 4000
 
-# Arranque dinámico con captura de errores de Node
-CMD ["sh", "-c", "MAIN_FILE=$(find dist -name main.js | head -n 1) && echo 'Ejecutando: ' $MAIN_FILE && node --unhandled-rejections=strict $MAIN_FILE"]
+CMD ["node", "dist/PlataformaHotelFrontend/server/main.js"]
