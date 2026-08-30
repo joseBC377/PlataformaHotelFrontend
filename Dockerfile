@@ -17,5 +17,4 @@ COPY --from=build /app/package*.json ./
 
 EXPOSE 4000
 
-# Búsqueda dinámica automática de main.js sin importar la ruta o las mayúsculas
-CMD ["sh", "-c", "node $(find dist -name main.js | head -n 1)"]
+CMD ["node", "dist/PlataformaHotelFrontend/server/main.js"]
