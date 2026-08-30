@@ -17,5 +17,5 @@ COPY --from=build /app/package*.json ./
 
 EXPOSE 4000
 
-# Comando dinámico infalible que localiza el archivo main.js sin lidiar con rutas fijas
-CMD ["sh", "-c", "node $(find dist -name main.js | head -n 1)"]
+# Arranque dinámico con logs explícitos para ver qué archivo corre
+CMD ["sh", "-c", "MAIN_FILE=$(find dist -name main.js | head -n 1) && echo 'Iniciando servidor desde: ' $MAIN_FILE && node $MAIN_FILE"]
