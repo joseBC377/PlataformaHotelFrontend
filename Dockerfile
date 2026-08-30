@@ -12,11 +12,11 @@ RUN npm run build
 FROM node:22-alpine AS runner
 WORKDIR /app
 
-# Copiar los artefactos compilados, dependencias y package.json necesarios para producción
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
 
 EXPOSE 4000
 
-CMD ["node", "dist/PlataformaHotelFrontend/server/main.js"]
+# Lista el contenido de dist para depurar y ejecuta main.js dinámicamente
+CMD ["sh", "-c", "echo '--- CONTENIDO DE DIST ---' && ls -R dist && node $(find dist -name main.js | head -n 1)"]
