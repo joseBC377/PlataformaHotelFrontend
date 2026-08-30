@@ -47,10 +47,17 @@ function handleTokenExpiration(request: HttpRequest<any>, next: HttpHandlerFn, a
     refreshTokenSubject.next(null);
     const refresh_token = authServ.getRefreshToken();
     if (refresh_token) {
+      // return authServ.refreshToken(refresh_token).pipe(
+      //   switchMap((response: any) => {
+      //     isRefreshing = false;
+      //     authServ['almacenarTokens'](response);
+      //     refreshTokenSubject.next(response.access_token);
+      //     return next(addTokenHeader(request, response.access_token));
+      //   }),
       return authServ.refreshToken(refresh_token).pipe(
         switchMap((response: any) => {
           isRefreshing = false;
-          authServ['almacenarTokens'](response);
+          authServ.almacenarTokens(response);
           refreshTokenSubject.next(response.access_token);
           return next(addTokenHeader(request, response.access_token));
         }),

@@ -1,11 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ResenaService } from '../services/resena.service';
 import { Resena } from '../../auth/models/resena';
-import { Rol } from '../../auth/models/rol';
 import { RequestResenaModel } from '../../auth/models/request-resena-model';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { EstadoReserva } from '../../auth/models/habitacionEstado';
-
 
 describe('ResenaService', () => {
 
@@ -14,36 +11,25 @@ describe('ResenaService', () => {
 
     const URL = 'http://localhost:8081/api/resena';
 
-    // Mock de una reseña
     const mockResenas: Resena[] = [
         {
-            id: 1,
+            id_resena: 1,
             calificacion: 4.5,
             comentario: 'Muy buena',
             fecha: '2025-01-01',
             usuario: {
-                id: 10,
-                nombre: 'Juan',
-                apellido: 'Pérez',
-                correo: 'juan@test.com',
-                telefono: '123456789',
-                password: '12345',
-                rol: Rol.ADMIN,
-                reserva: []
+                id_usuario: 10,
+                nombre_usuario: 'Juan',
+                apellido_paterno: 'Pérez'
             },
             habitacion: {
-                id: 20,
-                nombre: 'Habitación 1',
-                descripcion: 'Habitación con vista al mar',
-                estado: EstadoReserva.DISPONIBLE,
-                categoriaHabitacion: {
-                    id: 1,
-                    nombre: 'Suite',
-                    descripcion: 'Suite de lujo',
-                    capacidad: 2,
-                    precio: 300,
-                    imagen: ''
-                }
+                id_habitacion: 20,
+                nombre_habitacion: 'Habitación 1',
+                estado: 'DISPONIBLE'
+            },
+            servicio: {
+                id_servicio: 1,
+                nombre_servicio: 'Spa'
             }
         }
     ];
@@ -52,8 +38,9 @@ describe('ResenaService', () => {
         calificacion: 5,
         comentario: 'Excelente',
         fecha: '2025-07-21',
-        usuario: { id: 10 },
-        habitacion: { id: 20 }
+        usuario: { id_usuario: 10 },
+        habitacion: { id_habitacion: 20 },
+        servicio: { idServicio: 1 }
     };
 
     beforeEach(() => {
@@ -67,7 +54,7 @@ describe('ResenaService', () => {
     });
 
     afterEach(() => {
-        httpMock.verify(); // Verifica que no haya solicitudes pendientes
+        httpMock.verify();
     });
 
     it('debe listar reseñas (GET)', () => {
@@ -82,18 +69,18 @@ describe('ResenaService', () => {
     });
 
     it('debe insertar reseña (POST)', () => {
-        service.insertar(nuevaResena).subscribe(); // sin expect
+        service.insertar(nuevaResena).subscribe();
         const req = httpMock.expectOne(URL);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body.descripcion).toBe('Excelente');
-        req.flush({}); // o lo que sea; no importa
+        expect(req.request.body.comentario).toBe('Excelente');
+        req.flush({});
     });
 
     it('debe editar reseña (PUT)', () => {
-        service.editar(1, nuevaResena).subscribe(); // sin expect
+        service.editar(1, nuevaResena).subscribe();
         const req = httpMock.expectOne(`${URL}/1`);
         expect(req.request.method).toBe('PUT');
-        req.flush({}); // igual
+        req.flush({});
     });
 
     it('debe eliminar reseña (DELETE)', () => {
@@ -105,6 +92,5 @@ describe('ResenaService', () => {
         expect(req.request.method).toBe('DELETE');
         req.flush('Reseña eliminada');
     });
-
 
 });

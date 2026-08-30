@@ -3,14 +3,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "rootDir": "./src",
     "outDir": "./out-tsc/app",
     "types": [
       "node"
     ]
   },
-  "angularCompilerOptions": {
-    "controlFlow": true
-  },
+  "angularCompilerOptions": {},
   "include": [
     "src/**/*.ts"
   ],

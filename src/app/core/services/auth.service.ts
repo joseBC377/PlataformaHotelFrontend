@@ -56,13 +56,26 @@ export class AuthService {
       localStorage.removeItem('refresh_token');
     }
   }
+  // cerrarSesion(): void {
+  //   localStorage.removeItem('access_token');
+  //   localStorage.removeItem('refresh_token');
+  //   localStorage.removeItem('nombre');
+  //   localStorage.removeItem('apellido');
+  //   localStorage.removeItem('id');
+  //   localStorage.removeItem('rol');
+  //   this.clearTokens();
+  //   this.isAuth.next(false);
+  //   this.router.navigate(['/login']);
+  // }
+
   cerrarSesion(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('nombre');
-    localStorage.removeItem('apellido');
-    localStorage.removeItem('id');
-    localStorage.removeItem('rol');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('nombre');
+      localStorage.removeItem('apellidoPaterno');
+      localStorage.removeItem('apellidoMaterno');
+      localStorage.removeItem('id');
+      localStorage.removeItem('rol');
+    }
     this.clearTokens();
     this.isAuth.next(false);
     this.router.navigate(['/login']);

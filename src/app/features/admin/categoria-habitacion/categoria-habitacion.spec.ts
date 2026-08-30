@@ -11,22 +11,15 @@ describe('CategoriaHabitacionServices', () => {
 
   const mockCategorias: CategoriaHabitacion[] = [
     {
-      id: 1,
-      nombre: 'Suite',
-      descripcion: 'Suite de lujo',
+      id_categoria_habitacion: 1,
+      nombre_categoria: 'Suite',
+      descripcion_categoria: 'Suite de lujo',
       capacidad: 2,
       precio: 300,
-      imagen: 'suite.jpg'
+      imagen: 'suite.jpg',
+      habitacion: []
     }
   ];
-
-  const nuevaCategoria: CategoriaHabitacion = {
-    nombre: 'Deluxe',
-    descripcion: 'Habitación deluxe',
-    capacidad: 4,
-    precio: 450,
-    imagen: 'deluxe.jpg'
-  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -39,13 +32,13 @@ describe('CategoriaHabitacionServices', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Asegura que no haya solicitudes pendientes
+    httpMock.verify();
   });
 
   it('debe obtener todas las categorías (GET)', () => {
     service.getAllCategorias().subscribe(categorias => {
       expect(categorias.length).toBe(1);
-      expect(categorias[0].nombre).toBe('Suite');
+      expect(categorias[0].nombre_categoria).toBe('Suite');
     });
 
     const req = httpMock.expectOne(API_URL);
@@ -55,7 +48,7 @@ describe('CategoriaHabitacionServices', () => {
 
   it('debe obtener una categoría por ID (GET)', () => {
     service.getCategoriaById(1).subscribe(categoria => {
-      expect(categoria.nombre).toBe('Suite');
+      expect(categoria.nombre_categoria).toBe('Suite');
     });
 
     const req = httpMock.expectOne(`${API_URL}/1`);
@@ -65,11 +58,11 @@ describe('CategoriaHabitacionServices', () => {
 
   it('debe insertar una categoría (POST con FormData)', () => {
     const formData = new FormData();
-    formData.append('nombre', nuevaCategoria.nombre);
-    formData.append('descripcion', nuevaCategoria.descripcion);
-    formData.append('capacidad', nuevaCategoria.capacidad.toString());
-    formData.append('precio', nuevaCategoria.precio.toString());
-    formData.append('imagen', nuevaCategoria.imagen);
+    formData.append('nombre_categoria', 'Deluxe');
+    formData.append('descripcion_categoria', 'Habitación deluxe');
+    formData.append('capacidad', '4');
+    formData.append('precio', '450');
+    formData.append('imagen', 'deluxe.jpg');
 
     service.postInsertarCategoria(formData).subscribe(response => {
       expect(response).toEqual({ mensaje: 'Categoria creada' });
@@ -82,7 +75,7 @@ describe('CategoriaHabitacionServices', () => {
 
   it('debe editar una categoría (PUT con FormData)', () => {
     const formData = new FormData();
-    formData.append('nombre', 'Suite Editada');
+    formData.append('nombre_categoria', 'Suite Editada');
 
     service.putEditarCategoria(1, formData).subscribe(response => {
       expect(response).toEqual({ mensaje: 'Categoria actualizada' });

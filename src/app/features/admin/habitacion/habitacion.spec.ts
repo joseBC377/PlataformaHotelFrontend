@@ -4,6 +4,7 @@ import { CategoriaHabitacion } from "../../auth/models/categoria-habitacion";
 import { Habitacion } from "../../auth/models/habitacion";
 import { HabitacionServices } from "../services/habitacion.services";
 import { EstadoReserva } from "../../auth/models/habitacionEstado";
+import { RolTipo } from "../../auth/models/roltipo"; // O la ruta donde tengas definido RolTipo
 
 describe('HabitacionServices', () => {
   let service: HabitacionServices;
@@ -11,31 +12,34 @@ describe('HabitacionServices', () => {
 
   const API_URL = 'http://localhost:8081/api/habitacion';
 
-  // Mock de una categoría
+  // Mock de una categoría alineado con tu modelo real
   const mockCategoria: CategoriaHabitacion = {
-    id: 1,
-    nombre: 'Suite',
-    descripcion: 'Suite de lujo',
+    id_categoria_habitacion: 1,
+    nombre_categoria: 'Suite',
+    descripcion_categoria: 'Suite de lujo',
     capacidad: 2,
     precio: 300,
-    imagen: 'suite.jpg'
+    imagen: 'suite.jpg',
+    habitacion: []
   };
 
-  // Mock de habitaciones
+  // Mock de habitaciones alineado con tu modelo real
   const mockHabitaciones: Habitacion[] = [
     {
-      id: 1,
-      nombre: 'Hab101',
-      descripcion: 'Habitación con vista al mar',
+      id_habitacion: 1,
+      nombre_habitacion: 'Hab101',
+      descripcion_habitacion: 'Habitación con vista al mar',
       estado: EstadoReserva.DISPONIBLE,
+      tipo: 'SIMPLE' as unknown as RolTipo, // o RolTipo.SIMPLE si el enum tiene ese valor
       categoriaHabitacion: mockCategoria
     }
   ];
 
   const nuevaHabitacion: Habitacion = {
-    nombre: 'Hab202',
-    descripcion: 'Habitación Deluxe',
+    nombre_habitacion: 'Hab202',
+    descripcion_habitacion: 'Habitación Deluxe',
     estado: EstadoReserva.OCUPADA,
+    tipo: 'DOUBLE' as unknown as RolTipo, // o RolTipo.DOUBLE si el enum tiene ese valor
     categoriaHabitacion: mockCategoria
   };
 
@@ -56,7 +60,7 @@ describe('HabitacionServices', () => {
   it('debe obtener todas las habitaciones (GET)', () => {
     service.getAllHabitaciones().subscribe(habitaciones => {
       expect(habitaciones.length).toBe(1);
-      expect(habitaciones[0].nombre).toBe('Hab101');
+      expect(habitaciones[0].nombre_habitacion).toBe('Hab101');
     });
 
     const req = httpMock.expectOne(API_URL);
@@ -66,7 +70,7 @@ describe('HabitacionServices', () => {
 
   it('debe obtener una habitación por ID (GET)', () => {
     service.getHabitacionById(1).subscribe(habitacion => {
-      expect(habitacion.nombre).toBe('Hab101');
+      expect(habitacion.nombre_habitacion).toBe('Hab101');
     });
 
     const req = httpMock.expectOne(`${API_URL}/1`);
@@ -76,12 +80,12 @@ describe('HabitacionServices', () => {
 
   it('debe insertar una habitación (POST)', () => {
     service.postInsertarHabitacion(nuevaHabitacion).subscribe(habitacion => {
-      expect(habitacion.nombre).toBe('Hab202');
+      expect(habitacion.nombre_habitacion).toBe('Hab202');
     });
 
     const req = httpMock.expectOne(API_URL);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body.nombre).toBe('Hab202');
+    expect(req.request.body.nombre_habitacion).toBe('Hab202');
     req.flush(nuevaHabitacion);
   });
 

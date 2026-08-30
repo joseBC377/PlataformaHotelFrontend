@@ -96,9 +96,19 @@ export class CategoriaHabitacionComponent {
     }
   }
 
-  editarCategoria(cat: CategoriaHabitacion): void {
-    this.categoriaForm.patchValue(cat);
-    this.idCategoriaEditar = cat.id_categoria_habitacion ?? null;
+  // editarCategoria(cat: CategoriaHabitacion): void {
+  //   this.categoriaForm.patchValue(cat);
+  //   this.idCategoriaEditar = cat.id_categoria_habitacion ?? null;
+  //   this.modoEdicion = true;
+  //   this.mostrarModalForm = true;
+  // }
+  editarCategoria(cat: any): void {
+    const id = cat.id_categoria_habitacion ?? cat.id ?? null;
+    this.categoriaForm.patchValue({
+      ...cat,
+      id_categoria_habitacion: id
+    });
+    this.idCategoriaEditar = id;
     this.modoEdicion = true;
     this.mostrarModalForm = true;
   }
