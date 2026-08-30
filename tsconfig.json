@@ -23,7 +23,7 @@
     "strictTemplates": true,
     "extendedDiagnostics": {
       "checks": {
-        "optionalChainLhsNotNull": "suppress"
+        "optionalChainNotNullable": "suppress"
       }
     }
   },
