@@ -18,4 +18,4 @@ COPY --from=build /app/package*.json ./
 EXPOSE 4000
 
 # Asegúrate de que esta ruta coincida con el nombre de tu app en la carpeta dist/
-CMD ["sh", "-c", "ls -R dist && node dist/plataforma-hotel-frontend/server/main.js"]
+CMD ["node", "dist/plataforma-hotel-frontend/browser/server/main.js"]
