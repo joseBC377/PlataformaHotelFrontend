@@ -1,39 +1,79 @@
-name: Build, Test and Push Angular SSR Docker Image
+# Define el nombre del flujo de trabajo CI/CD.
+name: Integración y Despliegue - Royal Suites Hotel
 
+# Eventos desencadenadores: 
+# Define bajo qué condiciones se orquestará la ejecución del pipeline.
 on:
   push:
-    branches:
-      - main
+    branches: [main] # Integración directa a la rama principal.
+  pull_request:
+    branches: [main] # Validación preventiva de código en propuestas de integración.
+
+# Principio de mínimo privilegio: 
+# Restringe los permisos del token de ejecución a estrictamente lectura del repositorio.
+permissions:
+  contents: read
 
 jobs:
+  # Definición del bloque de trabajo principal.
   build-and-push:
+    # Aprovisionamiento del entorno de ejecución (servidor virtual) basado en Ubuntu.
     runs-on: ubuntu-latest
 
     steps:
+      # Paso 1: Clonación del repositorio en el entorno virtual.
       - name: Checkout del código
         uses: actions/checkout@v4
 
+      # Paso 2: Aprovisionamiento del entorno en tiempo de ejecución para Node.js.
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          # Implementación de caché a nivel de dependencias para optimizar el tiempo de ejecución.
+          cache: 'npm' 
 
+      # Paso 3: Instalación determinista de dependencias (basado en package-lock.json).
+      # Garantiza la inmutabilidad y consistencia del entorno de construcción.
       - name: Instalar dependencias
         run: npm ci
 
+      # Paso 4: Ejecución automatizada de la suite de pruebas unitarias.
+      # Configurado en modo 'headless' (sin interfaz gráfica) apto para entornos CI.
       - name: Ejecutar pruebas unitarias (Karma / Headless)
         run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
 
+      # Paso 5: Inicialización de Docker Buildx.
+      # Habilita características avanzadas de construcción y gestión eficiente de caché de capas.
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Paso 6: Autenticación en el registro de contenedores (Docker Hub).
+      # Control de seguridad: La directiva 'if' asegura que las credenciales solo 
+      # se utilicen en confirmaciones sobre la rama principal, evadiendo ataques vía PR.
       - name: Login en Docker Hub
+        if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Paso 7: Construcción del artefacto (Imagen Docker) y publicación.
       - name: Build y Push de imagen Docker
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/angular-ssr-app:latest
+          
+          # Condicional de despliegue: Solo realiza el 'push' si el evento proviene de 'main'.
+          push: ${{ github.ref == 'refs/heads/main' }}
+          
+          # Versionamiento y etiquetado (Tagging):
+          # Implementa la etiqueta 'latest' para uso general, y una etiqueta inmutable
+          # basada en el hash del commit (github.sha) para garantizar trazabilidad y permitir rollbacks.
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/angular-ssr-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/angular-ssr-app:${{ github.sha }}
+            
+          # Optimización de caché de Docker utilizando el backend de GitHub Actions.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
