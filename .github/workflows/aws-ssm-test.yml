@@ -1,4 +1,4 @@
-name: Prueba AWS SSM - Royal Suites
+name: CI/CD AWS EC2 - Royal Suites
 
 on:
   push:
@@ -11,22 +11,72 @@ permissions:
   contents: read
 
 jobs:
-  test-aws:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Descargar código
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      # 2. Configurar Node.js
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # 3. Instalar dependencias
+      - name: Instalar dependencias
+        run: npm ci
+
+      # 4. Ejecutar pruebas
+      - name: Ejecutar pruebas unitarias
+        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
+
+      # 5. Configurar Docker Buildx
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 6. Login en Docker Hub
+      - name: Login en Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 7. Construir y publicar imagen exclusiva para AWS
+      - name: Build y Push imagen AWS
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/angular-ssr-app:aws-deploy
+            ${{ secrets.DOCKER_USERNAME }}/angular-ssr-app:aws-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # 8. Autenticarse temporalmente en AWS mediante OIDC
       - name: Configurar credenciales temporales AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::213008104192:role/github-actions-royal-suites-deploy
           aws-region: us-east-2
 
-      - name: Probar comunicación con EC2 mediante SSM
+      # 9. Desplegar nueva versión en EC2 mediante Systems Manager
+      - name: Desplegar en AWS EC2 mediante SSM
         run: |
           COMMAND_ID=$(aws ssm send-command \
             --instance-ids "i-0e6a4e1a0f5eb9b93" \
             --document-name "AWS-RunShellScript" \
-            --parameters 'commands=["docker pull bc377/angular-ssr-app:latest","docker stop royal-suites || true","docker rm royal-suites || true","docker run -d --name royal-suites -p 4000:4000 bc377/angular-ssr-app:latest","docker ps"]' \
+            --parameters 'commands=[
+              "docker pull bc377/angular-ssr-app:aws-deploy",
+              "docker stop royal-suites || true",
+              "docker rm royal-suites || true",
+              "docker run -d --restart unless-stopped --name royal-suites -p 4000:4000 bc377/angular-ssr-app:aws-deploy",
+              "docker ps"
+            ]' \
             --query "Command.CommandId" \
             --output text)
 
