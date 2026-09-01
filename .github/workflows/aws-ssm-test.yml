@@ -26,7 +26,7 @@ jobs:
           COMMAND_ID=$(aws ssm send-command \
             --instance-ids "i-0e6a4e1a0f5eb9b93" \
             --document-name "AWS-RunShellScript" \
-            --parameters 'commands=["docker ps"]' \
+            --parameters 'commands=["docker pull bc377/angular-ssr-app:latest","docker stop royal-suites || true","docker rm royal-suites || true","docker run -d --name royal-suites -p 4000:4000 bc377/angular-ssr-app:latest","docker ps"]' \
             --query "Command.CommandId" \
             --output text)
 
