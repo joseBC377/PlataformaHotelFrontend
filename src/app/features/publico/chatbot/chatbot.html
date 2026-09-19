@@ -1,0 +1,88 @@
+<!-- Botón flotante -->
+<button class="chat-launcher" (click)="toggleChat()" [class.active]="isOpen" aria-label="Abrir asistente virtual">
+  <div class="launcher-glow"></div>
+  <span class="icon-open" *ngIf="!isOpen">✦</span>
+  <span class="icon-close" *ngIf="isOpen">✕</span>
+</button>
+
+<!-- Modal del Chatbot -->
+<div class="chat-luxury-card" *ngIf="isOpen">
+  <!-- Cabecera -->
+  <header class="chat-header">
+    <div class="brand">
+      <div class="avatar-ring">
+        <span class="hotel-symbol">👑</span>
+        <span class="online-indicator"></span>
+      </div>
+      <div class="titles">
+        <h3>Royal Suites Hotel</h3>
+        <span>Asistente Virtual • Suites & Reservas</span>
+      </div>
+    </div>
+    <button class="close-btn" (click)="toggleChat()">✕</button>
+  </header>
+
+  <!-- Cuerpo de mensajes -->
+  <main class="chat-body" #chatScroll>
+    <div *ngFor="let msg of messages" class="bubble-row" [ngClass]="msg.sender">
+      <div class="bubble">
+        <!-- Transcripción por voz -->
+        <div *ngIf="msg.transcription" class="transcription-badge">
+          <span class="mic-icon">🎙️</span> <em>"{{ msg.transcription }}"</em>
+        </div>
+
+        <p class="bubble-text">{{ msg.text }}</p>
+
+        <!-- Function Calling -->
+        <details *ngIf="msg.toolCall" class="tool-preview">
+          <summary><span>⚡</span> Acción ejecutada</summary>
+          <pre>{{ msg.toolCall | json }}</pre>
+        </details>
+      </div>
+    </div>
+
+    <!-- Indicador de carga -->
+    <div *ngIf="loading" class="bubble-row assistant">
+      <div class="bubble typing-indicator">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Barra de entrada -->
+  <footer class="chat-footer">
+    <div class="input-container">
+      <button
+        type="button"
+        class="action-btn voice-btn"
+        [class.recording]="isRecording"
+        (click)="isRecording ? stopRecording() : startRecording()"
+        [title]="isRecording ? 'Detener grabación' : 'Hablar por micrófono'"
+      >
+        <span *ngIf="!isRecording">🎙️</span>
+        <span *ngIf="isRecording" class="recording-pulse">⏹</span>
+      </button>
+
+      <input
+        type="text"
+        placeholder="Escriba o hable con el concierge..."
+        [(ngModel)]="inputText"
+        (keyup.enter)="sendMessage()"
+        [disabled]="loading"
+      />
+
+      <button
+        type="button"
+        class="action-btn send-btn"
+        (click)="sendMessage()"
+        [disabled]="loading || !inputText.trim()"
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+      </button>
+    </div>
+  </footer>
+</div>
