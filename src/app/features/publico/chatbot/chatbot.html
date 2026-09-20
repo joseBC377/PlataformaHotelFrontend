@@ -1,88 +1,515 @@
-<!-- Botón flotante -->
-<button class="chat-launcher" (click)="toggleChat()" [class.active]="isOpen" aria-label="Abrir asistente virtual">
+<!-- ===================================================== -->
+<!-- BOTÓN FLOTANTE                                        -->
+<!-- ===================================================== -->
+
+<button
+  class="chat-launcher"
+  (click)="toggleChat()"
+  [class.active]="isOpen"
+  aria-label="Abrir asistente virtual"
+>
   <div class="launcher-glow"></div>
-  <span class="icon-open" *ngIf="!isOpen">✦</span>
-  <span class="icon-close" *ngIf="isOpen">✕</span>
+
+  <svg
+    *ngIf="!isOpen"
+    viewBox="0 0 24 24"
+    class="launcher-icon"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+  >
+    <path d="M12 3a7 7 0 0 0-7 7v2a4 4 0 0 0 4 4h1v-6H7"/>
+    <path d="M12 3a7 7 0 0 1 7 7v2a4 4 0 0 1-4 4h-1v-6h3"/>
+    <path d="M14 19h-2"/>
+  </svg>
+
+  <span
+    *ngIf="isOpen"
+    class="close-launcher"
+  >
+    ✕
+  </span>
 </button>
 
-<!-- Modal del Chatbot -->
-<div class="chat-luxury-card" *ngIf="isOpen">
-  <!-- Cabecera -->
-  <header class="chat-header">
-    <div class="brand">
-      <div class="avatar-ring">
-        <span class="hotel-symbol">👑</span>
-        <span class="online-indicator"></span>
-      </div>
-      <div class="titles">
-        <h3>Royal Suites Hotel</h3>
-        <span>Asistente Virtual • Suites & Reservas</span>
-      </div>
-    </div>
-    <button class="close-btn" (click)="toggleChat()">✕</button>
-  </header>
 
-  <!-- Cuerpo de mensajes -->
-  <main class="chat-body" #chatScroll>
-    <div *ngFor="let msg of messages" class="bubble-row" [ngClass]="msg.sender">
-      <div class="bubble">
-        <!-- Transcripción por voz -->
-        <div *ngIf="msg.transcription" class="transcription-badge">
-          <span class="mic-icon">🎙️</span> <em>"{{ msg.transcription }}"</em>
+<!-- ===================================================== -->
+<!-- CHATBOT                                               -->
+<!-- ===================================================== -->
+
+<section
+  class="chat-premium"
+  *ngIf="isOpen"
+>
+
+  <!-- =================================================== -->
+  <!-- HEADER                                              -->
+  <!-- =================================================== -->
+
+  <header class="chat-header">
+
+    <div class="brand">
+
+      <div class="avatar">
+        <span class="crown">♛</span>
+        <span class="online"></span>
+      </div>
+
+      <div class="brand-info">
+
+        <div class="brand-title">
+          Royal Concierge
+
+          <span class="ai-badge">
+            AI
+          </span>
         </div>
 
-        <p class="bubble-text">{{ msg.text }}</p>
+        <div class="brand-status">
+          <span class="status-dot"></span>
+          Asistente de Royal Suites
+        </div>
 
-        <!-- Function Calling -->
-        <details *ngIf="msg.toolCall" class="tool-preview">
-          <summary><span>⚡</span> Acción ejecutada</summary>
-          <pre>{{ msg.toolCall | json }}</pre>
-        </details>
       </div>
+
     </div>
 
-    <!-- Indicador de carga -->
-    <div *ngIf="loading" class="bubble-row assistant">
-      <div class="bubble typing-indicator">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
+    <button
+      type="button"
+      class="header-close"
+      (click)="toggleChat()"
+      aria-label="Cerrar"
+    >
+      ✕
+    </button>
+
+  </header>
+
+
+  <!-- =================================================== -->
+  <!-- SUBHEADER                                           -->
+  <!-- =================================================== -->
+
+  <div class="concierge-bar">
+
+    <div class="concierge-text">
+      <span class="spark">✦</span>
+
+      <span>
+        Habitaciones, servicios y reservas
+      </span>
     </div>
+
+    <span class="secure">
+      ● En línea
+    </span>
+
+  </div>
+
+
+  <!-- =================================================== -->
+  <!-- MENSAJES                                            -->
+  <!-- =================================================== -->
+
+  <main
+    class="chat-body"
+    #chatScroll
+  >
+
+    <div
+      *ngFor="let msg of messages"
+      class="message-row"
+      [ngClass]="msg.sender"
+    >
+
+      <!-- AVATAR ASISTENTE -->
+
+      <div
+        *ngIf="msg.sender === 'assistant'"
+        class="assistant-avatar"
+      >
+        ♛
+      </div>
+
+
+      <div class="message-content">
+
+        <!-- AUTOR -->
+
+        <div
+          *ngIf="msg.sender === 'assistant'"
+          class="message-author"
+        >
+          Royal Concierge
+        </div>
+
+
+        <!-- BURBUJA -->
+
+        <div class="message-bubble">
+
+          <!-- =========================================== -->
+          <!-- MENSAJE DE VOZ DEL USUARIO                 -->
+          <!-- =========================================== -->
+
+          <div
+            *ngIf="msg.transcription"
+            class="voice-transcription"
+          >
+
+            <div class="voice-header">
+
+              <div class="voice-icon">
+                <span>🎙</span>
+              </div>
+
+              <div>
+                <strong>
+                  Mensaje de voz
+                </strong>
+
+                <small>
+                  Transcripción
+                </small>
+              </div>
+
+            </div>
+
+            <div class="voice-text">
+              {{ msg.transcription }}
+            </div>
+
+          </div>
+
+
+          <!-- =========================================== -->
+          <!-- MENSAJE NORMAL                             -->
+          <!-- =========================================== -->
+
+          <div
+            *ngIf="!msg.transcription"
+            class="message-text"
+          >
+
+            <!-- ========================================= -->
+            <!-- RESPUESTA DEL ASISTENTE                  -->
+            <!-- ========================================= -->
+
+            <ng-container
+              *ngIf="msg.sender === 'assistant'; else userText"
+            >
+
+              <ng-container
+                *ngFor="let line of formatMessage(msg.text)"
+              >
+
+                <!-- ESPACIO -->
+
+                <div
+                  *ngIf="line.type === 'space'"
+                  class="message-space"
+                ></div>
+
+
+                <!-- TÍTULO -->
+
+                <div
+                  *ngIf="line.type === 'title'"
+                  class="response-title"
+                >
+                  {{ line.text }}
+                </div>
+
+
+                <!-- TEXTO NORMAL -->
+
+                <div
+                  *ngIf="line.type === 'text'"
+                  class="response-line"
+                >
+                  {{ line.text }}
+                </div>
+
+
+                <!-- LÍNEA DESTACADA -->
+
+                <div
+                  *ngIf="line.type === 'strong'"
+                  class="response-strong"
+                >
+                  {{ line.text }}
+                </div>
+
+
+                <!-- PRECIO -->
+
+                <div
+                  *ngIf="line.type === 'price'"
+                  class="response-price"
+                >
+                  {{ line.text }}
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div
+                  *ngIf="line.type === 'total'"
+                  class="response-total"
+                >
+                  {{ line.text }}
+                </div>
+
+
+                <!-- ESTADO -->
+
+                <div
+                  *ngIf="line.type === 'status'"
+                  class="response-status"
+                >
+                  {{ line.text }}
+                </div>
+
+              </ng-container>
+
+            </ng-container>
+
+
+            <!-- ========================================= -->
+            <!-- MENSAJE NORMAL DEL USUARIO               -->
+            <!-- ========================================= -->
+
+            <ng-template #userText>
+              {{ msg.text }}
+            </ng-template>
+
+          </div>
+
+
+          <!-- =========================================== -->
+          <!-- FUNCTION CALLING                           -->
+          <!-- =========================================== -->
+
+          <details
+            *ngIf="msg.toolCall"
+            class="tool-preview"
+          >
+
+            <summary>
+              <span class="tool-icon">
+                ⚡
+              </span>
+
+              Acción del asistente
+            </summary>
+
+            <pre>{{ msg.toolCall | json }}</pre>
+
+          </details>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- IA PENSANDO                                      -->
+    <!-- ================================================= -->
+
+    <div
+      *ngIf="loading"
+      class="message-row assistant"
+    >
+
+      <div class="assistant-avatar">
+        ♛
+      </div>
+
+      <div class="message-content">
+
+        <div class="message-author">
+          Royal Concierge
+        </div>
+
+        <div class="message-bubble typing-bubble">
+
+          <div class="typing">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <small>
+            Preparando tu respuesta...
+          </small>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </main>
 
-  <!-- Barra de entrada -->
+
+  <!-- =================================================== -->
+  <!-- GRABACIÓN                                           -->
+  <!-- =================================================== -->
+
+  <div
+    class="recording-panel"
+    *ngIf="isRecording"
+  >
+
+    <div class="recording-animation">
+
+      <span class="record-dot"></span>
+
+      <div class="audio-wave">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+      </div>
+
+    </div>
+
+
+    <div class="recording-info">
+
+      <strong>
+        Escuchando...
+      </strong>
+
+      <span>
+        Habla con naturalidad
+      </span>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="stop-recording"
+      (click)="stopRecording()"
+    >
+      Detener
+    </button>
+
+  </div>
+
+
+  <!-- =================================================== -->
+  <!-- FOOTER                                              -->
+  <!-- =================================================== -->
+
   <footer class="chat-footer">
-    <div class="input-container">
+
+    <div class="input-box">
+
+      <!-- MICRÓFONO -->
+
       <button
         type="button"
-        class="action-btn voice-btn"
+        class="voice-button"
         [class.recording]="isRecording"
         (click)="isRecording ? stopRecording() : startRecording()"
-        [title]="isRecording ? 'Detener grabación' : 'Hablar por micrófono'"
+        [disabled]="loading"
+        [title]="
+          isRecording
+            ? 'Detener grabación'
+            : 'Hablar con Royal Concierge'
+        "
       >
-        <span *ngIf="!isRecording">🎙️</span>
-        <span *ngIf="isRecording" class="recording-pulse">⏹</span>
+
+        <svg
+          *ngIf="!isRecording"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <rect
+            x="9"
+            y="2"
+            width="6"
+            height="12"
+            rx="3"
+          />
+
+          <path d="M5 10a7 7 0 0 0 14 0"/>
+          <path d="M12 17v5"/>
+          <path d="M8 22h8"/>
+        </svg>
+
+
+        <span
+          *ngIf="isRecording"
+          class="stop-square"
+        ></span>
+
       </button>
+
+
+      <!-- INPUT -->
 
       <input
         type="text"
-        placeholder="Escriba o hable con el concierge..."
         [(ngModel)]="inputText"
         (keyup.enter)="sendMessage()"
-        [disabled]="loading"
+        [disabled]="loading || isRecording"
+        placeholder="Escribe tu consulta..."
+        autocomplete="off"
       />
+
+
+      <!-- ENVIAR -->
 
       <button
         type="button"
-        class="action-btn send-btn"
+        class="send-button"
         (click)="sendMessage()"
-        [disabled]="loading || !inputText.trim()"
+        [disabled]="
+          loading ||
+          isRecording ||
+          !inputText.trim()
+        "
+        aria-label="Enviar mensaje"
       >
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M22 2 11 13"/>
+          <path d="m22 2-7 20-4-9-9-4Z"/>
         </svg>
+
       </button>
+
     </div>
+
+
+    <div class="footer-note">
+
+      <span>
+        ✦ Royal Suites AI Concierge
+      </span>
+
+      <span class="separator">
+        •
+      </span>
+
+      <span>
+        Respuestas en tiempo real
+      </span>
+
+    </div>
+
   </footer>
-</div>
+
+</section>
