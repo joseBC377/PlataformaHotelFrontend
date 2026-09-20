@@ -2,28 +2,74 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
+
 export interface ChatResponse {
-  transcription?: string;
-  response: string;
-  toolCall?: any;
+
+  transcripcion?: string;
+
+  respuesta: string;
+
 }
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatbotService {
-  // Ajusta esta URL con la IP/dominio de tu backend en AWS o local
-  private readonly apiUrl = 'http://localhost:8080/api/chatbot';
 
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl =
+    `${environment.API_BASE_URL}/ai`;
 
-  enviarAudio(audioBlob: Blob): Observable<ChatResponse> {
-    const formData = new FormData();
-    formData.append('audio', audioBlob, 'consulta.wav');
-    return this.http.post<ChatResponse>(`${this.apiUrl}/voice`, formData);
+
+  constructor(
+    private http: HttpClient
+  ) {}
+
+
+  // ==========================================
+  // ENVIAR AUDIO
+  // ==========================================
+
+  enviarAudio(
+    audioBlob: Blob
+  ): Observable<ChatResponse> {
+
+    const formData =
+      new FormData();
+
+
+    formData.append(
+      'audio',
+      audioBlob,
+      'consulta.webm'
+    );
+
+
+    return this.http.post<ChatResponse>(
+      `${this.apiUrl}/voice`,
+      formData
+    );
+
   }
 
-  enviarTexto(mensaje: string): Observable<ChatResponse> {
-    return this.http.post<ChatResponse>(`${this.apiUrl}/text`, { message: mensaje });
+
+  // ==========================================
+  // ENVIAR TEXTO
+  // ==========================================
+
+  enviarTexto(
+    mensaje: string
+  ): Observable<ChatResponse> {
+
+    return this.http.post<ChatResponse>(
+      `${this.apiUrl}/chat`,
+      {
+        mensaje: mensaje
+      }
+    );
+
   }
+
 }
