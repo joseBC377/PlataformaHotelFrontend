@@ -518,7 +518,8 @@ export class Chatbot
       // ----------------------------------------------------
 
       if (
-        teniaNegrita
+        teniaNegrita &&
+        line.length <= 60
       ) {
 
         resultado.push({
