@@ -12,6 +12,7 @@ export class ReservaService {
   private API_URL = `${environment.API_BASE_URL}/reservas`;
   private http = inject(HttpClient);
 
+  // --- RESERVAS ---
   getAllReservas(): Observable<ReservaModel[]> {
     return this.http.get<ReservaModel[]>(`${this.API_URL}`);
   }
@@ -43,5 +44,9 @@ export class ReservaService {
   getHistorialPorUsuario(idUsuario: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.API_URL}/historial/${idUsuario}`);
   }
-}
 
+  // --- HABITACIONES (Para poblar el select del modal) ---
+  getAllHabitaciones(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.API_BASE_URL}/habitaciones`);
+  }
+}
