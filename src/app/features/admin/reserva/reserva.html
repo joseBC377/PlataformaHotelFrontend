@@ -1,6 +1,6 @@
 <div class="reservas-dashboard-container">
 
-  <!-- HEADER SECTOR -->
+  <!-- HEADER -->
   <header class="dashboard-header">
     <div class="header-main-info">
       <div class="welcome-box">
@@ -19,7 +19,7 @@
     </div>
 
     <div class="header-action-zone">
-      <!-- Buscador Global -->
+      <!-- Buscador -->
       <div class="global-search-bar">
         <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
@@ -41,7 +41,21 @@
         </select>
       </div>
 
-      <!-- Botón Nueva Reserva -->
+      <!-- Exportar Excel -->
+      <button class="btn-export-excel"
+              (click)="exportarExcel()"
+              [disabled]="cargando || reservas.length === 0"
+              id="btnExportarExcel"
+              title="Descargar todas las reservas en Excel">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Exportar Excel</span>
+      </button>
+
+      <!-- Nueva Reserva -->
       <button class="btn-create-booking-new" (click)="abrirModalNuevo()" id="btnNuevaReserva">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -53,7 +67,7 @@
     </div>
   </header>
 
-  <!-- MAIN DASHBOARD CONTENT -->
+  <!-- LISTA DE RESERVAS -->
   <main class="dashboard-main-layout">
     <section class="dashboard-section-card">
       <div class="section-card-header">
@@ -65,18 +79,21 @@
       </div>
 
       <div class="table-scroll-container">
-        <!-- Skeleton Loader -->
+        <!-- Loader Skeleton -->
         <div *ngIf="cargando" class="skeleton-table-rows">
           <div class="skeleton-row skeleton-pulse" *ngFor="let i of [1,2,3,4,5]"></div>
         </div>
 
-        <!-- Tabla Premium -->
-        <table class="premium-table" *ngIf="!cargando && reservasPaginados.length > 0">
+        <!-- Tabla Principal -->
+        <table class="premium-table" id="tablaGestionReservas" *ngIf="!cargando && reservasPaginados.length > 0">
           <thead>
             <tr>
               <th>Identificación</th>
               <th>Huésped / Cliente</th>
               <th>Fecha de Creación</th>
+              <th>Entrada (check-in)</th>
+              <th>Salida (check-out)</th>
+              <th>Noches</th>
               <th>Estado</th>
               <th class="actions-col">Acciones</th>
             </tr>
@@ -102,6 +119,19 @@
               </td>
               <td>
                 <span class="date-val">{{ res.fechaCreacion | date:'dd/MM/yyyy' }}</span>
+              </td>
+              <td>
+                <span class="date-val">
+                  {{ fechaEntradaDe(res) ? (fechaEntradaDe(res) + 'T12:00:00' | date:'dd/MM/yyyy') : '--' }}
+                </span>
+              </td>
+              <td>
+                <span class="date-val">
+                  {{ fechaSalidaDe(res) ? (fechaSalidaDe(res) + 'T12:00:00' | date:'dd/MM/yyyy') : '--' }}
+                </span>
+              </td>
+              <td>
+                <span class="date-val">{{ nochesDe(res) > 0 ? nochesDe(res) : '--' }}</span>
               </td>
               <td>
                 <span class="badge-status" [ngClass]="badgeClass(res.estado)">
@@ -130,7 +160,7 @@
           </tbody>
         </table>
 
-        <!-- Empty State -->
+        <!-- Estado vacío -->
         <div class="empty-state-card" *ngIf="!cargando && reservasFiltradas.length === 0">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
@@ -139,29 +169,29 @@
           </svg>
           <div class="empty-state-text">
             <span class="empty-title">Sin Reservas</span>
-            <p>No se encontraron registros de reservas que coincidan con la búsqueda.</p>
+            <p>No se encontraron registros de reservas.</p>
           </div>
         </div>
       </div>
 
-      <!-- Pagination Footer -->
+      <!-- Paginación -->
       <div class="table-pagination-footer" *ngIf="!cargando && reservasFiltradas.length > 0">
         <span class="pagination-info">
           Mostrando {{ (paginaActual - 1) * itemsPorPagina + 1 }} a {{ minIndex }} de {{ reservasFiltradas.length }} reservas
         </span>
-        
+
         <div class="pagination-controls">
           <button class="pag-btn" [disabled]="paginaActual === 1" (click)="cambiarPagina(paginaActual - 1)">
             Anterior
           </button>
-          
-          <button *ngFor="let page of paginasArray" 
-                  class="pag-btn page-num" 
+
+          <button *ngFor="let page of paginasArray"
+                  class="pag-btn page-num"
                   [ngClass]="{'active': page === paginaActual}"
                   (click)="cambiarPagina(page)">
             {{ page }}
           </button>
-          
+
           <button class="pag-btn" [disabled]="paginaActual === totalPaginas" (click)="cambiarPagina(paginaActual + 1)">
             Siguiente
           </button>
@@ -170,21 +200,15 @@
     </section>
   </main>
 
-  <!-- PIE DE PAGINA -->
-  <footer class="hotel-dashboard-footer">
-    <p>&copy; 2026 Royal Suites Hotel</p>
-  </footer>
-
-  <!-- MODAL NUEVO/EDITAR RESERVA -->
+  <!-- MODAL DE NUEVA / EDITAR RESERVA -->
   <div class="modal-backdrop-premium" *ngIf="mostrarModalReserva">
     <div class="modal-card-container">
-      
-      <!-- Modal Header -->
+
       <div class="modal-card-header">
         <div class="title-wrap">
           <span class="badge-form">Operaciones</span>
           <h3>{{ modoEdicion ? 'Editar Reserva' : 'Nueva Reserva' }}</h3>
-          <p>{{ modoEdicion ? 'Modificar datos de la reserva seleccionada' : 'Registrar una nueva reserva base en el sistema' }}</p>
+          <p>{{ modoEdicion ? 'Modificar datos de la reserva' : 'Registrar una nueva reserva con habitación asignada' }}</p>
         </div>
         <button class="modal-close-icon-btn" (click)="cerrarModal()" aria-label="Cerrar modal">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -194,25 +218,21 @@
         </button>
       </div>
 
-      <!-- Formulario -->
       <form [formGroup]="reservaForm" (ngSubmit)="registroReserva()">
         <div class="modal-card-body">
-          
-          <!-- Fila 1: Fecha Reserva -->
+
+          <!-- Fecha Creación -->
           <div class="form-group-custom">
-            <label for="fechaCreacion" class="form-label-custom">Fecha Reserva *</label>
+            <label for="fechaCreacion" class="form-label-custom">Fecha de Creación *</label>
             <input type="date" id="fechaCreacion" formControlName="fechaCreacion" class="form-input-custom" />
             <span class="error-alert-txt" *ngIf="fechaCreacion?.touched && fechaCreacion?.invalid">
-              La fecha de reserva es obligatoria.
+              La fecha es obligatoria.
             </span>
-            <small class="error-alert-txt" *ngIf="erroresBackend.fechaCreacion">
-              {{ erroresBackend.fechaCreacion }}
-            </small>
           </div>
 
-          <!-- Fila 2: Usuario / Huésped -->
+          <!-- Huésped / Usuario -->
           <div class="form-group-custom">
-            <label for="usuarioSelect" class="form-label-custom">Usuario / Huésped *</label>
+            <label for="usuarioSelect" class="form-label-custom">Huésped / Cliente *</label>
             <div class="select-wrapper">
               <select id="usuarioSelect" formControlName="usuario" [compareWith]="compararUsuario" class="form-select-custom">
                 <option [ngValue]="null" disabled selected>Seleccione un usuario</option>
@@ -223,42 +243,69 @@
               <div class="select-arrow-custom"></div>
             </div>
             <span class="error-alert-txt" *ngIf="usuario?.touched && usuario?.invalid">
-              El usuario es obligatorio.
+              El cliente es obligatorio.
             </span>
-            <small class="error-alert-txt" *ngIf="erroresBackend.usuario">
-              {{ erroresBackend.usuario }}
-            </small>
           </div>
 
-          <!-- Fila 3: Estado -->
+          <!-- Habitación con Categoría y Descripción (Solo en creación) -->
+          <div class="form-group-custom" *ngIf="!modoEdicion">
+            <label for="habitacionSelect" class="form-label-custom">Habitación Asignada *</label>
+            <div class="select-wrapper">
+              <select id="habitacionSelect" formControlName="habitacion" [compareWith]="compararHabitacion" class="form-select-custom">
+                <option [ngValue]="null" disabled selected>Seleccione una habitación</option>
+                <option *ngFor="let h of habitacionesDisponibles" [ngValue]="h">
+                  {{ h.nombre_habitacion || ('Habitación ' + h.id_habitacion) }}
+                  — {{ $any(h).categoriaHabitacion?.nombre_categoria || $any(h).categoria?.nombre_categoria || 'Habitación' }}
+                  ({{ $any(h).categoriaHabitacion?.descripcion_categoria || $any(h).categoria?.descripcion_categoria || ('Capacidad: ' + ($any(h).categoriaHabitacion?.capacidad || 2)) }})
+                </option>
+              </select>
+              <div class="select-arrow-custom"></div>
+            </div>
+            <span class="error-alert-txt" *ngIf="habitacion?.touched && habitacion?.invalid">
+              Debe seleccionar una habitación.
+            </span>
+          </div>
+
+          <!-- Fechas Entrada / Salida (Solo en creación) -->
+          <div class="dates-row" style="display: flex; gap: 1rem;" *ngIf="!modoEdicion">
+            <div class="form-group-custom" style="flex: 1;">
+              <label for="fechaEntrada" class="form-label-custom">Entrada (Check-in) *</label>
+              <input type="date" id="fechaEntrada" formControlName="fechaEntrada" class="form-input-custom" />
+              <span class="error-alert-txt" *ngIf="fechaEntrada?.touched && fechaEntrada?.invalid">
+                Obligatorio.
+              </span>
+            </div>
+
+            <div class="form-group-custom" style="flex: 1;">
+              <label for="fechaSalida" class="form-label-custom">Salida (Check-out) *</label>
+              <input type="date" id="fechaSalida" formControlName="fechaSalida" class="form-input-custom" />
+              <span class="error-alert-txt" *ngIf="fechaSalida?.touched && fechaSalida?.invalid">
+                Obligatorio.
+              </span>
+            </div>
+          </div>
+
+          <!-- Estado -->
           <div class="form-group-custom">
             <label for="estadoSelect" class="form-label-custom">Estado *</label>
             <div class="select-wrapper">
               <select id="estadoSelect" formControlName="estado" class="form-select-custom">
-                <option value="" disabled>Seleccione un estado</option>
                 <option value="PENDIENTE">PENDIENTE</option>
                 <option value="CONFIRMADO">CONFIRMADO</option>
                 <option value="CANCELADO">CANCELADO</option>
               </select>
               <div class="select-arrow-custom"></div>
             </div>
-            <span class="error-alert-txt" *ngIf="estado?.touched && estado?.invalid">
-              El estado es obligatorio.
-            </span>
-            <small class="error-alert-txt" *ngIf="erroresBackend.estado">
-              {{ erroresBackend.estado }}
-            </small>
           </div>
 
         </div>
 
-        <!-- Modal Footer -->
         <div class="modal-card-footer">
           <button type="button" class="btn-modal-cancel" (click)="cerrarModal()">
             Cancelar
           </button>
           <button type="submit" class="btn-modal-submit" [disabled]="reservaForm.invalid">
-            {{ modoEdicion ? 'Actualizar' : 'Registrar' }}
+            {{ modoEdicion ? 'Actualizar' : 'Registrar Reserva' }}
           </button>
         </div>
       </form>
