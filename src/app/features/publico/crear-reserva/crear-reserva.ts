@@ -47,7 +47,7 @@ export const CUSTOM_DATE_FORMATS = {
   styleUrl: './crear-reserva.scss',
   providers: [
     { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es-PE' }
+    { provide: MAT_DATE_LOCALE, useValue: 'es' }
   ]
 })
 export class CrearReserva implements OnInit {

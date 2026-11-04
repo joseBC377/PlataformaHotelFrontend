@@ -45,7 +45,7 @@ export const CUSTOM_DATE_FORMATS = {
   styleUrl: './inicio.scss',
   providers: [
     { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es-PE' }
+    { provide: MAT_DATE_LOCALE, useValue: 'es' }
   ]
 })
 export class Inicio implements OnInit, OnDestroy {
